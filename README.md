@@ -110,8 +110,8 @@ A computational pipeline to target arbitrary unstructured sequence fragments (8-
 - You may choose to run MPNN with Rosetta relax, but this is slow and questionably useful. If you do, add the flag `--relax`.
 - If you run relax or minimization methods that can perturb the rigid body and/or binder/target backbones, you could run a second MPNN on the output of the first to potentially design a better sequence. However, the current preference is to go straight to AlphaFold filtering/refinement.
 - Diffusion can be run at various steps such as:
-1. After 1 or 2 rounds of mpnn/af2 , in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion
-2. On the final designs before ordering, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion
-3. On the initial hits after experimental screeining and characterization, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion
-
+1. After 1 or 2 rounds of mpnn/af2 , in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion.
+2. On the final designs before ordering, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion.
+3. On the initial hits after experimental screeining and characterization, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion.
+- In general the pipeline works without the use of diffusion, however, intellegent use of diffusion can increase in silico success rates for difficult targets and potentially improve the affinity and specificty of characterized binders.
 

@@ -36,23 +36,26 @@ def update_bcov_dict(bcov_filters_dict, result, run_all=False):
 
   this_scores['pae_interaction'] = jnp.mean( jnp.concatenate( [pae[binderlen:,:binderlen], pae[:binderlen,binderlen:].T], axis=0 ) )
 
-  input_ca = bcov_filters_dict['input_ca']
-  current_ca = result['structure_module']['final_atom_positions'][:,1,:]
-  
-  binder_rmsd, _, _, _ = jax_super_rmsd( current_ca[:binderlen], input_ca[:binderlen] )
-  target_rmsd, post, rotate, pre = jax_super_rmsd( current_ca[binderlen:], input_ca[binderlen:] )
-  aligned_current = ( rotate @ ( current_ca + pre[None,:] ).T ).T + post[None,:]
-  interface_rmsd = jnp.sqrt(jnp.mean(jnp.sum(jnp.square(aligned_current[:binderlen] - input_ca[:binderlen]), axis=-1)))
-  
-  this_scores['binder_rmsd'] = binder_rmsd
-  this_scores['target_rmsd'] = target_rmsd
-  this_scores['interface_rmsd'] = interface_rmsd
-
   is_passing = True
-  is_passing = jnp.logical_and( is_passing, this_scores['pae_interaction'] < bcov_filters_dict['pae_interaction_cut'] )
-  is_passing = jnp.logical_and( is_passing, this_scores['interface_rmsd'] < bcov_filters_dict['interface_rmsd_cut'] )
 
-  bcov_filters_dict.update(this_scores)
+  if 'input_ca' in bcov_filters_dict:
+    input_ca = bcov_filters_dict['input_ca']
+    current_ca = result['structure_module']['final_atom_positions'][:,1,:]
+  
+    binder_rmsd, _, _, _ = jax_super_rmsd( current_ca[:binderlen], input_ca[:binderlen] )
+    target_rmsd, post, rotate, pre = jax_super_rmsd( current_ca[binderlen:], input_ca[binderlen:] )
+    aligned_current = ( rotate @ ( current_ca + pre[None,:] ).T ).T + post[None,:]
+    interface_rmsd = jnp.sqrt(jnp.mean(jnp.sum(jnp.square(aligned_current[:binderlen] - input_ca[:binderlen]), axis=-1)))
+  
+    this_scores['binder_rmsd'] = binder_rmsd
+    this_scores['target_rmsd'] = target_rmsd
+    this_scores['interface_rmsd'] = interface_rmsd
+
+    is_passing = jnp.logical_and( is_passing, this_scores['pae_interaction'] < bcov_filters_dict['pae_interaction_cut'] )
+    is_passing = jnp.logical_and( is_passing, this_scores['interface_rmsd'] < bcov_filters_dict['interface_rmsd_cut'] )
+
+    bcov_filters_dict.update(this_scores)
+  
   bcov_filters_dict['bcov_continue'] = is_passing
 
   if not run_all:

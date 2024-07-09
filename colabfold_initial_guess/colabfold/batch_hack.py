@@ -332,6 +332,7 @@ def predict_structure(
     pad_len: int,
     model_type: str,
     model_runner_and_params: List[Tuple[str, model.RunModel, haiku.Params]],
+    num_relax: int = 0,
     relax_max_iterations: int = 0,
     relax_tolerance: float = 2.39,
     relax_stiffness: float = 10.0,
@@ -430,7 +431,6 @@ def predict_structure(
                 callback=callback)
 
             bcov_features_dict = confidence.update_bcov_dict(bcov_features_dict, result, run_all=True)
-
             prediction_time = time.time() - start
 
             ########################
@@ -462,9 +462,6 @@ def predict_structure(
                     "pae_binder" : bcov_features_dict["pae_binder"],
                     "pae_target" : bcov_features_dict["pae_target"],
                     "pae_interaction" : bcov_features_dict["pae_interaction"],
-                    "binder_rmsd" : bcov_features_dict["binder_rmsd"],
-                    "target_rmsd" : bcov_features_dict["target_rmsd"],
-                    "interface_rmsd" : bcov_features_dict["interface_rmsd"],
                     
                     "iplddt": bcov_features_dict["iplddt"],
                     "binder_contacts": int(bcov_features_dict["binder_contacts"]),
@@ -520,6 +517,109 @@ def parse_fasta(fasta_string: str) -> Tuple[List[str], List[str]]:
         sequences[index] += line
 
     return sequences, descriptions
+
+def get_queries(
+    input_path: Union[str, Path], sort_queries_by: str = "length"
+) -> Tuple[List[Tuple[str, str, Optional[List[str]]]], bool]:
+    """Reads a directory of fasta files, a single fasta file or a csv file and returns a tuple
+    of job name, sequence and the optional a3m lines"""
+
+    input_path = Path(input_path)
+    if not input_path.exists():
+        raise OSError(f"{input_path} could not be found")
+
+    if input_path.is_file():
+        if input_path.suffix == ".csv" or input_path.suffix == ".tsv":
+            sep = "\t" if input_path.suffix == ".tsv" else ","
+            df = pandas.read_csv(input_path, sep=sep)
+            assert "id" in df.columns and "sequence" in df.columns
+            queries = [
+                (seq_id, sequence.upper().split(":"), None)
+                for seq_id, sequence in df[["id", "sequence"]].itertuples(index=False)
+            ]
+            for i in range(len(queries)):
+                if len(queries[i][1]) == 1:
+                    queries[i] = (queries[i][0], queries[i][1][0], None)
+        elif input_path.suffix == ".a3m":
+            (seqs, header) = parse_fasta(input_path.read_text())
+            if len(seqs) == 0:
+                raise ValueError(f"{input_path} is empty")
+            query_sequence = seqs[0]
+            # Use a list so we can easily extend this to multiple msas later
+            a3m_lines = [input_path.read_text()]
+            queries = [(input_path.stem, query_sequence, a3m_lines)]
+        elif input_path.suffix in [".fasta", ".faa", ".fa"]:
+            (sequences, headers) = parse_fasta(input_path.read_text())
+            queries = []
+            for sequence, header in zip(sequences, headers):
+                sequence = sequence.upper()
+                if sequence.count(":") == 0:
+                    # Single sequence
+                    queries.append((header, sequence, None))
+                else:
+                    # Complex mode
+                    queries.append((header, sequence.upper().split(":"), None))
+        else:
+            raise ValueError(f"Unknown file format {input_path.suffix}")
+    else:
+        assert input_path.is_dir(), "Expected either an input file or a input directory"
+        queries = []
+        for file in sorted(input_path.iterdir()):
+            if not file.is_file():
+                continue
+            if file.suffix.lower() not in [".a3m", ".fasta", ".faa"]:
+                logger.warning(f"non-fasta/a3m file in input directory: {file}")
+                continue
+            (seqs, header) = parse_fasta(file.read_text())
+            if len(seqs) == 0:
+                logger.error(f"{file} is empty")
+                continue
+            query_sequence = seqs[0]
+            if len(seqs) > 1 and file.suffix in [".fasta", ".faa", ".fa"]:
+                logger.warning(
+                    f"More than one sequence in {file}, ignoring all but the first sequence"
+                )
+
+            if file.suffix.lower() == ".a3m":
+                a3m_lines = [file.read_text()]
+                queries.append((file.stem, query_sequence.upper(), a3m_lines))
+            else:
+                if query_sequence.count(":") == 0:
+                    # Single sequence
+                    queries.append((file.stem, query_sequence, None))
+                else:
+                    # Complex mode
+                    queries.append((file.stem, query_sequence.upper().split(":"), None))
+
+    # sort by seq. len
+    if sort_queries_by == "length":
+        queries.sort(key=lambda t: len("".join(t[1])))
+
+    elif sort_queries_by == "random":
+        random.shuffle(queries)
+
+    is_complex = False
+    for job_number, (raw_jobname, query_sequence, a3m_lines) in enumerate(queries):
+        if isinstance(query_sequence, list):
+            is_complex = True
+            break
+        if a3m_lines is not None and a3m_lines[0].startswith("#"):
+            a3m_line = a3m_lines[0].splitlines()[0]
+            tab_sep_entries = a3m_line[1:].split("\t")
+            if len(tab_sep_entries) == 2:
+                query_seq_len = tab_sep_entries[0].split(",")
+                query_seq_len = list(map(int, query_seq_len))
+                query_seqs_cardinality = tab_sep_entries[1].split(",")
+                query_seqs_cardinality = list(map(int, query_seqs_cardinality))
+                is_single_protein = (
+                    True
+                    if len(query_seq_len) == 1 and query_seqs_cardinality[0] == 1
+                    else False
+                )
+                if not is_single_protein:
+                    is_complex = True
+                    break
+    return queries, is_complex
 
 def pair_sequences(
     a3m_lines: List[str], query_sequences: List[str], query_cardinality: List[int]
@@ -814,8 +914,6 @@ def generate_input_feature(
     is_complex: bool,
     model_type: str,
     max_seq: int,
-    pair_mode: str,
-    msa_mode: str,
 ) -> Tuple[Dict[str, Any], Dict[str, str]]:
 
     input_feature = {}
@@ -824,36 +922,17 @@ def generate_input_feature(
 
         full_sequence = ""
         Ls = []
-        #DRH HACKY
-        fake_unpaired_msa = []
         for sequence_index, sequence in enumerate(query_seqs_unique):
             for cardinality in range(0, query_seqs_cardinality[sequence_index]):
                 full_sequence += sequence
                 Ls.append(len(sequence))
-                fake_unpaired_msa += [f">{101+sequence_index}\n{sequence}"]
 
-        if unpaired_msa == None:
-            unpaired_msa = fake_unpaired_msa
-
-        # print(f"unpaired_msa: {unpaired_msa}")
-        # print(f"paired_msa: {paired_msa}")
-
-        if msa_mode == "single_sequence":
-            if pair_mode == "unpaired":
-                a3m_lines = f">0\n{full_sequence}\n"
-            elif pair_mode == "paired":
-                a3m_lines = pair_msa(query_seqs_unique, query_seqs_cardinality, paired_msa, unpaired_msa)
-            elif pair_mode == "unpaired_paired":
-                a3m_lines = f">0\n{full_sequence}\n"
-                a3m_lines += pair_msa(query_seqs_unique, query_seqs_cardinality, paired_msa, unpaired_msa)
-        else:
-            a3m_lines = f">0\n{full_sequence}\n"
-            a3m_lines += pair_msa(query_seqs_unique, query_seqs_cardinality, paired_msa, unpaired_msa)
-        #DRH HACKY
+        # bugfix
+        a3m_lines = f">0\n{full_sequence}\n"
+        a3m_lines += pair_msa(query_seqs_unique, query_seqs_cardinality, paired_msa, unpaired_msa)
 
         input_feature = build_monomer_feature(full_sequence, a3m_lines, mk_mock_template(full_sequence))
-        # input_feature["residue_index"] = np.concatenate([np.arange(L) for L in Ls])
-        input_feature["residue_index"] = np.array(list(range(len(full_sequence))))
+        input_feature["residue_index"] = np.concatenate([np.arange(L) for L in Ls])
         input_feature["asym_id"] = np.concatenate([np.full(L,n) for n,L in enumerate(Ls)])
         if any(
             [
@@ -1022,6 +1101,19 @@ def unserialize_msa(
         template_features,
     )
 
+def msa_to_str(
+    unpaired_msa: List[str],
+    paired_msa: List[str],
+    query_seqs_unique: List[str],
+    query_seqs_cardinality: List[int],
+) -> str:
+    msa = "#" + ",".join(map(str, map(len, query_seqs_unique))) + "\t"
+    msa += ",".join(map(str, query_seqs_cardinality)) + "\n"
+    # build msa with cardinality of 1, it makes it easier to parse and manipulate
+    query_seqs_cardinality = [1 for _ in query_seqs_cardinality]
+    msa += pair_msa(query_seqs_unique, query_seqs_cardinality, paired_msa, unpaired_msa)
+    return msa
+
 
 def put_mmciffiles_into_resultdir(
     pdb_hit_file: Path,
@@ -1072,7 +1164,8 @@ def put_mmciffiles_into_resultdir(
                 if not result_file.exists():
                     print(f"WARNING: {pdb_id} does not exist in {local_pdb_path}.")
 
-def run_ig(
+
+def run(
     queries: List[Tuple[str, Union[str, List[str]], Optional[List[str]]]],
     result_dir: Union[str, Path],
     num_models: int,
@@ -1085,10 +1178,12 @@ def run_ig(
     msa_mode: str = "mmseqs2_uniref_env",
     use_templates: bool = False,
     custom_template_path: str = None,
+    num_relax: int = 0,
     relax_max_iterations: int = 0,
     relax_tolerance: float = 2.39,
     relax_stiffness: float = 10.0,
     relax_max_outer_iterations: int = 3,
+    keep_existing_results: bool = True,
     rank_by: str = "auto",
     pair_mode: str = "unpaired_paired",
     pairing_strategy: str = "greedy",
@@ -1114,11 +1209,6 @@ def run_ig(
     local_pdb_path: Optional[Path] = None,
     use_cluster_profile: bool = True,
     feature_dict_callback: Callable[[Any], Any] = None,
-    initial_guess=None,
-    pae_interaction_cut=26,
-    interface_rmsd_cut=20,
-    template_chain_1=False,
-    template_chain_2_plus=True,
     **kwargs
 ):
     # check what device is available
@@ -1174,6 +1264,9 @@ def run_ig(
     if max_msa is not None:
         max_seq, max_extra_seq = [int(x) for x in max_msa.split(":")]
 
+    if kwargs.pop("use_amber", False) and num_relax == 0:
+        num_relax = num_models * num_seeds
+
     if len(kwargs) > 0:
         print(f"WARNING: the following options are not being used: {kwargs}")
 
@@ -1190,20 +1283,6 @@ def run_ig(
     write_header = not os.path.exists(scorefilename)
 
     finished_structs = af2_util.determine_finished_structs(checkpoint_filename)
-
-    #DRH
-    queries = af2_util.get_queries_from_silent(initial_guess)
-    # Sorting the list
-    # The key for sorting is a tuple with two elements:
-    # 1. The combined length of 'seq1' and 'seq2' (len(x[1][0]) + len(x[1][1])),
-    #    which ensures that the primary sorting is done by the total length of the sequences.
-    # 2. The 'seq2' string (x[1][1]),
-    #    which ensures that within each length group, items are sorted alphabetically by 'seq2'.
-    queries.sort(key=lambda x: (len(x[1][0]) + len(x[1][1]), x[1][1]))
-    #queries.sort(key=lambda t: (len("".join(t[1])), t[0]))
-    sfd_in = pyrosetta.rosetta.core.io.silent.SilentFileData(pyrosetta.rosetta.core.io.silent.SilentFileOptions())
-    sfd_in.read_file(initial_guess)
-    #DRH
 
     # get max length
     max_len = 0
@@ -1232,7 +1311,7 @@ def run_ig(
     if msa_mode == "single_sequence":
         num_seqs = 1
         if is_complex and "multimer" not in model_type: num_seqs += max_num
-        if use_templates or initial_guess != None: num_seqs += 4
+        if use_templates: num_seqs += 4
         max_seq = min(num_seqs, max_seq)
         max_extra_seq = max(min(num_seqs - max_seq, max_extra_seq), 1)
 
@@ -1241,6 +1320,7 @@ def run_ig(
 
     use_env = "env" in msa_mode
     use_msa = "mmseqs2" in msa_mode
+    use_amber = num_models > 0 and num_relax > 0
 
     if pdb_hit_file is not None:
         if local_pdb_path is None:
@@ -1298,77 +1378,15 @@ def run_ig(
             logger.exception(f"Could not get MSA/templates for {jobname}: {e}")
             continue
 
+
         #DRH
-        pose = af2_util.pose_from_silent(sfd_in, raw_jobname)
-        all_atom_positions, all_atom_masks = af2_util.af2_get_atom_positions(pose)
-        if all_atom_positions is None:
-            print(f"Skipping {raw_jobname} due to duplicate residue numbers.")
-            continue  # Skip to the next PDB file
-        this_initial_guess = af2_util.parse_initial_guess(all_atom_positions)
-        #DRH
-
-        
-        #DRH
-        split_chains = pose.split_by_chain()
-        if "multimer" in model_type:
-            template_dict_list = []
-            for i, split_chain in enumerate(split_chains):
-                if i == 0:
-                    if template_chain_1:
-                        chain_residue_mask = [True for i in range(split_chain.size())]
-                    else:
-                        chain_residue_mask = [False for i in range(split_chain.size())]
-                else:
-                    if template_chain_2_plus:
-                        chain_residue_mask = [True for i in range(split_chain.size())]
-                    else:
-                        chain_residue_mask = [False for i in range(split_chain.size())]
-                
-                chain_all_atom_positions, chain_all_atom_masks = af2_util.af2_get_atom_positions(split_chain)
-
-                template_dict = af2_util.generate_template_features(
-                                                                    split_chain.sequence(),
-                                                                    chain_all_atom_positions,
-                                                                    chain_all_atom_masks,
-                                                                    chain_residue_mask
-                                                                   )
-                template_dict_list.append(template_dict)
-
-            template_features = template_dict_list
-
-        else:
-            all_residue_mask = []
-            for i, split_chain in enumerate(split_chains):
-                if i == 0:
-                    if template_chain_1:
-                        all_residue_mask += [True for i in range(split_chain.size())]
-                    else:
-                        all_residue_mask += [False for i in range(split_chain.size())]
-                else:
-                    if template_chain_2_plus:
-                        all_residue_mask += [True for i in range(split_chain.size())]
-                    else:
-                        all_residue_mask += [False for i in range(split_chain.size())]
-            
-            template_dict = af2_util.generate_template_features(
-                                                                    pose.sequence(),
-                                                                    all_atom_positions,
-                                                                    all_atom_masks,
-                                                                    all_residue_mask
-                                                                )
-
         ######################
 
         bcov_features_dict = {}
-        bcov_features_dict['len_is_binderlen'] = jnp.zeros(split_chains[1].size(), bool)
-        bcov_features_dict['input_ca'] = this_initial_guess[:,1,:]
-
-        bcov_features_dict['pae_interaction_cut'] = pae_interaction_cut
-        bcov_features_dict['interface_rmsd_cut'] = interface_rmsd_cut
+        bcov_features_dict['len_is_binderlen'] = len(queries[1][0])
 
         ######################
         #DRH
-
 
         #######################
         # generate features
@@ -1376,7 +1394,7 @@ def run_ig(
         try:
             (feature_dict, domain_names) \
             = generate_input_feature(query_seqs_unique, query_seqs_cardinality, unpaired_msa, paired_msa,
-                                     template_features, is_complex, model_type, max_seq=max_seq, pair_mode=pair_mode, msa_mode=msa_mode)
+                                     template_features, is_complex, model_type, max_seq=max_seq)
 
             # to allow display of MSA info during colab/chimera run (thanks tomgoddard)
             if feature_dict_callback is not None:
@@ -1385,21 +1403,6 @@ def run_ig(
         except Exception as e:
             logger.exception(f"Could not generate input features {jobname}: {e}")
             continue
-
-        #DRH
-        #correct for chainbreaks
-        breaks = af2_util.check_residue_distances(all_atom_positions, all_atom_masks, 3.0)
-        feature_dict['residue_index'] = af2_util.insert_truncations(feature_dict['residue_index'], breaks)
-        
-        #correct template if not multimer
-        if "multimer" in model_type:
-            pass
-        else:
-            keys_to_remove = [key for key in feature_dict if "template" in key]
-            for key in keys_to_remove:
-                del feature_dict[key]
-            feature_dict.update(template_dict)
-        #DRH
 
         result_files = []
 
@@ -1430,7 +1433,7 @@ def run_ig(
                         else:
                             num_seqs = int(len(feature_dict["msa"]))
 
-                        if use_templates or initial_guess != None: num_seqs += 4
+                        if use_templates: num_seqs += 4
 
                         # adjust max settings
                         max_seq = min(num_seqs, max_seq)
@@ -1439,7 +1442,7 @@ def run_ig(
 
                     model_runner_and_params = load_models_and_params(
                         num_models=num_models,
-                        use_templates=True, #DRH use_templates,
+                        use_templates=use_templates,
                         num_recycles=num_recycles,
                         num_ensemble=num_ensemble,
                         model_order=model_order,
@@ -1463,11 +1466,12 @@ def run_ig(
                     result_dir=result_dir,
                     feature_dict=feature_dict,
                     is_complex=is_complex,
-                    use_templates=True, #DRH use_templates,
+                    use_templates=use_templates,
                     sequences_lengths=query_sequence_len_array,
                     pad_len=pad_len,
                     model_type=model_type,
                     model_runner_and_params=model_runner_and_params,
+                    num_relax=num_relax,
                     relax_max_iterations=relax_max_iterations,
                     relax_tolerance=relax_tolerance,
                     relax_stiffness=relax_stiffness,
@@ -1482,7 +1486,7 @@ def run_ig(
                     save_single_representations=save_single_representations,
                     save_pair_representations=save_pair_representations,
                     save_recycles=save_recycles,
-                    initial_guess=this_initial_guess,
+                    initial_guess=None,
                     bcov_features_dict=bcov_features_dict,
                 )
 

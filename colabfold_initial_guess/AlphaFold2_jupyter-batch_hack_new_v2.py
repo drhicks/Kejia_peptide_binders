@@ -10,13 +10,11 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 
 from colabfold.download import download_alphafold_params, default_data_dir
 from colabfold.utils import setup_logging
-from colabfold.batch import get_queries, run, set_model_type
+from colabfold.batch_hack import run, set_model_type
 
 from colabfold.colabfold import plot_protein
 from pathlib import Path
 import matplotlib.pyplot as plt
-
-#TODO: add template code at some point
 
 def read_fasta(fasta_path):
     if not os.path.isfile(fasta_path):

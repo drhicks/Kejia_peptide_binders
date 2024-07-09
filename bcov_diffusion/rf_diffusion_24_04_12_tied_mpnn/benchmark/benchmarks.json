@@ -1,0 +1,23 @@
+{
+    "rsv5-1": "inference.input_pdb=rsv5_5tpn.pdb contigmap.contigs=[\\'11,A163-181,30\\']",
+    "rsv5-2": "inference.input_pdb=rsv5_5tpn.pdb contigmap.contigs=[\\'0-40,A163-181,25-50\\'] contigmap.length=55-100",
+    "rsv0-1": "inference.input_pdb=rsv0_4jhw.pdb contigmap.contigs=[\\'19,F63-69,34,F196-211\\']",
+    "rsv0-2": "inference.input_pdb=rsv0_4jhw.pdb contigmap.contigs=[\\'0-40,F63-69,10-50,F196-211,0-40\\'] contigmap.length=55-100",
+    "lan-1": "inference.input_pdb=lan_6mi5.pdb contigmap.contigs=[\\'30,X59-72,20,X83-94,30\\']",
+    "lan-2": "inference.input_pdb=lan_6mi5.pdb contigmap.contigs=[\\'10-100,X59-72,10-100,X83-94,10-100\\'] contigmap.length=80-250",
+    "lip-1":  "inference.input_pdb=lip_6tp8.pdb  contigmap.contigs=[\\'39,A105-106,25,A187-187,16,A224-224,12\\']",
+    "lip-2":  "inference.input_pdb=lip_6tp8.pdb  contigmap.contigs=[\\'0-40,A105-106,10-40,A187-187,10-40,A224-224,0-40\\'] contigmap.length=80-200",
+    "lip-2-native":  "inference.input_pdb=lip_6tp8.pdb  contigmap.contigs=[\\'20,A105-106,80,A187-187,36,A224-224,20\\']",
+    "lip-3":  "inference.input_pdb=lip_6tp8.pdb  contigmap.contigs=[\\'0-40,A39-40,10-40,A105-106,10-40,A187-187,10-40,A224-224,0-40\\'] contigmap.length=80-200",
+    "ra-2":   "inference.input_pdb=ra_5an7.pdb   contigmap.contigs=[\\'0-40,A1051-1051,10-40,A1083-1083,10-40,A1110-1110,10-40,A1180-1180,0-40\\'] contigmap.length=80-200",
+    "unconditional": "inference.input_pdb=ra_5an7.pdb contigmap.contigs=[\\'160-200\\'] contigmap.length=160-200",
+    "unconditional_58": "inference.input_pdb=norn_58res.pdb contigmap.contigs=[\\'58\\']",
+    "2kl8_scaffolding": "inference.input_pdb=2KL8.pdb contigmap.contigs=[\\'A1-20,59\\']",
+    "overfit_1-1":"inference.input_pdb=rzpdvzlaaqdm.i.pdb contigmap.contigs=[\\'7,A8-16,54\\']",
+	"theo_0": "inference.input_pdb=theozyme/theo_0.pdb contigmap.contigs=[\\'15,A16-17,9,A27-28,19,A48-48,91\\']",
+	"theo_1": "inference.input_pdb=theozyme/theo_1.pdb contigmap.contigs=[\\'6,A7-7,186,A194-195,46,A242-243,8\\']",
+    "theo_2": "inference.input_pdb=theozyme/theo_2.pdb contigmap.contigs=[\\'173,A174-174,33,A208-208,67,A276-276,24\\']",
+    "theo_3": "inference.input_pdb=theozyme/theo_3.pdb contigmap.contigs=[\\'106,A107-108,15,A124-125,39,A165-166,1\\']",
+    "theo_4": "inference.input_pdb=theozyme/theo_4.pdb contigmap.contigs=[\\'29,A30-31,41,A73-74,15,A90-90,13\\']"
+}
+

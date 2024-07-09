@@ -1,0 +1,212 @@
+#!/usr/bin/env python
+
+# This is a script that automates the creation and submission of a batch of jobs in a Brian-style file structure
+# This is super similar to createarrayjobs but just does python jobs instead
+# Written by Nate Bennett (nrbennet@uw.edu)
+
+import sys, subprocess, os
+from argparse import ArgumentParser
+import distutils.spawn
+import glob
+sys.path.append(os.path.dirname(distutils.spawn.find_executable("silent_tools.py")))
+import silent_tools
+import re
+from silent_tools import eprint
+
+def my_rstrip(string, strip):
+    if (string.endswith(strip)):
+        return string[:-len(strip)]
+    return string
+
+def cmd(command, wait=True):
+    the_command = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    if (not wait):
+        return
+    the_stuff = the_command.communicate()
+    return str( the_stuff[0]) + str(the_stuff[1] )
+
+# This does ceiling integer division and is stolen from stackoverflow, thanks stackoverflow!!
+def ceildiv(a, b):
+    return -(-a // b)
+
+# 
+# Read in Arguments
+# 
+
+if (len(sys.argv) == 1):
+    eprint("")
+    eprint('This script prepares your jobs to run as array jobs. It will create a Brian-style file structure for commands and runs.')
+    eprint("Arguments:")
+    eprint(" -prefix            : The name that you want to prefix the _commands and _runs directories")
+    eprint(" -script            : The python script that you wish to run")
+    eprint(" -silent            : The sequence file that contains sequences that you want to submit")
+    eprint(" -args              : A string of addition arguments that you wish to be used in the python script command")
+    eprint(" -apptainer         : A path to the apptainer you would like to run this script with (default: /software/containers/mpnn_binder_design.sif)")
+    eprint(" -structs_per_job   : The number of structures that you wish to package into one job")
+    eprint(" -cpus              : Optional, the number of cpus per job that you wish to use (default, 2)")
+    eprint(" -mem               : Optional, the amount of memory that you wish to use per job in GB (default, 16)")
+    eprint(" -p                 : Optional, the SLURM queue that you wish to submit your job to (default, cpu-bf)")
+    eprint(" -t                 : Optional, the SLURM timelimit to use for your job (default, 12:00:00)")
+    eprint(" -gres              : Optional, arguments that you would like to submit to SLURM's --gres field (default, '')")
+    eprint(" -jobs_per_group    : Optional, the number of jobs per submission to SLURM (default, 1)")
+    eprint(" -scratch           : Optional, whether to write the output of the runs to a mirrored directory on scratch (default, False)")
+    eprint(" -dscratch          : Optional, whether to write the output of the runs to a mirrored directory on dscratch (default, False)")
+    sys.exit(1)
+
+parser = ArgumentParser()
+parser.add_argument("-prefix", type=str, default="")
+parser.add_argument("-script", type=str, default="")
+parser.add_argument("-silent", type=str, default="")
+parser.add_argument("-args", type=str, default="")
+parser.add_argument("-apptainer", type=str, default="/software/containers/mpnn_binder_design.sif")
+parser.add_argument("-structs_per_job", type=int, default="0")
+parser.add_argument("-cpus", type=int, default=2)
+parser.add_argument("-mem", type=int, default=16)
+parser.add_argument("-p", type=str, default="cpu-bf")
+parser.add_argument("-t", type=str, default="12:00:00")
+parser.add_argument("-gres", type=str, default="")
+parser.add_argument("-jobs_per_group", type=int, default=1)
+parser.add_argument("-scratch", action='store_true')
+parser.add_argument("-dscratch", action='store_true')
+
+args = parser.parse_args(sys.argv[1:])
+
+prefix = args.prefix
+script_filename = args.script
+silent = args.silent
+args_string = args.args
+structs_per_job = args.structs_per_job
+cpus = args.cpus
+mem = args.mem
+queue = args.p
+timelimit = args.t
+gres = args.gres
+group_size = args.jobs_per_group
+scratch = args.scratch
+dscratch = args.dscratch
+
+if ( script_filename == '' ):
+    sys.exit("This script needs a python script to run")
+script_filename = os.path.abspath( script_filename )
+
+if (silent == ''):
+    sys.exit("This script needs a silent a file")
+silent = os.path.abspath( silent )
+
+if (prefix == ''):
+	sys.exit("This script needs a prefix name to the _commands and _runs directories")
+
+if ( structs_per_job == 0 ):
+	sys.exit("This script needs a value for structs_per_job")
+
+if not queue in ['cpu', 'cpu-bf', 'gpu', 'gpu-bf']:
+	sys.exit("-p (the SLURM queue) must be in {cpu, cpu-bf, gpu, gpu-bf}")
+
+# Input Checking for Timelimit
+valid_time_format = re.compile(r'^[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$')
+if not valid_time_format.fullmatch(timelimit):
+    # Strict time limit format matching
+    sys.exit(f"-t (the SLURM time limit) must be of the format HH:MM:SS. You used {timelimit}. Exiting.")
+
+if ( not gres == '' ):
+    gres = "--gres=%s "%gres
+
+scratchit = False
+if ( scratch ):
+    if ( os.getcwd().startswith( '/net/scratch' ) or os.getcwd().startswith( '/mnt/net/scratch' ) ):
+        print("\nThe -scratch flag was supplied but I am already in /net/scratch, ignoring the flag")
+    else:
+        scratchit = True
+        scratchdir = "/net/scratch"
+
+total_path = os.getcwd()
+
+if( scratchit ):
+    trunc_path = ''
+    if ( total_path.startswith( '/mnt/home' ) ):
+        trunc_path = total_path[9:]
+    elif ( total_path.startswith( '/home' ) ):
+        trunc_path = total_path[5:]
+    else:
+        sys.exit( 'Something is seriously wrong with the current working directory: %s' %total_path )
+
+    runs_path = scratchdir + os.path.join( trunc_path, "%s_runs"%prefix)
+    commands_path = scratchdir + trunc_path + "/%s_commands"%prefix
+
+    # Just for testing
+    print( 'You have chosen to write your output to scratch' )
+    print( 'I am planning on writing your jobs to %s'%runs_path )
+
+    cmd( "mkdir -p %s" %runs_path )
+    cmd( "ln -s %s" %runs_path )
+
+    cmd( "mkdir -p %s" %commands_path )
+    cmd( "ln -s %s" %commands_path )
+
+else:
+    cmd( "mkdir %s_runs" %prefix )
+    cmd( "mkdir %s_commands" %prefix )
+
+    runs_path = os.path.join(total_path, "%s_runs"%prefix)
+    commands_path = os.path.join(total_path, "%s_commands"%prefix)
+
+os.chdir( commands_path )
+cmd( "mkdir splits" )
+os.chdir( 'splits' )
+
+# Let's just use sequence outputs
+cmd( f'/home/nrbennet/software/silent_tools/silentsplitnoshuf {silent} {structs_per_job}' )
+
+commands = []
+for x in glob.glob("*.silent"):
+    full_x = os.path.join(commands_path,'splits', x)
+    dirname = my_rstrip( x, ".silent" )
+    commands.append( "cd {runs_path}; mkdir {dirname}; cd {dirname}; {args.apptainer} {script_filename} -silent {full_x} {args_string} > log.log 2>&1".format(**locals()) )
+
+os.chdir( commands_path )
+with open("commands.list", "w") as f:
+    f.write("\n".join(commands))
+    f.write("\n")
+
+num_commands_min_1 = ceildiv( len(commands), group_size ) - 1
+test_command = commands[0][ : -len( '> log.log 2>&1' ) ]
+
+os.chdir( total_path )
+
+assert( os.path.exists("/home/nrbennet/protocols/temppython/local_bcov_scripts/split_commands.py") ), \
+"/home/nrbennet/protocols/temppython/local_bcov_scripts/split_commands.py path does not exist, I probably changed it because I'm dumb"
+
+retval = cmd( "python2 /home/nrbennet/protocols/temppython/local_bcov_scripts/split_commands.py %s_commands/commands.list %s_commands %i %i %i %s"%(prefix, prefix, group_size, mem, cpus, prefix) )
+
+# print( retval )
+
+command_string = "sbatch -p %s -t %s %s-a 0-%i %s_commands/%s_array.submit"%(queue, timelimit, gres, num_commands_min_1, prefix, prefix)
+
+with open("run_submit.sh", 'w') as f:
+        f.write( '#!/bin/bash' )
+        f.write( '\n')
+        f.write( command_string )
+        f.write( '\n')
+cmd('chmod +x run_submit.sh')
+with open("test_command.sh", 'w' ) as f:
+        f.write( '#!/bin/bash' )
+        f.write( '\n')
+        f.write( test_command )
+        f.write( '\n')
+cmd('chmod +x test_command.sh')
+
+
+print( "" )
+print("/"*100)
+print( "Please please please run this command to test that your jobs will run correctly:" )
+print( "" )
+print( "./test_command.sh" )
+print( "" )
+print("/"*100)
+print( "" )
+print( "When you are ready and sure that everything is working this is the command that will submit your jobs:")
+print( "" )
+print( "./run_submit.sh" )
+print( "" )
+
+

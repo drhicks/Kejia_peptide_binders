@@ -1,0 +1,14 @@
+{
+    "rsv5-1": "--pdb rsv5_5tpn.pdb --contigs 11,A163-181,30",
+    "rsv5-2": "--pdb rsv5_5tpn.pdb --contigs 0-40,A163-181,25-50 --len 55-100",
+    "rsv0-1": "--pdb rsv0_4jhw.pdb --contigs 19,F63-69,34,F196-211",
+    "rsv0-2": "--pdb rsv0_4jhw.pdb --contigs 0-40,F63-69,10-50,F196-211,0-40 --len 55-100",
+    "lan-1":  "--pdb lan_6mi5.pdb --contigs 30,X59-72,20,X83-94,30",
+    "lan-2":  "--pdb lan_6mi5.pdb --contigs 10-100,X59-72,10-100,X83-94,10-100 --len 80-200",
+    "lip-1":  "--pdb lip_6tp8.pdb --contigs 39,A105-106,25,A187-187,16,A224-224,12",
+    "lip-2":  "--pdb lip_6tp8.pdb --contigs 0-40,A105-106,10-40,A187-187,10-40,A224-224,0-40 --len 80-200",
+    "lip-3":  "--pdb lip_6tp8.pdb --contigs 0-40,A39-40,10-40,A105-106,10-40,A187-187,10-40,A224-224,0-40 --len 80-200",
+    "ra-2":   "--pdb ra_5an7.pdb --contigs 0-40,A1051-1051,10-40,A1083-1083,10-40,A1110-1110,10-40,A1180-1180,0-40 --len 80-200",
+    "unconditional":   "--pdb ra_5an7.pdb --contigs 160-200",
+    "2kl8_scaffodling": "--pdb 2KL8.pdb --contigs A1-20,59"
+}

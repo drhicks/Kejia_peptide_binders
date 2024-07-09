@@ -114,4 +114,5 @@ A computational pipeline to target arbitrary unstructured sequence fragments (8-
 2. On the final designs before ordering, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion.
 3. On the initial hits after experimental screeining and characterization, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion.
 - In general the pipeline works without the use of diffusion, however, intellegent use of diffusion can increase in silico success rates for difficult targets and potentially improve the affinity and specificty of characterized binders.
+- There are many knobs that can be tuned and variations of the pipeline that can be run depending on the ease or difficulty of individual targets.
 

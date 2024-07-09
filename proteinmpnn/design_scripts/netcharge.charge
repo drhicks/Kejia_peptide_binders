@@ -1,5 +1,0 @@
-DESIRED_CHARGE -6 #Desired net charge atleast -6.
-PENALTIES_CHARGE_RANGE -7 0 #Penalties are listed in the observed net charge range of -2 to +2.
-PENALTIES 0 0 1 2 3 4 5 10 #
-BEFORE_FUNCTION CONSTANT #Return 5 for observed net charges of 0+.
-AFTER_FUNCTION CONSTANT #Return 0 for observed net charges of -6 or less.

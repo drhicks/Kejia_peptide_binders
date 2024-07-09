@@ -1,5 +1,7 @@
 # Kejia_peptide_binders
 
+# A computation pipeline to target arbitrary unstructured sequence fragments (8-30 amino acids) of intrinsically disordered proteins and peptides, with de novo designed proteins.
+
 # you will need a python env with pyrosetta
 # update paths in path_to/threading/make_jobs.py to use your python env
 # make sure path_to/threading/make_jobs.py has the correct path path_to/threading/thread_peptide_sequence_v2_and_pert.py

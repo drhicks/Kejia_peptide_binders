@@ -5,6 +5,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (8-
 ## Prerequisites
 
 - A Python environment with PyRosetta.
+- Make sure silent_tools is in your PATH
 - Download DL weights for AlphaFold, ProteinMPNN, and RF_Diffusion.
 - Correct paths in MPNN scripts for your local installs.
 - Update paths in `path_to/threading/make_jobs.py` to use your Python environment.
@@ -44,7 +45,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (8-
 
 6. **After jobs finish, collect all PDB outputs into a silent file**:
     ```sh
-    silent_tools/silentfrompdbs path_to_pdbs_*pdb > threading.silent
+    silentfrompdbs path_to_pdbs/*pdb > threading.silent
     ```
 
 ### 2. MPNN
@@ -70,30 +71,30 @@ A computational pipeline to target arbitrary unstructured sequence fragments (8-
 
 1. **Back in your original working directory**:
     ```sh
-    mkdir 3_af2
-    cd 3_af2
+    mkdir 3_af2_ig
+    cd 3_af2_ig
     ```
 
 2. **Make array jobs**:
     ```sh
-    path_to/job_creation/interfaceaf2create -prefix af2_ig -script path_to/colabfold_initial_guess/AlphaFold2_initial_guess_multimer.py -silent ../2_mpnn/mpnn_out.silent -gres "gpu:1" -apptainer /software/containers/users/drhicks1/colabfold_ig/colab_fold_ig.sif -structs_per_job 300 -p gpu-bf -t 06:00:00
+    path_to/job_creation/interfaceaf2create -prefix af2 -script path_to/colabfold_initial_guess/AlphaFold2_initial_guess_multimer.py -silent ../2_mpnn/mpnn_out.silent -gres "gpu:1" -apptainer path_to/colab_fold_ig.sif -structs_per_job 300 -p gpu-bf -t 06:00:00
     ./run_submit.sh
     ```
 
 3. **Concatenate all the silent files together**:
     ```sh
-    cat af2_ig_runs/*/*silent > af2_ig_out.silent
+    cat af2_runs/*/*silent > af2_out.silent
     ```
 
 4. **Create a scorefile**:
     ```sh
-    silent_tools/silentscorefile af2_ig_out.silent
+    silent_tools/silentscorefile af2_out.silent
     ```
 
 5. **Filter with sequence clustering and picking the top AlphaFold output/s per cluster after averaging 5 models**:
     ```sh
-    python path_to/af2_filtering/average_af2_model_scores.py af2_ig_out.sc > af2_ig_out_averaged.sc
-    python path_to/af2_filtering/dynamic_filtering_by_group.py af2_ig_out_averaged.sc af2_ig_out.silent
+    python path_to/af2_filtering/average_af2_model_scores.py af2_out.sc > af2_out_averaged.sc
+    python path_to/af2_filtering/dynamic_filtering_by_group.py af2_out_averaged.sc af2_out.silent
     ```
 
 ### Additional Steps
@@ -102,11 +103,15 @@ A computational pipeline to target arbitrary unstructured sequence fragments (8-
 - **Repeat AlphaFold IG and filtering**.
 - **Sequence-only ColabFold**.
 - **Final filtering and visual inspection to order**.
+- **Incorporate motif diffusion or partial diffusion as needed**
 
 ## Notes
 
 - You may choose to run MPNN with Rosetta relax, but this is slow and questionably useful. If you do, add the flag `--relax`.
 - If you run relax or minimization methods that can perturb the rigid body and/or binder/target backbones, you could run a second MPNN on the output of the first to potentially design a better sequence. However, the current preference is to go straight to AlphaFold filtering/refinement.
+- Diffusion can be run at various steps such as:
+1. After 1 or 2 rounds of mpnn/af2 , in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion
+2. On the final designs before ordering, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion
+3. On the initial hits after experimental screeining and characterization, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion
 
-This structured format should make your README more readable and user-friendly. Let me know if you need any further adjustments!
 

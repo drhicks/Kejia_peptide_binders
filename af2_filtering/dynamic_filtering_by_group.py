@@ -85,35 +85,61 @@ def output_fasta(df, output_file):
 def load_data(filepath):
     return pd.read_csv(filepath, delim_whitespace=True)
 
-def dynamic_filtering(group, thresholds, max_thresholds, N_examples=1, max_stagnant_cycles=1000, max_cycles=10000):
-    filtered = group[
-        (group['iptm'] >= thresholds['iptm']) &
-        (group['interface_rmsd'] <= thresholds['interface_rmsd']) &
-        (group['plddt_binder'] >= thresholds['plddt_binder'])
-    ]
+def dynamic_filtering(group, thresholds, max_thresholds, N_examples=1, max_stagnant_cycles=1000, max_cycles=10000, not_initial_guess=False):
+    if not_initial_guess:
+        filtered = group[
+            (group['iptm'] >= thresholds['iptm']) &
+            (group['plddt_binder'] >= thresholds['plddt_binder'])
+        ]
+        
+    else:
+        filtered = group[
+            (group['iptm'] >= thresholds['iptm']) &
+            (group['interface_rmsd'] <= thresholds['interface_rmsd']) &
+            (group['plddt_binder'] >= thresholds['plddt_binder'])
+        ]
+
     previous_len = len(filtered)
     stagnant_count = 0
     cycles = 0
     while len(filtered) != N_examples and stagnant_count < max_stagnant_cycles and cycles < max_cycles:
-        if len(filtered) > N_examples:
-            new_thresholds = {
-                'iptm': max(thresholds['iptm'] * 1.0003, max_thresholds['iptm']),
-                'interface_rmsd': min(thresholds['interface_rmsd'] * 0.9998, max_thresholds['interface_rmsd']),
-                'plddt_binder': max(thresholds['plddt_binder'] * 1.0002, max_thresholds['plddt_binder'])
-            }
+        if not_initial_guess:
+            if len(filtered) > N_examples:
+                new_thresholds = {
+                    'iptm': max(thresholds['iptm'] * 1.0003, max_thresholds['iptm']),
+                    'plddt_binder': max(thresholds['plddt_binder'] * 1.0002, max_thresholds['plddt_binder'])
+                }
+            else:
+                new_thresholds = {
+                    'iptm': max(thresholds['iptm'] * 0.9998, max_thresholds['iptm']),
+                    'plddt_binder': max(thresholds['plddt_binder'] * 0.9997, max_thresholds['plddt_binder'])
+                }
+            
+            filtered = group[
+                (group['iptm'] >= new_thresholds['iptm']) &
+                (group['plddt_binder'] >= new_thresholds['plddt_binder'])
+            ]
+
         else:
-            new_thresholds = {
-                'iptm': max(thresholds['iptm'] * 0.9998, max_thresholds['iptm']),
-                'interface_rmsd': min(thresholds['interface_rmsd'] * 1.0003, max_thresholds['interface_rmsd']),
-                'plddt_binder': max(thresholds['plddt_binder'] * 0.9997, max_thresholds['plddt_binder'])
-            }
-        
-        filtered = group[
-            (group['iptm'] >= new_thresholds['iptm']) &
-            (group['interface_rmsd'] <= new_thresholds['interface_rmsd']) &
-            (group['plddt_binder'] >= new_thresholds['plddt_binder'])
-        ]
-        
+            if len(filtered) > N_examples:
+                new_thresholds = {
+                    'iptm': max(thresholds['iptm'] * 1.0003, max_thresholds['iptm']),
+                    'interface_rmsd': min(thresholds['interface_rmsd'] * 0.9998, max_thresholds['interface_rmsd']),
+                    'plddt_binder': max(thresholds['plddt_binder'] * 1.0002, max_thresholds['plddt_binder'])
+                }
+            else:
+                new_thresholds = {
+                    'iptm': max(thresholds['iptm'] * 0.9998, max_thresholds['iptm']),
+                    'interface_rmsd': min(thresholds['interface_rmsd'] * 1.0003, max_thresholds['interface_rmsd']),
+                    'plddt_binder': max(thresholds['plddt_binder'] * 0.9997, max_thresholds['plddt_binder'])
+                }
+            
+            filtered = group[
+                (group['iptm'] >= new_thresholds['iptm']) &
+                (group['interface_rmsd'] <= new_thresholds['interface_rmsd']) &
+                (group['plddt_binder'] >= new_thresholds['plddt_binder'])
+            ]
+
         if len(filtered) == previous_len:
             stagnant_count += 1
             thresholds = new_thresholds
@@ -128,11 +154,18 @@ def dynamic_filtering(group, thresholds, max_thresholds, N_examples=1, max_stagn
         filtered = filtered.sample(n=N_examples, random_state=42)
 
     if len(filtered) == 0:
-        filtered = group[
-            (group['iptm'] >= max_thresholds['iptm']) &
-            (group['interface_rmsd'] <= max_thresholds['interface_rmsd']) &
-            (group['plddt_binder'] >= max_thresholds['plddt_binder'])
-        ]
+        if not_initial_guess:
+            filtered = group[
+                (group['iptm'] >= max_thresholds['iptm']) &
+                (group['plddt_binder'] >= max_thresholds['plddt_binder'])
+            ]
+        
+        else:
+            filtered = group[
+                (group['iptm'] >= max_thresholds['iptm']) &
+                (group['interface_rmsd'] <= max_thresholds['interface_rmsd']) &
+                (group['plddt_binder'] >= max_thresholds['plddt_binder'])
+            ]
 
         if len(filtered) > N_examples:
             filtered = filtered.sample(n=N_examples, random_state=42)
@@ -272,26 +305,45 @@ def main():
     parser.add_argument("--n_examples", type=int, default=1, help="Desired number of output per cluster")
     parser.add_argument("--abs_cut", type=float, default=0, help="minimum acceptable Abs_0.1 value so you can use A280")
     parser.add_argument("--isoelectric_point_cut", type=float, default=5.5, help="maximum acceptable isoelectric_point")
+    parser.add_argument('--not_initial_guess', action='store_true', help='Set this flag for af2 predictions not using initial guess')
 
     args = parser.parse_args()
 
-    initial_thresholds = {
-        'iptm': args.initial_iptm,
-        'interface_rmsd': args.initial_interface_rmsd,
-        'plddt_binder': args.initial_plddt_binder
-    }
+    if args.not_initial_guess:
+        initial_thresholds = {
+            'iptm': args.initial_iptm,
+            'plddt_binder': args.initial_plddt_binder
+        }
 
-    max_thresholds = {
-        'iptm': args.max_iptm,
-        'interface_rmsd': args.max_interface_rmsd,
-        'plddt_binder': args.max_plddt_binder
-    }
+        max_thresholds = {
+            'iptm': args.max_iptm,
+            'plddt_binder': args.max_plddt_binder
+        }
+
+    else:
+         initial_thresholds = {
+            'iptm': args.initial_iptm,
+            'interface_rmsd': args.initial_interface_rmsd,
+            'plddt_binder': args.initial_plddt_binder
+        }
+
+        max_thresholds = {
+            'iptm': args.max_iptm,
+            'interface_rmsd': args.max_interface_rmsd,
+            'plddt_binder': args.max_plddt_binder
+        }
 
     df = load_data(args.scorefile)
     print(f"df len: {len(df)}")
-    df = df[(df["iptm"] >= max_thresholds["iptm"]) & 
+    
+    if args.not_initial_guess:
+        df = df[(df["iptm"] >= max_thresholds["iptm"]) & 
+                (df["plddt_binder"] >= max_thresholds["plddt_binder"])]
+    else:
+        df = df[(df["iptm"] >= max_thresholds["iptm"]) & 
             (df["interface_rmsd"] <= max_thresholds["interface_rmsd"]) & 
             (df["plddt_binder"] >= max_thresholds["plddt_binder"])]
+
     print(f"df len: {len(df)}", flush=True)
 
     tags = df["description"].values
@@ -320,7 +372,7 @@ def main():
     final_results = {}
 
     for key, group in grouped:
-        filtered_group, thresholds = dynamic_filtering(group, initial_thresholds, max_thresholds, N_examples=args.n_examples)
+        filtered_group, thresholds = dynamic_filtering(group, initial_thresholds, max_thresholds, N_examples=args.n_examples, not_initial_guess=args.not_initial_guess)
         final_results[key] = filtered_group
         print(f"Cluster ID: {key}, Final Length: {len(filtered_group)}, Final Thresholds: {thresholds}")
 

@@ -1383,7 +1383,7 @@ def run(
         ######################
 
         bcov_features_dict = {}
-        bcov_features_dict['len_is_binderlen'] = len(queries[1][0])
+        bcov_features_dict['len_is_binderlen'] = jnp.zeros(len(query_sequence[0]), bool)
 
         ######################
         #DRH
@@ -1491,10 +1491,12 @@ def run(
                 )
 
                 for af2_pdb, score_dict, model_tag in zip(af2_pdbs, score_dicts, model_tags):
+                    if "alphafold2_multimer_v3" in model_tag:
+                        model_tag = model_tag.replace("alphafold2_multimer_v3", "af2mv3")
+                    elif "alphafold2_ptm" in model_tag:
+                        model_tag = model_tag.replace("alphafold2_ptm", "af2ptm")
                     af2_pose = pyrosetta.Pose()
                     pyrosetta.rosetta.core.import_pose.pose_from_pdbstring(af2_pose, af2_pdb)
-                    af2_pose.pdb_info( pose.pdb_info())
-                    assert(af2_pose.num_chains() == pose.num_chains())
 
                     # af2_pose.dump_pdb(f"{raw_jobname}_{model_tag}.pdb")
 

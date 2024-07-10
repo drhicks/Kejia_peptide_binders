@@ -1487,6 +1487,10 @@ def run_ig(
                 )
 
                 for af2_pdb, score_dict, model_tag in zip(af2_pdbs, score_dicts, model_tags):
+                    if "alphafold2_multimer_v3" in model_tag:
+                        model_tag = model_tag.replace("alphafold2_multimer_v3", "af2mv3")
+                    elif "alphafold2_ptm" in model_tag:
+                        model_tag = model_tag.replace("alphafold2_ptm", "af2ptm")
                     af2_pose = pyrosetta.Pose()
                     pyrosetta.rosetta.core.import_pose.pose_from_pdbstring(af2_pose, af2_pdb)
                     af2_pose.pdb_info( pose.pdb_info())

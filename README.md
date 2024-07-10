@@ -97,11 +97,16 @@ A computational pipeline to target arbitrary unstructured sequence fragments (8-
     python path_to/af2_filtering/dynamic_filtering_by_group.py af2_out_averaged.sc af2_out.silent
     ```
 
+### 4. MPNN/AF2 cycle
+1. **Repeat MPNN step on filtered silent file**.
+
+2. **Repeat AlphaFold IG and filtering**.
+
+### 5. Sequence Only AlphaFold Filtering and Refinement
+1. **Sequence-only ColabFold**.
+
 ### Additional Steps
 
-- **Repeat MPNN step on filtered silent file**.
-- **Repeat AlphaFold IG and filtering**.
-- **Sequence-only ColabFold**.
 - **Final filtering and visual inspection to order**.
 - **Incorporate motif diffusion or partial diffusion as needed**
 

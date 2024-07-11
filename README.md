@@ -115,8 +115,8 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 - You may choose to run MPNN with Rosetta relax, but this is slow and questionably useful. If you do, add the flag `--relax`.
 - If you run relax or minimization methods that can perturb the rigid body and/or binder/target backbones, you could run a second MPNN on the output of the first to potentially design a better sequence. However, the current preference is to go straight to AlphaFold filtering/refinement.
 - Diffusion can be run at various steps such as:
-1. After 1 or 2 rounds of mpnn/af2 , if not enough designs (< 96) passing the final filtering criteria, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion.
-2. On the final designs before ordering, if enough designs (>= 96) passing the final filtering criteria, but one may want to order on chips and/or include arbitrary refined designs in initial test, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion.
+1. After 1 or 2 rounds of mpnn/af2 , if not enough designs (< 70) passing the final filtering criteria, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion.
+2. On the final designs before ordering, if enough designs (>= 70) passing the final filtering criteria, but one may want to order on chips and/or include arbitrary refined designs in initial test, in which case you can repeat either the one cycle or two cycles of mpnn/af2 on the output from diffusion. Depending on available computation resources and chip quota.
 3. On the initial hits after experimental screeining and characterization, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion.
 - In general the pipeline works most times without the use of diffusion, however, intellegent use of diffusion can increase in silico success rates for difficult targets and potentially improve the affinity and specificty of characterized binders.
 - There are many knobs that can be tuned and variations of the pipeline that can be run depending on the ease or difficulty of individual targets.

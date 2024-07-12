@@ -18,23 +18,41 @@ except ImportError:
         print("Failed to import silent_tools even after modifying sys.path")
         sys.exit(1)
 
-def run_mmseqs2_easy_cluster(fasta_file, output_prefix, min_id=0.5, max_id=0.99, goal_min=40, goal_max=70, max_attempts=100):
+def run_mmseqs2_easy_cluster(fasta_file, output_prefix, min_id=0.5, max_id=0.99, desired_goal=100, threshold=10, max_attempts=20):
     rep_file = f"{output_prefix}_rep_seq.fasta"
     clusters = 0
     attempts = 0
-    cluster_value = (min_id+max_id)/2
+    best_cluster_value = min_id
+    best_diff = float('inf')
+    best_clusters = clusters
 
-    while (clusters < goal_min or clusters > goal_max) and attempts < max_attempts and min_id < cluster_value < max_id:
+    while attempts < max_attempts and min_id <= max_id:
+        cluster_value = (min_id + max_id) / 2
         subprocess.run(['/software/mmseqs2/bin/mmseqs', 'easy-cluster', fasta_file, output_prefix, 'tmp', '--min-seq-id', str(cluster_value), '-s', '5.7'])
         
         result = subprocess.run(['wc', '-l', rep_file], stdout=subprocess.PIPE, text=True)
         line_count = int(result.stdout.split()[0])
         clusters = line_count / 2
 
-        if clusters < goal_min:
-            cluster_value += 0.01
+        diff = abs(clusters - desired_goal)
+        if diff < best_diff:
+            best_diff = diff
+            best_cluster_value = cluster_value
+            best_clusters = clusters
+
+        if diff <= threshold:
+            break  # Close enough to the desired goal
+        elif clusters < desired_goal:
+            min_id = cluster_value + 0.0001  # Small adjustment to avoid infinite loop
         else:
-            cluster_value -= 0.003
+            max_id = cluster_value - 0.0001  # Small adjustment to avoid infinite loop
+
+        attempts += 1
+
+    # In case the loop exits without reaching the threshold
+    if best_diff > threshold:
+        print(f"Could not reach desired goal. Best result was {best_clusters} clusters with cluster_value {best_cluster_value}")
+
     return f"{output_prefix}_cluster.tsv"
 
 def map_pdb_to_cluster(mmseqs2_outfile, df):
@@ -85,91 +103,146 @@ def output_fasta(df, output_file):
 def load_data(filepath):
     return pd.read_csv(filepath, delim_whitespace=True)
 
-def dynamic_filtering(group, thresholds, max_thresholds, N_examples=1, max_stagnant_cycles=1000, max_cycles=10000, not_initial_guess=False):
-    if not_initial_guess:
-        filtered = group[
-            (group['iptm'] >= thresholds['iptm']) &
-            (group['plddt_binder'] >= thresholds['plddt_binder'])
-        ]
+# def dynamic_filtering(group, thresholds, max_thresholds, N_examples=1, max_stagnant_cycles=1000, max_cycles=10000, not_initial_guess=False):
+#     if not_initial_guess:
+#         filtered = group[
+#             (group['iptm'] >= thresholds['iptm']) &
+#             (group['plddt_binder'] >= thresholds['plddt_binder'])
+#         ]
         
-    else:
-        filtered = group[
-            (group['iptm'] >= thresholds['iptm']) &
-            (group['interface_rmsd'] <= thresholds['interface_rmsd']) &
-            (group['plddt_binder'] >= thresholds['plddt_binder'])
-        ]
+#     else:
+#         filtered = group[
+#             (group['iptm'] >= thresholds['iptm']) &
+#             (group['interface_rmsd'] <= thresholds['interface_rmsd']) &
+#             (group['plddt_binder'] >= thresholds['plddt_binder'])
+#         ]
 
+#     previous_len = len(filtered)
+#     stagnant_count = 0
+#     cycles = 0
+#     while len(filtered) != N_examples and stagnant_count < max_stagnant_cycles and cycles < max_cycles:
+#         if not_initial_guess:
+#             if len(filtered) > N_examples:
+#                 new_thresholds = {
+#                     'iptm': max(thresholds['iptm'] * 1.0003, max_thresholds['iptm']),
+#                     'plddt_binder': max(thresholds['plddt_binder'] * 1.0002, max_thresholds['plddt_binder'])
+#                 }
+#             else:
+#                 new_thresholds = {
+#                     'iptm': max(thresholds['iptm'] * 0.9998, max_thresholds['iptm']),
+#                     'plddt_binder': max(thresholds['plddt_binder'] * 0.9997, max_thresholds['plddt_binder'])
+#                 }
+            
+#             filtered = group[
+#                 (group['iptm'] >= new_thresholds['iptm']) &
+#                 (group['plddt_binder'] >= new_thresholds['plddt_binder'])
+#             ]
+
+#         else:
+#             if len(filtered) > N_examples:
+#                 new_thresholds = {
+#                     'iptm': max(thresholds['iptm'] * 1.0003, max_thresholds['iptm']),
+#                     'interface_rmsd': min(thresholds['interface_rmsd'] * 0.9998, max_thresholds['interface_rmsd']),
+#                     'plddt_binder': max(thresholds['plddt_binder'] * 1.0002, max_thresholds['plddt_binder'])
+#                 }
+#             else:
+#                 new_thresholds = {
+#                     'iptm': max(thresholds['iptm'] * 0.9998, max_thresholds['iptm']),
+#                     'interface_rmsd': min(thresholds['interface_rmsd'] * 1.0003, max_thresholds['interface_rmsd']),
+#                     'plddt_binder': max(thresholds['plddt_binder'] * 0.9997, max_thresholds['plddt_binder'])
+#                 }
+            
+#             filtered = group[
+#                 (group['iptm'] >= new_thresholds['iptm']) &
+#                 (group['interface_rmsd'] <= new_thresholds['interface_rmsd']) &
+#                 (group['plddt_binder'] >= new_thresholds['plddt_binder'])
+#             ]
+
+#         if len(filtered) == previous_len:
+#             stagnant_count += 1
+#             thresholds = new_thresholds
+#         else:
+#             previous_len = len(filtered)
+#             thresholds = new_thresholds
+#             stagnant_count = 0
+
+#         cycles += 1
+
+#     if len(filtered) > N_examples:
+#         filtered = filtered.sample(n=N_examples, random_state=42)
+
+#     if len(filtered) == 0:
+#         if not_initial_guess:
+#             filtered = group[
+#                 (group['iptm'] >= max_thresholds['iptm']) &
+#                 (group['plddt_binder'] >= max_thresholds['plddt_binder'])
+#             ]
+        
+#         else:
+#             filtered = group[
+#                 (group['iptm'] >= max_thresholds['iptm']) &
+#                 (group['interface_rmsd'] <= max_thresholds['interface_rmsd']) &
+#                 (group['plddt_binder'] >= max_thresholds['plddt_binder'])
+#             ]
+
+#         if len(filtered) > N_examples:
+#             filtered = filtered.sample(n=N_examples, random_state=42)
+        
+#         thresholds = max_thresholds
+
+#     return filtered, thresholds
+
+import pandas as pd
+
+def dynamic_filtering(group, thresholds, max_thresholds, N_examples=1, max_stagnant_cycles=1000, max_cycles=10000, not_initial_guess=False):
+    def apply_filters(group, thresholds, not_initial_guess):
+        if not_initial_guess:
+            return group[
+                (group['iptm'] >= thresholds['iptm']) &
+                (group['plddt_binder'] >= thresholds['plddt_binder'])
+            ]
+        else:
+            return group[
+                (group['iptm'] >= thresholds['iptm']) &
+                (group['interface_rmsd'] <= thresholds['interface_rmsd']) &
+                (group['plddt_binder'] >= thresholds['plddt_binder'])
+            ]
+
+    filtered = apply_filters(group, thresholds, not_initial_guess)
     previous_len = len(filtered)
     stagnant_count = 0
     cycles = 0
-    while len(filtered) != N_examples and stagnant_count < max_stagnant_cycles and cycles < max_cycles:
-        if not_initial_guess:
-            if len(filtered) > N_examples:
-                new_thresholds = {
-                    'iptm': max(thresholds['iptm'] * 1.0003, max_thresholds['iptm']),
-                    'plddt_binder': max(thresholds['plddt_binder'] * 1.0002, max_thresholds['plddt_binder'])
-                }
-            else:
-                new_thresholds = {
-                    'iptm': max(thresholds['iptm'] * 0.9998, max_thresholds['iptm']),
-                    'plddt_binder': max(thresholds['plddt_binder'] * 0.9997, max_thresholds['plddt_binder'])
-                }
-            
-            filtered = group[
-                (group['iptm'] >= new_thresholds['iptm']) &
-                (group['plddt_binder'] >= new_thresholds['plddt_binder'])
-            ]
 
-        else:
-            if len(filtered) > N_examples:
-                new_thresholds = {
-                    'iptm': max(thresholds['iptm'] * 1.0003, max_thresholds['iptm']),
-                    'interface_rmsd': min(thresholds['interface_rmsd'] * 0.9998, max_thresholds['interface_rmsd']),
-                    'plddt_binder': max(thresholds['plddt_binder'] * 1.0002, max_thresholds['plddt_binder'])
-                }
-            else:
-                new_thresholds = {
-                    'iptm': max(thresholds['iptm'] * 0.9998, max_thresholds['iptm']),
-                    'interface_rmsd': min(thresholds['interface_rmsd'] * 1.0003, max_thresholds['interface_rmsd']),
-                    'plddt_binder': max(thresholds['plddt_binder'] * 0.9997, max_thresholds['plddt_binder'])
-                }
-            
-            filtered = group[
-                (group['iptm'] >= new_thresholds['iptm']) &
-                (group['interface_rmsd'] <= new_thresholds['interface_rmsd']) &
-                (group['plddt_binder'] >= new_thresholds['plddt_binder'])
-            ]
+    while len(filtered) != N_examples and stagnant_count < max_stagnant_cycles and cycles < max_cycles:
+        adjust_factor_up = 1.0003
+        adjust_factor_down = 0.9997
+
+        new_thresholds = {
+            'iptm': min(thresholds['iptm'] * (adjust_factor_up if len(filtered) < N_examples else adjust_factor_down), max_thresholds['iptm']),
+            'plddt_binder': min(thresholds['plddt_binder'] * (adjust_factor_up if len(filtered) < N_examples else adjust_factor_down), max_thresholds['plddt_binder'])
+        }
+
+        if not not_initial_guess:
+            new_thresholds['interface_rmsd'] = max(thresholds['interface_rmsd'] * (adjust_factor_down if len(filtered) > N_examples else adjust_factor_up), max_thresholds['interface_rmsd'])
+
+        filtered = apply_filters(group, new_thresholds, not_initial_guess)
 
         if len(filtered) == previous_len:
             stagnant_count += 1
-            thresholds = new_thresholds
         else:
             previous_len = len(filtered)
-            thresholds = new_thresholds
             stagnant_count = 0
 
+        thresholds = new_thresholds
         cycles += 1
 
     if len(filtered) > N_examples:
         filtered = filtered.sample(n=N_examples, random_state=42)
 
     if len(filtered) == 0:
-        if not_initial_guess:
-            filtered = group[
-                (group['iptm'] >= max_thresholds['iptm']) &
-                (group['plddt_binder'] >= max_thresholds['plddt_binder'])
-            ]
-        
-        else:
-            filtered = group[
-                (group['iptm'] >= max_thresholds['iptm']) &
-                (group['interface_rmsd'] <= max_thresholds['interface_rmsd']) &
-                (group['plddt_binder'] >= max_thresholds['plddt_binder'])
-            ]
-
+        filtered = apply_filters(group, max_thresholds, not_initial_guess)
         if len(filtered) > N_examples:
             filtered = filtered.sample(n=N_examples, random_state=42)
-        
         thresholds = max_thresholds
 
     return filtered, thresholds

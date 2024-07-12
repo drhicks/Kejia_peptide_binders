@@ -127,6 +127,7 @@ pip install msgpack
 pip install optax
 pip install orbax-checkpoint
 pip install tensorboard-data-server
+pip install tensorflow-cpu
 pip install tensorflow-io-gcs-filesystem
 pip install tensorstore
 pip install biopython==1.81

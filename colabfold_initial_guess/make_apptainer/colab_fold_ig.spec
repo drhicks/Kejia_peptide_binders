@@ -3,23 +3,20 @@ From: ubuntu
 IncludeCmd: yes
 
 %setup
-#copy in our modified alphafold and colabfold
-mkdir $APPTAINER_ROOTFS/apptainer_python_packages
-mkdir $APPTAINER_ROOTFS/apptainer_python_packages/colabfold_bak
-mkdir $APPTAINER_ROOTFS/apptainer_python_packages/alphafold_bak
-cp -r /home/drhicks1/ColabFold_dev/colabfold/* $APPTAINER_ROOTFS/apptainer_python_packages/colabfold_bak/
-cp -r /home/drhicks1/ColabFold_dev/alphafold/* $APPTAINER_ROOTFS/apptainer_python_packages/alphafold_bak/
-cp /home/drhicks1/ColabFold_dev/AlphaFold2_initial_guess.py $APPTAINER_ROOTFS/apptainer_python_packages/
-cp -r /home/drhicks1/silent_tools/ $APPTAINER_ROOTFS/apptainer_python_packages/
+# Copy in our modified alphafold and colabfold
+mkdir -p $APPTAINER_ROOTFS/apptainer_python_packages/colabfold_bak
+mkdir -p $APPTAINER_ROOTFS/apptainer_python_packages/alphafold_bak
+cp -r ../colabfold/* $APPTAINER_ROOTFS/apptainer_python_packages/colabfold_bak/
+cp -r ../alphafold/* $APPTAINER_ROOTFS/apptainer_python_packages/alphafold_bak/
+cp -r ../../silent_tools/ $APPTAINER_ROOTFS/apptainer_python_packages/
 
 rsync -a --no-o --no-g /usr/local/cuda-11.7/lib/ $APPTAINER_ROOTFS/usr/lib/x86_64-linux-gnu/
 rsync -a --no-o --no-g /usr/local/cuda-11.7/lib64/ $APPTAINER_ROOTFS/usr/lib/x86_64-linux-gnu/
 rsync -a --no-o --no-g /usr/local/cuda-11.7/bin/ $APPTAINER_ROOTFS/usr/bin/
-
-#only Brians hacked/old pyrosetta seems compatible
-cp -r /home/drhicks1/dev_SE3nv_22_12_11/ $APPTAINER_ROOTFS/apptainer_python_packages/
-
 cp /usr/local/cuda/bin/ptxas $APPTAINER_ROOTFS/apptainer_python_packages/
+
+#only this old pyrosetta seems compatible
+cp -r /home/drhicks1/dev_SE3nv_22_12_11/ $APPTAINER_ROOTFS/apptainer_python_packages/
 
 %files
 /etc/localtime
@@ -39,55 +36,111 @@ ln -s /net /mnt/net
 
 # apt
 apt-get update
-# apt-get install -y git
-# apt-get clean
 
 bash /opt/miniconda.sh -b -u -p /usr
-rm /opt/miniconda.sh                 
+rm /opt/miniconda.sh
 
+conda install -y -n base python=3.9 pip git
+conda install -y -n base libarchive conda-libmamba-solver libmamba libmambapy -c main --force-reinstall
+#conda install -y --solver=classic conda-forge::conda-libmamba-solver conda-forge::libmamba conda-forge::libmambapy conda-forge::libarchive
 
-conda install python=3.9 pip git
+#    pyrosetta=2023.49+release.9891f2c=py39_0 \
+# Install packages with conda where possible
+conda install -y -n base -c conda-forge -c bioconda -c https://west.rosettacommons.org/pyrosetta/conda/release/ \
+    kalign2=2.04 \
+    hhsuite=3.3.0 \
+    mmseqs2=14.7 \
+    openmm=7.7.0 \
+    pdbfixer \
+    appdirs \
+    absl-py \
+    chex \
+    contextlib2 \
+    contourpy \
+    cryptography \
+    cycler \
+    dm-haiku \
+    dm-tree \
+    etils \
+    flatbuffers \
+    flax \
+    fonttools \
+    fsspec \
+    gast \
+    google-pasta \
+    grpcio \
+    h5py \
+    immutabledict \
+    importlib-metadata \
+    importlib_resources \
+    keras \
+    kiwisolver \
+    libclang \
+    markdown \
+    markdown-it-py \
+    markupsafe \
+    matplotlib \
+    mdurl \
+    ml-collections \
+    namex \
+    nest-asyncio \
+    numpy=2.0.0 \
+    opt-einsum \
+    optree \
+    packaging \
+    pandas \
+    pillow \
+    pluggy \
+    protobuf \
+    py3Dmol \
+    python-dateutil \
+    pytz \
+    pyyaml \
+    requests \
+    rich \
+    ruamel.yaml \
+    scipy \
+    six \
+    tabulate \
+    tensorboard \
+    termcolor \
+    toolz \
+    tqdm \
+    typing_extensions \
+    urllib3 \
+    werkzeug \
+    wrapt \
+    zipp \
+    libstdcxx-ng=14.1.0 \
+    libgcc-ng=14.1.0
 
-#install all required packages from colabfold
-pip install 'colabfold[alphafold-minus-jax] @ git+https://github.com/sokrypton/ColabFold'
-
-#This was needed, but pip complained about package discrepancies
-pip install --upgrade dm-haiku
-
-#install some other packages we need
-conda install -y -c conda-forge -c bioconda kalign2=2.04 hhsuite=3.3.0 mmseqs2=14.7 openmm=7.7.0 pdbfixer
-
-pip uninstall -y jaxlib
-pip uninstall -y jax
-#install correct jaxlib
+# Fallback to pip for remaining packages
+echo "Installing remaining packages with pip"
 pip install https://storage.googleapis.com/jax-releases/cuda11/jaxlib-0.4.20+cuda11.cudnn86-cp39-cp39-manylinux2014_x86_64.whl
-#install/update biopython
-pip install biopython==1.81
-#install correct jax
-#pip install --upgrade jax
 pip install jax[cuda11_pip]==0.4.20
+pip install ml-dtypes
+pip install msgpack
+pip install optax
+pip install orbax-checkpoint
+pip install tensorboard-data-server
+pip install tensorflow-io-gcs-filesystem
+pip install tensorstore
+pip install biopython==1.81
 
-#only Brians hacked/old pyrosetta seems compatible
+#only this old pyrosetta seems compatible
 pip install $APPTAINER_ROOTFS/apptainer_python_packages/dev_SE3nv_22_12_11/setup/
-rm -r $APPTAINER_ROOTFS/apptainer_python_packages/dev_SE3nv_22_12_11/
-
-ls 
-ls $APPTAINER_ROOTFS
-ls $APPTAINER_ROOTFS/apptainer_python_packages/
 
 site_packages=$(python -c 'import site; print(site.getsitepackages()[0])')
-#sed -i 's/fastmath=1)(func)/fastmath=True)(func.py_func)/g' $site_packages/homog/util.py
-
-ls $site_packages
-
-rm -r $site_packages/alphafold
-rm -r $site_packages/colabfold
 
 mv $APPTAINER_ROOTFS/apptainer_python_packages/alphafold_bak $site_packages/alphafold
 mv $APPTAINER_ROOTFS/apptainer_python_packages/colabfold_bak $site_packages/colabfold
 mv $APPTAINER_ROOTFS/apptainer_python_packages/silent_tools $site_packages/
 
 mv $APPTAINER_ROOTFS/apptainer_python_packages/ptxas $APPTAINER_ROOTFS/usr/bin/ptxas
+
+ls $site_packages
+
+conda list 
 
 # Clean up
 apt-get clean
@@ -99,3 +152,4 @@ exec python "$@"
 %help
 ColabFold_initial_guess env.
 Author: Derrick Hicks
+

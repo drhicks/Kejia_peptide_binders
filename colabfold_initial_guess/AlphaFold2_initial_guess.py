@@ -1,21 +1,16 @@
 import argparse
 import sys
 import os
-import glob
 import re
 from pathlib import Path
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-from colabfold.download import download_alphafold_params, default_data_dir
 from colabfold.utils import setup_logging
 from colabfold.batch_ig import run_ig, set_model_type
 
-from colabfold.colabfold import plot_protein
-from colabfold.plot import plot_msa_v2
 from pathlib import Path
-import matplotlib.pyplot as plt
 
 
 """

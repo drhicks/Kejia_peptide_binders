@@ -1,3 +1,7 @@
 TODO
 __pycache__/
 TEST
+make_apptainer/test/
+make_apptainer/requirements.list
+make_apptainer/log
+make_apptainer/pyro.list

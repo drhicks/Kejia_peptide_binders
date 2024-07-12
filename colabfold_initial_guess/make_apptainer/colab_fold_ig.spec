@@ -63,7 +63,6 @@ conda install -y -n base -c conda-forge -c bioconda -c https://west.rosettacommo
     dm-tree \
     etils \
     flatbuffers \
-    flax \
     fonttools \
     fsspec \
     gast \
@@ -116,8 +115,13 @@ conda install -y -n base -c conda-forge -c bioconda -c https://west.rosettacommo
 
 # Fallback to pip for remaining packages
 echo "Installing remaining packages with pip"
+
+pip uninstall -y jaxlib
+pip uninstall -y jax
+
 pip install https://storage.googleapis.com/jax-releases/cuda11/jaxlib-0.4.20+cuda11.cudnn86-cp39-cp39-manylinux2014_x86_64.whl
 pip install jax[cuda11_pip]==0.4.20
+pip install flax==0.8.5
 pip install ml-dtypes
 pip install msgpack
 pip install optax

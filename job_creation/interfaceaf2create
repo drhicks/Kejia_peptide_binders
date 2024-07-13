@@ -155,8 +155,7 @@ cmd( "mkdir splits" )
 os.chdir( 'splits' )
 
 # Let's just use sequence outputs
-cmd( f'/home/drhicks1/silent_tools/silentsplittargetseq {silent} {structs_per_job}' )
-#cmd( f'/home/nrbennet/software/silent_tools/silentsplitbylength {silent} {structs_per_job}' )
+cmd( f'/home/drhicks1/scripts/Kejia_peptide_binders/silent_tools/silentsplittargetseq {silent} {structs_per_job}' )
 
 commands = []
 for x in glob.glob("len*.silent"):
@@ -174,10 +173,10 @@ test_command = commands[0][ : -len( '> log.log 2>&1' ) ]
 
 os.chdir( total_path )
 
-assert( os.path.exists("/home/nrbennet/protocols/temppython/local_bcov_scripts/split_commands.py") ), \
-"/home/nrbennet/protocols/temppython/local_bcov_scripts/split_commands.py path does not exist, I probably changed it because I'm dumb"
+assert( os.path.exists("/home/drhicks1/scripts/Kejia_peptide_binders/job_creation/split_commands.py") ), \
+"/home/drhicks1/scripts/Kejia_peptide_binders/job_creation/split_commands.py path does not exist"
 
-retval = cmd( "python2 /home/nrbennet/protocols/temppython/local_bcov_scripts/split_commands.py %s_commands/commands.list %s_commands %i %i %i %s"%(prefix, prefix, group_size, mem, cpus, prefix) )
+retval = cmd( "python2 /home/drhicks1/scripts/Kejia_peptide_binders/job_creation/split_commands.py %s_commands/commands.list %s_commands %i %i %i %s"%(prefix, prefix, group_size, mem, cpus, prefix) )
 
 # print( retval )
 

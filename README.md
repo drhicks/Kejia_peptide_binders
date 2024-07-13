@@ -9,7 +9,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 - Download DL weights for AlphaFold, ProteinMPNN, and RF_Diffusion.
 - Correct paths in MPNN scripts for your local installs.
 - Update paths in `path_to/threading/make_jobs.py` to use your Python environment.
-- Ensure `path_to/threading/make_jobs.py` has the correct path for `path_to/threading/thread_peptide_sequence_v2_and_pert.py`
+- Ensure `path_to/threading/make_jobs.py` has the correct path for `path_to/threading/thread_peptide_sequence_new.py`
 
 ## Step-by-Step Guide
 

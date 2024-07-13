@@ -27,7 +27,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
     make your target fasta file
     make your template list file
     ```sh
-    python path_to/threading/make_jobs.py path_to/peptide.fasta path_to/scaffolds.list | sort -R > all_jobs
+    python path_to/threading/make_jobs.py path_to/peptide.fasta path_to/templates.list | sort -R > all_jobs
     ```
 
 3. **Split jobs into smaller sets**:

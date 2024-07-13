@@ -162,13 +162,16 @@ def process_peptides(args, pose, input_pose, template_name, bidentates, peptide_
         this_ref_bidentates = bidentates.copy()
 
         if len(peptides[pep]) < len(peptide_reslist):
-            pose_thread_list.extend(handle_shorter_peptides(peptides, pep, input_pose, pose, bidentates, this_ref_bidentates,
+            pose_thread_list_tmp, this_peptide_reslist = handle_shorter_peptides(peptides, pep, input_pose, pose, bidentates, this_ref_bidentates,
                                                             bb_farep, sf, sf_farep, this_peptide_reslist, template_name,
-                                                            args.min_seq_identity, args.min_blosum))
+                                                            args.min_seq_identity, args.min_blosum)
+            pose_thread_list.extend(pose_thread_list_tmp)
+
         else:
-            pose_thread_list.extend(handle_longer_peptides(peptides, pep, input_pose, pose, bidentates, this_ref_bidentates,
+            pose_thread_list_tmp, this_peptide_reslist = handle_longer_peptides(peptides, pep, input_pose, pose, bidentates, this_ref_bidentates,
                                                            bb_farep, sf, sf_farep, this_peptide_reslist, template_name,
-                                                           args.min_seq_identity, args.min_blosum))
+                                                           args.min_seq_identity, args.min_blosum)
+            pose_thread_list.extend(pose_thread_list_tmp)
 
         pose_packmin_list = []
         for pt_id, pt in enumerate(pose_thread_list):
@@ -242,7 +245,7 @@ def handle_shorter_peptides(peptides, pep, input_pose, pose, bidentates, this_re
                         this_ref_bidentates.pop(sc)
             pose_thread_list.append([pose_thread, [start_pos + 1, start_pos + len(peptides[pep])], [1, len(peptides[pep])],
                                      seq_id, blosum_score])
-    return pose_thread_list
+    return pose_thread_list, this_peptide_reslist
 
 def handle_longer_peptides(peptides, pep, input_pose, pose, bidentates, this_ref_bidentates, bb_farep, sf, sf_farep,
                            this_peptide_reslist, template_name, min_seq_identity, min_blosum):
@@ -262,7 +265,7 @@ def handle_longer_peptides(peptides, pep, input_pose, pose, bidentates, this_ref
                 mt.apply(pose_thread)
             pose_thread_list.append([pose_thread, [1, len(this_peptide_reslist)],
                                      [start_pos + 1, start_pos + len(this_peptide_reslist)], seq_id, blosum_score])
-    return pose_thread_list
+    return pose_thread_list, this_peptide_reslist
 
 def main(args):
     """Main function to execute the peptide threading and docking."""

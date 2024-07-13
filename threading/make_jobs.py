@@ -9,11 +9,11 @@ python_env = "/home/drhicks1/.conda/envs/pyro/bin/python"
 threading_script = "/home/drhicks1/for_/for_kejia/pchannel/thread/thread_peptide_sequence_v2_and_pert.py"
 
 peptide_fasta = sys.argv[1]
-scaffold_list = sys.argv[2]
+template_list = sys.argv[2]
 
-with open(scaffold_list, "r") as f:
-    scaffolds = f.readlines()
-    scaffolds = [x.strip() for x in scaffolds]
+with open(template_list, "r") as f:
+    templates = f.readlines()
+    templates = [x.strip() for x in templates]
 
 with open(peptide_fasta, "r") as f:
     lines = f.readlines()
@@ -24,6 +24,6 @@ for i, j in zip(lines[0:-1:2], lines[1::2]):
     i = i.replace(">", "")
     pairs.append([i,j])
 
-for scaffold in scaffolds:
+for template in scaffolds:
     for pair in pairs:
-        print(f"{python_env} {threading_script} --peptide_header {pair[0]} --peptide_seq {pair[1]} --scaffold {scaffold}")
+        print(f"{python_env} {threading_script} --peptide_header {pair[0]} --peptide_seq {pair[1]} --template {template}")

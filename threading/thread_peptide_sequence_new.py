@@ -308,15 +308,9 @@ def main(args):
                 continue
 
         bb_farep = sf_farep(pose)
-<<<<<<< HEAD
         print("DEBUG 4")
         data = process_peptides(args, pose, input_pose, template_name, bidentates, peptide_reslist, bb_farep, sf, sf_farep)
         print("DEBUG 5")
-=======
-
-        data = process_peptides(args, pose, input_pose, template_name, bidentates, peptide_reslist, bb_farep, sf, sf_farep)
-        
->>>>>>> ee355f69cc3293b14d8f4e78cb5f8d3791324859
         try:
             df = pd.DataFrame(data)
             df.to_csv(args.output_csv, index=False)

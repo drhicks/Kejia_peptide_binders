@@ -81,7 +81,7 @@ def find_bidentate_hbond(pose, hbond_list):
                    hb_i.acc_res(), pose.residue(hb_i.acc_res()).atom_name(hb_i.acc_atm()).strip())
         if not hb_i.don_hatm_is_backbone():
             hbonds_by_sc_res[hb_i.don_res()].append(hb_info)
-        if not hb_i.acc_hatm_is_backbone():
+        if not hb_i.acc_atm_is_backbone():
             hbonds_by_sc_res[hb_i.acc_res()].append(hb_info)
 
     bidentate_hbonds_by_sc_res = {res: hbonds_by_sc_res[res] for res in hbonds_by_sc_res if len(hbonds_by_sc_res[res]) > 1}

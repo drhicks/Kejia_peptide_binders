@@ -88,7 +88,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 
 2. **Make array jobs**:
     ```sh
-    path_to/job_creation/interfaceaf2create -prefix af2 -script path_to/colabfold_initial_guess/AlphaFold2_initial_guess_multimer.py -silent ../2_mpnn/mpnn_out.silent -gres "gpu:1" -apptainer path_to/colab_fold_ig.sif -structs_per_job 300 -p gpu-bf -t 06:00:00
+    path_to/job_creation/interfaceaf2create -prefix af2 -script path_to/colabfold_initial_guess/AlphaFold2_initial_guess_multimer.py -silent ../2_mpnn/mpnn_out.silent -gres "gpu:1" -apptainer /home/drhicks1/scripts/Kejia_peptide_binders/colabfold_initial_guess/make_apptainer/colab_fold_ig.sif -structs_per_job 300 -p gpu-bf -t 06:00:00
     ./run_submit.sh
     ```
 
@@ -113,12 +113,36 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 
 2. **Repeat AlphaFold IM and filtering**.
 
-### 5. Sequence Only AlphaFold Filtering and Refinement
-1. **Sequence-only ColabFold**.
+### 5. Sequence Only AlphaFold Filtering and Refinement (potentially optional)
+1. **Make fasta file**.
+    ```sh
+    silentsequence path_to/af2_out_filtered.silent | awk '{print ">"$3"\n"$1":"$2}' > colabfold_input.fasta
+    ```
+    
+2. **Run colabfold**.
+    ```sh
+    /home/drhicks1/scripts/Kejia_peptide_binders/colabfold_initial_guess/make_apptainer/colab_fold_ig.sif AlphaFold2_jupyter-batch_hack_new_v2.py --fasta colabfold_input.fasta --num_recycles 10
+    ```
+
+3. **Concatenate all the silent files together**:
+    ```sh
+    cat af2_runs/*/*silent > af2_out.silent
+    ```
+
+4. **Create a scorefile**:
+    ```sh
+    silent_tools/silentscorefile af2_out.silent
+    ```
+
+5. **Filter with sequence clustering and picking the top AlphaFold output/s per cluster after averaging 5 models**:
+    ```sh
+    python path_to/af2_filtering/average_af2_model_scores.py af2_out.sc > af2_out_averaged.sc
+    python path_to/af2_filtering/dynamic_filtering_by_group.py af2_out_averaged.sc af2_out.silent --not_initial_guess
+    ```
 
 ### Additional Steps
 
-- **Final filtering and visual inspection to order**.
+- **Other filtering steps as desired such as af2_filtering/rosetta_min_ddg.py and visual inspection to order**.
 - **Incorporate motif diffusion or partial diffusion as needed**
 
 ## Notes

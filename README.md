@@ -40,7 +40,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 
 5. **Submit array file jobs to SLURM**:
     ```sh
-    bash path_to/threading/submit_runs.sh path_to/threading/sbatch_array.sh
+    path_to/threading/submit_jobs.sh
     ```
 
 6. **After jobs finish, collect all PDB outputs into a silent file**:

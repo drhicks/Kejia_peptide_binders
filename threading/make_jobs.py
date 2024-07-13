@@ -24,6 +24,6 @@ for i, j in zip(lines[0:-1:2], lines[1::2]):
     i = i.replace(">", "")
     pairs.append([i,j])
 
-for template in scaffolds:
+for template in templates:
     for pair in pairs:
         print(f"{python_env} {threading_script} --peptide_header {pair[0]} --peptide_seq {pair[1]} --template {template}")

@@ -117,8 +117,6 @@ fr_cart_fast_xml = f'''
 </MOVERS>
 '''
 
-#dfpmin_armijo_nonmonotone, lbfgs_armijo_nonmonotone
-
 chainA = pyrosetta.rosetta.core.select.residue_selector.ChainSelector("A")
 chainB = pyrosetta.rosetta.core.select.residue_selector.ChainSelector("B")
 
@@ -307,7 +305,7 @@ def get_sap(pose):
     sap = pyrosetta.rosetta.core.pack.guidance_scoreterms.sap.SapScoreMetric()
     return sap.calculate(pose)
 
-def relax_and_ddg(pose):
+def pack_min_and_ddg(pose):
     correct_rotamer_bonus = 30
     max_dev = 2
     
@@ -358,7 +356,7 @@ if __name__ == "__main__":
     for raw_jobname in silent_index['tags']:
 
         pose = pose_from_silent(sfd_in, raw_jobname)
-        pose, filter_scores = relax_and_ddg(pose)
+        pose, filter_scores = pack_min_and_ddg(pose)
         add2silent(f"{raw_jobname}_min", pose, filter_scores, sfd_out)
         add2scorefile(f"{raw_jobname}_min", scorefilename, write_header=write_header, score_dict=filter_scores)
         write_header = False

@@ -20,6 +20,7 @@ pyrosetta.init(PYROSETTA_OPTIONS)
 
 # Add paths
 sys.path.insert(0, '/home/drhicks1/scripts/Kejia_peptide_binders/mpnn_git_repo/proteinMPNN/')
+
 import protein_mpnn_run_HACK as mpnn_util
 from drh_utils import (xml,
     get_sap,

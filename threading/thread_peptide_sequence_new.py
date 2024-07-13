@@ -148,26 +148,26 @@ def compute_seq_identity(seq1, seq2):
     ic = sum(1 for a, b in zip(seq1, seq2) if a == b)
     return ic / len(seq1)
 
-def process_peptides(args, pose, input_pose, scaffold_name, bidentates, peptide_reslist, bb_farep, sf, sf_farep):
+def process_peptides(args, pose, input_pose, template_name, bidentates, peptide_reslist, bb_farep, sf, sf_farep):
     """Process the peptides and generate data."""
     peptides = {args.peptide_header: args.peptide_seq}
-    data = {x: [] for x in ['pdb', 'scaffold', 'scaffold_bidentates', 'target_peptide', 'scaffold_peptide_start',
-                            'scaffold_peptide_end', 'target_peptide_start', 'target_peptide_end', 'fa_rep',
+    data = {x: [] for x in ['pdb', 'template', 'template_bidentates', 'target_peptide', 'template_peptide_start',
+                            'template_peptide_end', 'target_peptide_start', 'target_peptide_end', 'fa_rep',
                             'sequence_identity', 'blosum_score']}
 
     for pep in peptides:
-        logging.info(f'Threading {pep} onto {scaffold_name}')
+        logging.info(f'Threading {pep} onto {template_name}')
         pose_thread_list = []
         this_peptide_reslist = peptide_reslist.copy()
         this_ref_bidentates = bidentates.copy()
 
         if len(peptides[pep]) < len(peptide_reslist):
             pose_thread_list.extend(handle_shorter_peptides(peptides, pep, input_pose, pose, bidentates, this_ref_bidentates,
-                                                            bb_farep, sf, sf_farep, this_peptide_reslist, scaffold_name,
+                                                            bb_farep, sf, sf_farep, this_peptide_reslist, template_name,
                                                             args.min_seq_identity, args.min_blosum))
         else:
             pose_thread_list.extend(handle_longer_peptides(peptides, pep, input_pose, pose, bidentates, this_ref_bidentates,
-                                                           bb_farep, sf, sf_farep, this_peptide_reslist, scaffold_name,
+                                                           bb_farep, sf, sf_farep, this_peptide_reslist, template_name,
                                                            args.min_seq_identity, args.min_blosum))
 
         pose_packmin_list = []
@@ -192,13 +192,13 @@ def process_peptides(args, pose, input_pose, scaffold_name, bidentates, peptide_
                     pose_packmin_list.append(pt + [sf_farep(pt[0]) - bb_farep])
 
         for ipt, pt in enumerate(pose_packmin_list):
-            pt[0].dump_pdb(f'{scaffold_name}_{pep}_{pt[1][0]}_{pt[1][1]}_{pt[2][0]}_{pt[2][1]}_{ipt}.pdb')
-            data['pdb'].append(f'{scaffold_name}_{pt[1][0]}_{pt[1][1]}_{pt[2][0]}_{pt[2][1]}_{ipt}.pdb')
-            data['scaffold'].append(scaffold_name)
-            data['scaffold_bidentates'].append('_'.join([str(x) for x in sorted(list(this_ref_bidentates.keys()))]))
+            pt[0].dump_pdb(f'{template_name}_{pep}_{pt[1][0]}_{pt[1][1]}_{pt[2][0]}_{pt[2][1]}_{ipt}.pdb')
+            data['pdb'].append(f'{template_name}_{pt[1][0]}_{pt[1][1]}_{pt[2][0]}_{pt[2][1]}_{ipt}.pdb')
+            data['template'].append(template_name)
+            data['template_bidentates'].append('_'.join([str(x) for x in sorted(list(this_ref_bidentates.keys()))]))
             data['target_peptide'].append(pep)
-            data['scaffold_peptide_start'].append(pt[1][0])
-            data['scaffold_peptide_end'].append(pt[1][1])
+            data['template_peptide_start'].append(pt[1][0])
+            data['template_peptide_end'].append(pt[1][1])
             data['target_peptide_start'].append(pt[2][0])
             data['target_peptide_end'].append(pt[2][1])
             data['fa_rep'].append(pt[-1])
@@ -208,15 +208,15 @@ def process_peptides(args, pose, input_pose, scaffold_name, bidentates, peptide_
     return data
 
 def handle_shorter_peptides(peptides, pep, input_pose, pose, bidentates, this_ref_bidentates, bb_farep, sf, sf_farep,
-                            this_peptide_reslist, scaffold_name, min_seq_identity, min_blosum):
+                            this_peptide_reslist, template_name, min_seq_identity, min_blosum):
     """Handle threading for shorter peptides."""
     pose_thread_list = []
     for start_pos in range(len(this_peptide_reslist) - len(peptides[pep]) + 1):
-        scaffold_seq = input_pose.sequence(input_pose.split_by_chain(1).size() + start_pos + 1,
+        template_seq = input_pose.sequence(input_pose.split_by_chain(1).size() + start_pos + 1,
                                            input_pose.split_by_chain(1).size() + start_pos + len(peptides[pep]))
         thread_seq = peptides[pep]
-        seq_id = compute_seq_identity(scaffold_seq, thread_seq)
-        blosum_score = blosum62.compute_blosum62_score(scaffold_seq, thread_seq)
+        seq_id = compute_seq_identity(template_seq, thread_seq)
+        blosum_score = blosum62.compute_blosum62_score(template_seq, thread_seq)
         if seq_id >= min_seq_identity and blosum_score >= min_blosum:
             pose_thread = pose.clone()
             for resid in range(len(peptides[pep])):
@@ -245,15 +245,15 @@ def handle_shorter_peptides(peptides, pep, input_pose, pose, bidentates, this_re
     return pose_thread_list
 
 def handle_longer_peptides(peptides, pep, input_pose, pose, bidentates, this_ref_bidentates, bb_farep, sf, sf_farep,
-                           this_peptide_reslist, scaffold_name, min_seq_identity, min_blosum):
+                           this_peptide_reslist, template_name, min_seq_identity, min_blosum):
     """Handle threading for longer peptides."""
     pose_thread_list = []
     for start_pos in range(len(peptides[pep]) - len(this_peptide_reslist) + 1):
-        scaffold_seq = input_pose.sequence(input_pose.split_by_chain(1).size() + 1,
+        template_seq = input_pose.sequence(input_pose.split_by_chain(1).size() + 1,
                                            input_pose.split_by_chain(1).size() + len(this_peptide_reslist))
         thread_seq = peptides[pep][start_pos:start_pos + len(this_peptide_reslist)]
-        seq_id = compute_seq_identity(scaffold_seq, thread_seq)
-        blosum_score = blosum62.compute_blosum62_score(scaffold_seq, thread_seq)
+        seq_id = compute_seq_identity(template_seq, thread_seq)
+        blosum_score = blosum62.compute_blosum62_score(template_seq, thread_seq)
         if seq_id >= min_seq_identity and blosum_score >= min_blosum:
             pose_thread = pose.clone()
             for resid in range(len(this_peptide_reslist)):
@@ -277,13 +277,13 @@ def main(args):
             sf_farep.set_weight(st, 0)
         sf_farep.set_weight(pyrosetta.rosetta.core.scoring.ScoreType.fa_rep, 1)
 
-        scaffold_file = args.scaffold.strip()
-        scaffold_name = scaffold_file.split('/')[-1].replace('.pdb', '')
+        template_file = args.template.strip()
+        template_name = template_file.split('/')[-1].replace('.pdb', '')
 
         try:
-            input_pose = pyrosetta.pose_from_file(scaffold_file)
+            input_pose = pyrosetta.pose_from_file(template_file)
         except Exception as e:
-            logging.error(f"Failed to load scaffold file: {e}")
+            logging.error(f"Failed to load template file: {e}")
             sys.exit(1)
 
         binder_size = input_pose.split_by_chain(1).size()
@@ -308,9 +308,15 @@ def main(args):
                 continue
 
         bb_farep = sf_farep(pose)
+<<<<<<< HEAD
         print("DEBUG 4")
-        data = process_peptides(args, pose, input_pose, scaffold_name, bidentates, peptide_reslist, bb_farep, sf, sf_farep)
+        data = process_peptides(args, pose, input_pose, template_name, bidentates, peptide_reslist, bb_farep, sf, sf_farep)
         print("DEBUG 5")
+=======
+
+        data = process_peptides(args, pose, input_pose, template_name, bidentates, peptide_reslist, bb_farep, sf, sf_farep)
+        
+>>>>>>> ee355f69cc3293b14d8f4e78cb5f8d3791324859
         try:
             df = pd.DataFrame(data)
             df.to_csv(args.output_csv, index=False)
@@ -325,15 +331,15 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--scaffold', type=str, required=True, help='A single scaffold')
+    parser.add_argument('--template', type=str, required=True, help='A single template')
     parser.add_argument('--peptide_header', type=str, required=True, help='Peptide header')
     parser.add_argument('--peptide_seq', type=str, required=True, help='Peptide sequence')
     parser.add_argument('--interface_dist_cutoff', type=float, default=DEFAULT_INTERFACE_DIST_CUTOFF,
                         help=f'Distance cutoff for neighborhood selector for interface residues. Default={DEFAULT_INTERFACE_DIST_CUTOFF}')
     parser.add_argument('--min_seq_identity', type=float, default=DEFAULT_MIN_SEQ_IDENTITY,
-                        help=f'Min sequence identity required between threaded sequence and original peptide sequence in the scaffold. Default={DEFAULT_MIN_SEQ_IDENTITY}')
+                        help=f'Min sequence identity required between threaded sequence and original peptide sequence in the template. Default={DEFAULT_MIN_SEQ_IDENTITY}')
     parser.add_argument('--min_blosum', type=float, default=DEFAULT_MIN_BLOSUM,
-                        help=f'Min blosum score required between threaded sequence and original peptide sequence in the scaffold. Default={DEFAULT_MIN_BLOSUM}')
+                        help=f'Min blosum score required between threaded sequence and original peptide sequence in the template. Default={DEFAULT_MIN_BLOSUM}')
     parser.add_argument('--max_farep', type=float, default=DEFAULT_MAX_FAREP,
                         help=f'Max allowed value for fa_rep(protein+peptide_seq)-fa_rep(protein+peptide_backbone). Default={DEFAULT_MAX_FAREP}')
     parser.add_argument('--keep_bidentates', action='store_true',

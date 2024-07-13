@@ -6,7 +6,7 @@ import sys
 #assumes no blank lines
 
 python_env = "/home/drhicks1/.conda/envs/pyro/bin/python"
-threading_script = "/home/drhicks1/for_/for_kejia/pchannel/thread/thread_peptide_sequence_v2_and_pert.py"
+threading_script = "/home/drhicks1/scripts/Kejia_peptide_binders/threading/thread_peptide_sequence_new.py"
 
 peptide_fasta = sys.argv[1]
 template_list = sys.argv[2]

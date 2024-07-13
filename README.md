@@ -64,7 +64,16 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
     ./run_submit.sh
     ```
 
-3. **Concatenate all the silent files together**:
+    or (with apptainer)
+    ```sh
+    path_to/job_creation/mpnn_design_job_create -prefix mpnn -script path_to/mpnn_git_repo/design_scripts/killer_mpnn_interface_design.py -p cpu -t 12:00:00 -mem 5 -cpus 1 -apptainer path_to/your_apptainer -structs_per_job 100 -silent path_to/threading.silent -args "--num_seq_per_target 5 --max_out 5 --sampling_temp 0.1"
+    ./run_submit.sh
+    ```
+
+    In the paper, we have been routinely doing 2-rounds sequence design (i.e., MPNN-relax-MPNN-relax) for many targets in an ealier time. To do this, one can simply run the above script twice with the flag --relax on. Set --num_seq_per_target 1 in the first run and --num_seq_per_target 5 in the second.
+    
+
+4. **Concatenate all the silent files together**:
     ```sh
     cat mpnn_runs/*/*silent > mpnn_out.silent
     ```

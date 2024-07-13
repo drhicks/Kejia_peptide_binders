@@ -89,7 +89,6 @@ def find_bidentate_hbond(pose, hbond_list):
 
 def _config_my_task_factory_for_repack(added_residues):
     """Configure the task factory for repacking."""
-    print("DEBUG 1")
     repack_residues = pyrosetta.rosetta.core.select.residue_selector.ResidueIndexSelector()
     for res_num in added_residues:
         repack_residues.append_index(res_num)
@@ -100,7 +99,6 @@ def _config_my_task_factory_for_repack(added_residues):
     tf = pyrosetta.rosetta.core.pack.task.TaskFactory()
     tf.push_back(restrict_to_repack)
     tf.push_back(freeze_rest)
-    print("DEBUG 2")
     return tf
 
 def repack_pose(pose, sf, reslist):
@@ -297,7 +295,6 @@ def main(args):
         bidentates = find_bidentate_hbond(input_pose, hbond_set['sc-bb'])
 
         peptide_reslist = list(range(binder_size + 1, pose.size() + 1))
-        print("DEBUG 3")
         peptide_selector = pyrosetta.rosetta.core.select.residue_selector.ResidueIndexSelector()
         for res_num in peptide_reslist:
             peptide_selector.append_index(res_num)
@@ -311,9 +308,7 @@ def main(args):
                 continue
 
         bb_farep = sf_farep(pose)
-        print("DEBUG 4")
         data = process_peptides(args, pose, input_pose, template_name, bidentates, peptide_reslist, bb_farep, sf, sf_farep)
-        print("DEBUG 5")
         try:
             df = pd.DataFrame(data)
             df.to_csv(args.output_csv, index=False)

@@ -10,7 +10,6 @@ from pyrosetta.rosetta.std import ostringstream
 
 # Initialize PyRosetta
 PYROSETTA_OPTIONS = "-mute all -beta_nov16 -in:file:silent_struct_type binary" \
-    " -holes:dalphaball /home/drhicks1/scripts/Kejia_peptide_binders/mpnn_git_repo/design_scripts/DAlphaBall.gcc" \
     " -use_terminal_residues true -precompute_ig" \
     " -dunbrack_prob_buried 0.8 -dunbrack_prob_nonburied 0.8" \
     " -dunbrack_prob_buried_semi 0.8 -dunbrack_prob_nonburied_semi 0.8" \

@@ -32,7 +32,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 
 3. **Split jobs into smaller sets**:
     ```sh
-    split -l 10 all_jobs
+    split -l 3 all_jobs
     ```
 
 4. **Add all job sets to SLURM array list**:

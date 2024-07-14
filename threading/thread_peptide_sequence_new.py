@@ -295,8 +295,8 @@ def generate_random_string(length=12):
     return ''.join(random.choice(letters) for i in range(length))
 
 def add2scorefile(tag, scorefilename, write_header=False, score_dict=None):
-        with open(scorefilename, "a") as f:
-                add_to_score_file_open(tag, f, write_header, score_dict)
+    with open(scorefilename, "a") as f:
+            add_to_score_file_open(tag, f, write_header, score_dict)
 
 def get_final_dict(score_dict, string_dict) -> OrderedDict:
     '''
@@ -315,7 +315,7 @@ def get_final_dict(score_dict, string_dict) -> OrderedDict:
     for idx in argsort:
         key = all_keys[idx]
 
-        if ( idx < len(keys_score) ):
+        if (idx < len(keys_score)):
             final_dict[key] = "%8.3f"%(score_dict[key])
         else:
             final_dict[key] = string_dict[key]
@@ -323,28 +323,24 @@ def get_final_dict(score_dict, string_dict) -> OrderedDict:
     return final_dict
 
 def add_to_score_file_open(tag, f, write_header=False, score_dict=None, string_dict=None):
-        final_dict = get_final_dict( score_dict, string_dict )
-        if ( write_header ):
-                f.write("SCORE:  %s description\n"%(" ".join(final_dict.keys())))
-        scores_string = " ".join(final_dict.values())
-        f.write("SCORE:  %s    %s\n"%(scores_string, tag))
+    final_dict = get_final_dict(score_dict, string_dict)
+    if (write_header):
+            f.write("SCORE:  %s description\n"%(" ".join(final_dict.keys())))
+    scores_string = " ".join(final_dict.values())
+    f.write("SCORE:  %s    %s\n"%(scores_string, tag))
 
 def add2silent( tag, pose, score_dict, sfd_out ,silentfile_name):
-        # pose = pose_from_file( pdb )
+    struct = sfd_out.create_SilentStructOP()
+    struct.fill_struct(pose, tag)
 
-        # pose = insert_chainbreaks( pose, binderlen )
+    for scorename, value in score_dict.items():
+        if (isinstance(value, str)):
+            struct.add_string_value(scorename, value)
+        else:
+            struct.add_energy(scorename, value)
 
-        struct = sfd_out.create_SilentStructOP()
-        struct.fill_struct( pose, tag )
-
-        for scorename, value in score_dict.items():
-            if ( isinstance(value, str) ):
-                struct.add_string_value(scorename, value)
-            else:
-                struct.add_energy(scorename, value)
-
-        sfd_out.add_structure( struct )
-        sfd_out.write_silent_struct( struct, silentfile_name )
+    sfd_out.add_structure(struct)
+    sfd_out.write_silent_struct(struct, silentfile_name)
 
 def main(args):
     """Main function to execute the peptide threading and docking."""
@@ -354,7 +350,8 @@ def main(args):
         #create silent out, scorefile, and checkpoint if needed
         #use random name becasue we run multiple trajectories in a single dir...
         random_name = generate_random_string()
-        sfd_out = pyrosetta.rosetta.core.io.silent.SilentFileData(f"{random_name}.silent", False, False, "binary", pyrosetta.rosetta.core.io.silent.SilentFileOptions())
+        silentfile_name = f"{random_name}.silent"
+        sfd_out = pyrosetta.rosetta.core.io.silent.SilentFileData(silentfile_name, False, False, "binary", pyrosetta.rosetta.core.io.silent.SilentFileOptions())
         scorefilename = "{random_name}.sc"
         write_header = not os.path.exists(scorefilename)
 
@@ -410,7 +407,7 @@ def main(args):
                         sfd_out, 
                         scorefilename, 
                         write_header,
-                        f"{random_name}.silent"
+                        silentfile_name
                         )
 
     except Exception as e:

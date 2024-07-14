@@ -4,6 +4,7 @@ import blosum62
 import pandas as pd
 import logging
 import sys
+import os
 import random
 import string
 from collections import OrderedDict

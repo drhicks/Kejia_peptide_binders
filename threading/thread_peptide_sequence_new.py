@@ -212,10 +212,14 @@ def process_peptides(
                                 break
                         if not bidentate_check:
                             continue
-                    pose_packmin_list.append(pt + [sf_farep(pt[0]) - bb_farep])
+                    pt.append(pt + [sf_farep(pt[0]) - bb_farep])
 
 
             pdb_out = f"{template_name}_{pep}_{pt[1][0]}_{pt[1][1]}_{pt[2][0]}_{pt[2][1]}_{ipt}"
+            """
+            pose_thread_list.append([pose_thread, [1, len(this_peptide_reslist)],
+                                     [start_pos + 1, start_pos + len(this_peptide_reslist)], seq_id, blosum_score]) + [farep]
+            """
             data['description'] = pdb_out
             data['template'] = template_name
             data['template_bidentates'] = '_'.join([str(x) for x in sorted(list(this_ref_bidentates.keys()))])

@@ -161,7 +161,7 @@ commands = []
 for x in glob.glob("*.silent"):
     full_x = os.path.join(commands_path,'splits', x)
     dirname = my_rstrip( x, ".silent" )
-    commands.append( "cd {runs_path}; mkdir {dirname}; cd {dirname}; {args.apptainer} {script_filename} -silent {full_x} {args_string} > log.log 2>&1".format(**locals()) )
+    commands.append( "cd {runs_path}; mkdir {dirname}; cd {dirname}; apptainer exec -B /home/drhicks1 {args.apptainer} {script_filename} -silent {full_x} {args_string} > log.log 2>&1".format(**locals()) )
 
 os.chdir( commands_path )
 with open("commands.list", "w") as f:

@@ -12,7 +12,7 @@ from pyrosetta.rosetta.protocols.flexpep_docking import FlexPepDockingProtocol
 # Constants
 DEFAULT_PYROSETTA_FLAGS = '-pep_refine -ex1 -ex2aro -restore_talaris_behavior -default_max_cycles 100 ' \
                           '-dunbrack_prob_buried 0.8 -dunbrack_prob_nonburied 0.8 -dunbrack_prob_buried_semi 0.8 ' \
-                          '-dunbrack_prob_nonburied_semi 0.8 -boost_fa_atr False -rep_ramp_cycles 5 -mcm_cycles 5' \
+                          '-dunbrack_prob_nonburied_semi 0.8 -boost_fa_atr False -rep_ramp_cycles 5 -mcm_cycles 5 ' \
                           '-in:file:silent_struct_type binary'
 
 DEFAULT_INTERFACE_DIST_CUTOFF = 8.0

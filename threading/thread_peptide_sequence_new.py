@@ -213,7 +213,7 @@ def process_peptides(
                             continue
 
 
-                pdb_out = f"{template_name}_{pep}_{pt[1][0]}_{pt[1][1]}_{pt[2][0]}_{pt[2][1]}_{ipt}"
+                pdb_out = f"{template_name}_{pep}_{pt[1][0]}_{pt[1][1]}_{pt[2][0]}_{pt[2][1]}_{pert}"
                 """
                 pose_thread_list.append([pose_thread, [1, len(this_peptide_reslist)],
                                          [start_pos + 1, start_pos + len(this_peptide_reslist)], seq_id, blosum_score]) + [farep]
@@ -221,7 +221,7 @@ def process_peptides(
                 this_bidentates = '_'.join([str(x) for x in sorted(list(this_ref_bidentates.keys()))])
                 if this_bidentates == "":
                     this_bidentates = "none"
-                    
+
                 stringdict['template'] = template_name
                 stringdict['template_bidentates'] = this_bidentates
                 stringdict['target_peptide'] = pep

@@ -142,6 +142,7 @@ def minimize_pose(pose, sf, reslist, cartesian_=False, coordcst_=False):
     min_mover = pyrosetta.rosetta.protocols.minimization_packing.MinMover(movemap, sf, 'lbfgs_armijo_nonmonotone', 0.01, True, True, False)
     min_mover.max_iter(100)
     if cartesian_:
+        sf.set_weight(pyrosetta.rosetta.core.scoring.cart_bonded, 1.0)
         min_mover.cartesian(True)
     min_mover.apply(pose)
     return pose
@@ -165,13 +166,10 @@ def process_peptides(
                     sfd_out, 
                     scorefilename, 
                     write_header,
-                    silentfile_name):
+                    silentfilename):
 
     """Process the peptides and generate data."""
     peptides = {args.peptide_header: args.peptide_seq}
-    data = {x: [] for x in ['description', 'template', 'template_bidentates', 'target_peptide', 'template_peptide_start',
-                            'template_peptide_end', 'target_peptide_start', 'target_peptide_end', 'fa_rep',
-                            'sequence_identity', 'blosum_score']}
 
     for pep in peptides:
         logging.info(f'Threading {pep} onto {template_name}')
@@ -197,7 +195,8 @@ def process_peptides(
             pt[0] = minimize_pose(pt[0], sf.clone(), this_peptide_reslist, coordcst_=True)
 
             for pert in range(0, args.flex_docking_repeats):
-                data = {}
+                scoredict = {}
+                stringdict = {}
                 pt[0] = pep_flex_dock(pt[0], sf)
                 pt.append(sf_farep(pt[0]) - bb_farep)
                 if pt[-1] <= args.max_farep:
@@ -219,20 +218,19 @@ def process_peptides(
                 pose_thread_list.append([pose_thread, [1, len(this_peptide_reslist)],
                                          [start_pos + 1, start_pos + len(this_peptide_reslist)], seq_id, blosum_score]) + [farep]
                 """
-                data['description'] = pdb_out
-                data['template'] = template_name
-                data['template_bidentates'] = '_'.join([str(x) for x in sorted(list(this_ref_bidentates.keys()))])
-                data['target_peptide'] = pep
-                data['template_peptide_start'] = pt[1][0]
-                data['template_peptide_end'] = pt[1][1]
-                data['target_peptide_start'] = pt[2][0]
-                data['target_peptide_end'] = pt[2][1]
-                data['delta_fa_rep'] = pt[-1]
-                data['sequence_identity'] = pt[-3]
-                data['blosum_score'] = pt[-2]
+                stringdict['template'] = template_name
+                stringdict['template_bidentates'] = '_'.join([str(x) for x in sorted(list(this_ref_bidentates.keys()))])
+                stringdict['target_peptide'] = pep
+                stringdict['template_peptide_start'] = pt[1][0]
+                stringdict['template_peptide_end'] = pt[1][1]
+                stringdict['target_peptide_start'] = pt[2][0]
+                stringdict['target_peptide_end'] = pt[2][1]
+                scoredict['delta_fa_rep'] = pt[5]
+                scoredict['sequence_identity'] = pt[3]
+                scoredict['blosum_score'] = pt[4]
 
-                add2silent(pdb_out, pt[0], data, sfd_out, silentfile_name)
-                add2scorefile(pdb_out, scorefilename, write_header=write_header, score_dict=data)
+                add2silent(pdb_out, pt[0], {**stringdict, **scoredict}, sfd_out, silentfilename)
+                add2scorefile(pdb_out, scorefilename, write_header=write_header, score_dict=scoredict, string_dict=stringdict)
                 write_header = False
 
     return
@@ -334,7 +332,7 @@ def add_to_score_file_open(tag, f, write_header=False, score_dict=None, string_d
     scores_string = " ".join(final_dict.values())
     f.write("SCORE:  %s    %s\n"%(scores_string, tag))
 
-def add2silent( tag, pose, score_dict, sfd_out ,silentfile_name):
+def add2silent( tag, pose, score_dict, sfd_out ,silentfilename):
     struct = sfd_out.create_SilentStructOP()
     struct.fill_struct(pose, tag)
 
@@ -345,7 +343,7 @@ def add2silent( tag, pose, score_dict, sfd_out ,silentfile_name):
             struct.add_energy(scorename, value)
 
     sfd_out.add_structure(struct)
-    sfd_out.write_silent_struct(struct, silentfile_name)
+    sfd_out.write_silent_struct(struct, silentfilename)
 
 def main(args):
     """Main function to execute the peptide threading and docking."""
@@ -355,9 +353,9 @@ def main(args):
         #create silent out, scorefile, and checkpoint if needed
         #use random name becasue we run multiple trajectories in a single dir...
         random_name = generate_random_string()
-        silentfile_name = f"{random_name}.silent"
-        sfd_out = pyrosetta.rosetta.core.io.silent.SilentFileData(silentfile_name, False, False, "binary", pyrosetta.rosetta.core.io.silent.SilentFileOptions())
-        scorefilename = "{random_name}.sc"
+        silentfilename = f"{random_name}.silent"
+        sfd_out = pyrosetta.rosetta.core.io.silent.SilentFileData(silentfilename, False, False, "binary", pyrosetta.rosetta.core.io.silent.SilentFileOptions())
+        scorefilename = f"{random_name}.sc"
         write_header = not os.path.exists(scorefilename)
 
         sf = pyrosetta.get_score_function()
@@ -412,7 +410,7 @@ def main(args):
                         sfd_out, 
                         scorefilename, 
                         write_header,
-                        silentfile_name
+                        silentfilename
                         )
 
     except Exception as e:

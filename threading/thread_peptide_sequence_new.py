@@ -212,7 +212,7 @@ def process_peptides(
                                 break
                         if not bidentate_check:
                             continue
-                    pt.append(pt + [sf_farep(pt[0]) - bb_farep])
+                    pt.append(sf_farep(pt[0]) - bb_farep)
 
 
             pdb_out = f"{template_name}_{pep}_{pt[1][0]}_{pt[1][1]}_{pt[2][0]}_{pt[2][1]}_{ipt}"
@@ -228,7 +228,7 @@ def process_peptides(
             data['template_peptide_end'] = pt[1][1]
             data['target_peptide_start'] = pt[2][0]
             data['target_peptide_end'] = pt[2][1]
-            data['fa_rep'] = pt[-1]
+            data['delta_fa_rep'] = pt[-1]
             data['sequence_identity'] = pt[-3]
             data['blosum_score'] = pt[-2]
 

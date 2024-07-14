@@ -4,12 +4,16 @@ import blosum62
 import pandas as pd
 import logging
 import sys
+import random
+import string
 from pyrosetta.rosetta.protocols.flexpep_docking import FlexPepDockingProtocol
 
 # Constants
 DEFAULT_PYROSETTA_FLAGS = '-pep_refine -ex1 -ex2aro -restore_talaris_behavior -default_max_cycles 100 ' \
                           '-dunbrack_prob_buried 0.8 -dunbrack_prob_nonburied 0.8 -dunbrack_prob_buried_semi 0.8 ' \
-                          '-dunbrack_prob_nonburied_semi 0.8 -boost_fa_atr False -rep_ramp_cycles 5 -mcm_cycles 5'
+                          '-dunbrack_prob_nonburied_semi 0.8 -boost_fa_atr False -rep_ramp_cycles 5 -mcm_cycles 5' \
+                          '-in:file:silent_struct_type binary'
+
 DEFAULT_INTERFACE_DIST_CUTOFF = 8.0
 DEFAULT_MIN_SEQ_IDENTITY = 0.0
 DEFAULT_MIN_BLOSUM = -10
@@ -20,7 +24,7 @@ DEFAULT_OUTPUT_CSV = 'thread_peptide_sequence_stats.csv'
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-codemap = {
+3aato1 = {
     'R': 'ARG', 'H': 'HIS', 'K': 'LYS', 'D': 'ASP', 'E': 'GLU',
     'S': 'SER', 'T': 'THR', 'N': 'ASN', 'Q': 'GLN', 'C': 'CYS',
     'G': 'GLY', 'P': 'PRO', 'A': 'ALA', 'V': 'VAL', 'I': 'ILE',
@@ -146,10 +150,24 @@ def compute_seq_identity(seq1, seq2):
     ic = sum(1 for a, b in zip(seq1, seq2) if a == b)
     return ic / len(seq1)
 
-def process_peptides(args, pose, input_pose, template_name, bidentates, peptide_reslist, bb_farep, sf, sf_farep):
+def process_peptides(
+                    args, 
+                    pose, 
+                    input_pose, 
+                    template_name, 
+                    bidentates, 
+                    peptide_reslist, 
+                    bb_farep, 
+                    sf, 
+                    sf_farep, 
+                    sfd_out, 
+                    scorefilename, 
+                    write_header
+                    silentfile_name):
+
     """Process the peptides and generate data."""
     peptides = {args.peptide_header: args.peptide_seq}
-    data = {x: [] for x in ['pdb', 'template', 'template_bidentates', 'target_peptide', 'template_peptide_start',
+    data = {x: [] for x in ['description', 'template', 'template_bidentates', 'target_peptide', 'template_peptide_start',
                             'template_peptide_end', 'target_peptide_start', 'target_peptide_end', 'fa_rep',
                             'sequence_identity', 'blosum_score']}
 
@@ -172,7 +190,9 @@ def process_peptides(args, pose, input_pose, template_name, bidentates, peptide_
             pose_thread_list.extend(pose_thread_list_tmp)
 
         pose_packmin_list = []
-        for pt_id, pt in enumerate(pose_thread_list):
+        for ipt, pt in enumerate(pose_thread_list):
+            data = {}
+
             pt[0] = repack_pose(pt[0], sf, this_peptide_reslist)
             pt[0] = minimize_pose(pt[0], sf.clone(), this_peptide_reslist, coordcst_=True)
 
@@ -192,21 +212,25 @@ def process_peptides(args, pose, input_pose, template_name, bidentates, peptide_
                             continue
                     pose_packmin_list.append(pt + [sf_farep(pt[0]) - bb_farep])
 
-        for ipt, pt in enumerate(pose_packmin_list):
-            pt[0].dump_pdb(f'{template_name}_{pep}_{pt[1][0]}_{pt[1][1]}_{pt[2][0]}_{pt[2][1]}_{ipt}.pdb')
-            data['pdb'].append(f'{template_name}_{pt[1][0]}_{pt[1][1]}_{pt[2][0]}_{pt[2][1]}_{ipt}.pdb')
-            data['template'].append(template_name)
-            data['template_bidentates'].append('_'.join([str(x) for x in sorted(list(this_ref_bidentates.keys()))]))
-            data['target_peptide'].append(pep)
-            data['template_peptide_start'].append(pt[1][0])
-            data['template_peptide_end'].append(pt[1][1])
-            data['target_peptide_start'].append(pt[2][0])
-            data['target_peptide_end'].append(pt[2][1])
-            data['fa_rep'].append(pt[-1])
-            data['sequence_identity'].append(pt[-3])
-            data['blosum_score'].append(pt[-2])
 
-    return data
+            pdb_out = f"{template_name}_{pep}_{pt[1][0]}_{pt[1][1]}_{pt[2][0]}_{pt[2][1]}_{ipt}"
+            data['description'] = pdb_out
+            data['template'] = template_name
+            data['template_bidentates'] = '_'.join([str(x) for x in sorted(list(this_ref_bidentates.keys()))])
+            data['target_peptide'] = pep
+            data['template_peptide_start'] = pt[1][0]
+            data['template_peptide_end'] = pt[1][1]
+            data['target_peptide_start'] = pt[2][0]
+            data['target_peptide_end'] = pt[2][1]
+            data['fa_rep'] = pt[-1]
+            data['sequence_identity'] = pt[-3]
+            data['blosum_score'] = pt[-2]
+
+            add2silent(pdb_out, pt[0], data, sfd_out, silentfile_name)
+            add2scorefile(pdb_out, scorefilename, write_header=write_header, score_dict=data)
+            write_header = False
+
+    return
 
 def handle_shorter_peptides(peptides, pep, input_pose, pose, bidentates, this_ref_bidentates, bb_farep, sf, sf_farep,
                             this_peptide_reslist, template_name, min_seq_identity, min_blosum):
@@ -222,7 +246,7 @@ def handle_shorter_peptides(peptides, pep, input_pose, pose, bidentates, this_re
             pose_thread = pose.clone()
             for resid in range(len(peptides[pep])):
                 mt = pyrosetta.rosetta.protocols.simple_moves.MutateResidue(
-                    input_pose.split_by_chain(1).size() + start_pos + resid + 1, codemap[peptides[pep][resid]])
+                    input_pose.split_by_chain(1).size() + start_pos + resid + 1, 3aato1[peptides[pep][resid]])
                 mt.apply(pose_thread)
             deleted_reslist = []
             if input_pose.split_by_chain(1).size() + start_pos + len(peptides[pep]) < pose_thread.size():
@@ -259,16 +283,81 @@ def handle_longer_peptides(peptides, pep, input_pose, pose, bidentates, this_ref
             pose_thread = pose.clone()
             for resid in range(len(this_peptide_reslist)):
                 mt = pyrosetta.rosetta.protocols.simple_moves.MutateResidue(
-                    input_pose.split_by_chain(1).size() + resid + 1, codemap[peptides[pep][start_pos + resid]])
+                    input_pose.split_by_chain(1).size() + resid + 1, 3aato1[peptides[pep][start_pos + resid]])
                 mt.apply(pose_thread)
             pose_thread_list.append([pose_thread, [1, len(this_peptide_reslist)],
                                      [start_pos + 1, start_pos + len(this_peptide_reslist)], seq_id, blosum_score])
     return pose_thread_list, this_peptide_reslist
 
+def generate_random_string(length=12):
+    """Generate a random string of fixed length."""
+    letters = string.ascii_letters + string.digits
+    return ''.join(random.choice(letters) for i in range(length))
+
+def add2scorefile(tag, scorefilename, write_header=False, score_dict=None):
+        with open(scorefilename, "a") as f:
+                add_to_score_file_open(tag, f, write_header, score_dict)
+
+def get_final_dict(score_dict, string_dict) -> OrderedDict:
+    '''
+    Given dictionaries of numerical scores and a string scores, return a sorted dictionary
+    of the scores, ready to be written to the scorefile.
+    '''
+
+    final_dict = OrderedDict()
+    keys_score = [] if score_dict is None else list(score_dict)
+    keys_string = [] if string_dict is None else list(string_dict)
+
+    all_keys = keys_score + keys_string
+
+    argsort = sorted(range(len(all_keys)), key=lambda x: all_keys[x])
+
+    for idx in argsort:
+        key = all_keys[idx]
+
+        if ( idx < len(keys_score) ):
+            final_dict[key] = "%8.3f"%(score_dict[key])
+        else:
+            final_dict[key] = string_dict[key]
+
+    return final_dict
+
+def add_to_score_file_open(tag, f, write_header=False, score_dict=None, string_dict=None):
+        final_dict = get_final_dict( score_dict, string_dict )
+        if ( write_header ):
+                f.write("SCORE:  %s description\n"%(" ".join(final_dict.keys())))
+        scores_string = " ".join(final_dict.values())
+        f.write("SCORE:  %s    %s\n"%(scores_string, tag))
+
+def add2silent( tag, pose, score_dict, sfd_out ,silentfile_name):
+        # pose = pose_from_file( pdb )
+
+        # pose = insert_chainbreaks( pose, binderlen )
+
+        struct = sfd_out.create_SilentStructOP()
+        struct.fill_struct( pose, tag )
+
+        for scorename, value in score_dict.items():
+            if ( isinstance(value, str) ):
+                struct.add_string_value(scorename, value)
+            else:
+                struct.add_energy(scorename, value)
+
+        sfd_out.add_structure( struct )
+        sfd_out.write_silent_struct( struct, silentfile_name )
+
 def main(args):
     """Main function to execute the peptide threading and docking."""
     try:
         pyrosetta.init(args.pyrosetta_flags)
+
+        #create silent out, scorefile, and checkpoint if needed
+        #use random name becasue we run multiple trajectories in a single dir...
+        random_name = generate_random_string()
+        sfd_out = pyrosetta.rosetta.core.io.silent.SilentFileData(f"{random_name}.silent", False, False, "binary", pyrosetta.rosetta.core.io.silent.SilentFileOptions())
+        scorefilename = "{random_name}.sc"
+        write_header = not os.path.exists(scorefilename)
+
         sf = pyrosetta.get_score_function()
         # sf_cart = sf.clone()
         # sf_cart.set_weight(pyrosetta.rosetta.core.scoring.ScoreType.pro_close, 0.0)
@@ -308,14 +397,21 @@ def main(args):
                 continue
 
         bb_farep = sf_farep(pose)
-        data = process_peptides(args, pose, input_pose, template_name, bidentates, peptide_reslist, bb_farep, sf, sf_farep)
-        try:
-            df = pd.DataFrame(data)
-            df.to_csv(args.output_csv, index=False)
-            logging.info(f"Results successfully saved to {args.output_csv}")
-        except Exception as e:
-            logging.error(f"Failed to save results to CSV: {e}")
-            sys.exit(1)
+        process_peptides(
+                        args, 
+                        pose, 
+                        input_pose, 
+                        template_name, 
+                        bidentates, 
+                        peptide_reslist, 
+                        bb_farep, 
+                        sf, 
+                        sf_farep,
+                        sfd_out, 
+                        scorefilename, 
+                        write_header,
+                        f"{random_name}.silent"
+                        )
 
     except Exception as e:
         logging.error(f"An error occurred: {e}")

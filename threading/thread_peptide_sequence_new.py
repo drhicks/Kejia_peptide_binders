@@ -6,6 +6,7 @@ import logging
 import sys
 import random
 import string
+from collections import OrderedDict
 from pyrosetta.rosetta.protocols.flexpep_docking import FlexPepDockingProtocol
 
 # Constants

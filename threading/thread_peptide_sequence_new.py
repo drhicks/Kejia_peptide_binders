@@ -24,7 +24,7 @@ DEFAULT_OUTPUT_CSV = 'thread_peptide_sequence_stats.csv'
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-aa3to1 = {
+aa1to3 = {
     'R': 'ARG', 'H': 'HIS', 'K': 'LYS', 'D': 'ASP', 'E': 'GLU',
     'S': 'SER', 'T': 'THR', 'N': 'ASN', 'Q': 'GLN', 'C': 'CYS',
     'G': 'GLY', 'P': 'PRO', 'A': 'ALA', 'V': 'VAL', 'I': 'ILE',
@@ -162,7 +162,7 @@ def process_peptides(
                     sf_farep, 
                     sfd_out, 
                     scorefilename, 
-                    write_header
+                    write_header,
                     silentfile_name):
 
     """Process the peptides and generate data."""
@@ -246,7 +246,7 @@ def handle_shorter_peptides(peptides, pep, input_pose, pose, bidentates, this_re
             pose_thread = pose.clone()
             for resid in range(len(peptides[pep])):
                 mt = pyrosetta.rosetta.protocols.simple_moves.MutateResidue(
-                    input_pose.split_by_chain(1).size() + start_pos + resid + 1, aa3to1[peptides[pep][resid]])
+                    input_pose.split_by_chain(1).size() + start_pos + resid + 1, aa1to3[peptides[pep][resid]])
                 mt.apply(pose_thread)
             deleted_reslist = []
             if input_pose.split_by_chain(1).size() + start_pos + len(peptides[pep]) < pose_thread.size():
@@ -283,7 +283,7 @@ def handle_longer_peptides(peptides, pep, input_pose, pose, bidentates, this_ref
             pose_thread = pose.clone()
             for resid in range(len(this_peptide_reslist)):
                 mt = pyrosetta.rosetta.protocols.simple_moves.MutateResidue(
-                    input_pose.split_by_chain(1).size() + resid + 1, aa3to1[peptides[pep][start_pos + resid]])
+                    input_pose.split_by_chain(1).size() + resid + 1, aa1to3[peptides[pep][start_pos + resid]])
                 mt.apply(pose_thread)
             pose_thread_list.append([pose_thread, [1, len(this_peptide_reslist)],
                                      [start_pos + 1, start_pos + len(this_peptide_reslist)], seq_id, blosum_score])

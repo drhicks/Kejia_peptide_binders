@@ -193,14 +193,14 @@ def process_peptides(
 
         pose_packmin_list = []
         for ipt, pt in enumerate(pose_thread_list):
-            data = {}
-
             pt[0] = repack_pose(pt[0], sf, this_peptide_reslist)
             pt[0] = minimize_pose(pt[0], sf.clone(), this_peptide_reslist, coordcst_=True)
 
             for pert in range(0, args.flex_docking_repeats):
+                data = {}
                 pt[0] = pep_flex_dock(pt[0], sf)
-                if sf_farep(pt[0]) - bb_farep <= args.max_farep:
+                pt.append(sf_farep(pt[0]) - bb_farep)
+                if pt[-1] <= args.max_farep:
                     if args.keep_bidentates:
                         this_hbond_list, this_hbond_set = find_hbonds(pt[0], list(range(1, pt[0].split_by_chain(1).size() + 1)),
                                                                       list(range(pt[0].split_by_chain(1).size() + 1, pt[0].size() + 1)))
@@ -212,7 +212,6 @@ def process_peptides(
                                 break
                         if not bidentate_check:
                             continue
-                    pt.append(sf_farep(pt[0]) - bb_farep)
 
 
                 pdb_out = f"{template_name}_{pep}_{pt[1][0]}_{pt[1][1]}_{pt[2][0]}_{pt[2][1]}_{ipt}"

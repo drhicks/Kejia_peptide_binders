@@ -218,13 +218,17 @@ def process_peptides(
                 pose_thread_list.append([pose_thread, [1, len(this_peptide_reslist)],
                                          [start_pos + 1, start_pos + len(this_peptide_reslist)], seq_id, blosum_score]) + [farep]
                 """
+                this_bidentates = '_'.join([str(x) for x in sorted(list(this_ref_bidentates.keys()))])
+                if this_bidentates == "":
+                    this_bidentates = "none"
+                    
                 stringdict['template'] = template_name
-                stringdict['template_bidentates'] = '_'.join([str(x) for x in sorted(list(this_ref_bidentates.keys()))])
+                stringdict['template_bidentates'] = this_bidentates
                 stringdict['target_peptide'] = pep
-                stringdict['template_peptide_start'] = pt[1][0]
-                stringdict['template_peptide_end'] = pt[1][1]
-                stringdict['target_peptide_start'] = pt[2][0]
-                stringdict['target_peptide_end'] = pt[2][1]
+                stringdict['template_peptide_start'] = str(pt[1][0])
+                stringdict['template_peptide_end'] = str(pt[1][1])
+                stringdict['target_peptide_start'] = str(pt[2][0])
+                stringdict['target_peptide_end'] = str(pt[2][1])
                 scoredict['delta_fa_rep'] = pt[5]
                 scoredict['sequence_identity'] = pt[3]
                 scoredict['blosum_score'] = pt[4]

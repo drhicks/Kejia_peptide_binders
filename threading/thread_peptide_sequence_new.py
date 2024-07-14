@@ -297,9 +297,9 @@ def generate_random_string(length=12):
     letters = string.ascii_letters + string.digits
     return ''.join(random.choice(letters) for i in range(length))
 
-def add2scorefile(tag, scorefilename, write_header=False, score_dict=None):
+def add2scorefile(tag, scorefilename, write_header=False, score_dict=None, string_dict=None):
     with open(scorefilename, "a") as f:
-            add_to_score_file_open(tag, f, write_header, score_dict)
+            add_to_score_file_open(tag, f, write_header, score_dict, string_dict)
 
 def get_final_dict(score_dict, string_dict) -> OrderedDict:
     '''

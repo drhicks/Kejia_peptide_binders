@@ -105,7 +105,8 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 5. **Filter with sequence clustering and picking the top AlphaFold output/s per cluster after averaging 5 models**:
     ```sh
     python path_to/af2_filtering/average_af2_model_scores.py af2_out.sc > af2_out_averaged.sc
-    python path_to/af2_filtering/dynamic_filtering_by_group.py af2_out_averaged.sc af2_out.silent
+    python path_to/af2_filtering/dynamic_filtering_by_group.py af2_out_averaged.sc af2_out.silent > cluster.log
+    grep -E '[a-zA-Z0-9_]+_af2mv3' clutser.log | awk '{print $3}' > tags
     ```
 
 ### 4. MPNN/AF2 cycle

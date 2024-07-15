@@ -106,7 +106,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
     ```sh
     python path_to/af2_filtering/average_af2_model_scores.py af2_out.sc > af2_out_averaged.sc
     python path_to/af2_filtering/dynamic_filtering_by_group.py af2_out_averaged.sc af2_out.silent > cluster.log
-    grep -E '[a-zA-Z0-9_]+_af2mv3' clutser.log | awk '{print $3}' > tags
+    column_number=$(head -1 cluster.log | tr '\t' '\n' | grep -n 'description' | cut -d: -f1); awk -v col=$column_number 'NR > 1 {print $col}' cluster.log | grep -oE '[a-zA-Z0-9_]+_af2mv3_[0-9]+' > tags
     ```
 
 ### 4. MPNN/AF2 cycle

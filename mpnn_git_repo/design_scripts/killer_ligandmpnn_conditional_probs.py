@@ -19,7 +19,7 @@ pyrosetta.init(PYROSETTA_OPTIONS)
 
 # Add paths
 sys.path.insert(0, '/home/drhicks1/scripts/Kejia_peptide_binders/mpnn_git_repo/ligandMPNN/')
-import protein_mpnn_run_HACK as mpnn_util
+import protein_mpnn_run_HACK_PROBS as mpnn_util
 from drh_utils import (xml,
     get_sap,
     passes_quality_checks,
@@ -70,7 +70,7 @@ argparser.add_argument("--mask_hydrogen", type=int, default=1, help="0 for False
 
 argparser.add_argument("--path_to_fasta", type=str, default="", help="path to fasta file with sequences to be scored")
 
-argparser.add_argument("--conditional_probs_only", type=int, default=0, help="0 for False, 1 for True; output conditional probabilities p(s_i given the rest of the sequence and backbone)")
+argparser.add_argument("--conditional_probs_only", type=int, default=1, help="0 for False, 1 for True; output conditional probabilities p(s_i given the rest of the sequence and backbone)")
 argparser.add_argument("--conditional_probs_only_backbone", type=int, default=0, help="0 for False, 1 for True; if true output conditional probabilities p(s_i given backbone)")
 
 argparser.add_argument("--unconditional_probs_only", type=int, default=0, help="0 for False, 1 for True; output unconditional probabilities p(s_i given backbone)")
@@ -88,8 +88,8 @@ argparser.add_argument("--pdb_path_chains", type=str, default='', help="Define w
 argparser.add_argument("--jsonl_path", type=str, help="Path to a folder with parsed pdb into jsonl")
 argparser.add_argument("--chain_id_jsonl",type=str, default='', help="Path to a dictionary specifying which chains need to be designed and which ones are fixed, if not specied all chains will be designed.")
 argparser.add_argument("--fixed_positions_jsonl", type=str, default='', help="Path to a dictionary with fixed positions")
-argparser.add_argument("--omit_AAs", type=list, default='CX', help="Specify which amino acids should be omitted in the generated sequence, e.g. 'AC' would omit alanine and cystine.")
-argparser.add_argument("--bias_AA_jsonl", type=str, default='/home/drhicks1/scripts/mpnn_git_repo/design_scripts/bias_AA_sap.jsonl', help="Path to a dictionary which specifies AA composion bias if needed, e.g. {A: -1.1, F: 0.7} would make A less likely and F more likely.")
+argparser.add_argument("--omit_AAs", type=list, default='X', help="Specify which amino acids should be omitted in the generated sequence, e.g. 'AC' would omit alanine and cystine.")
+argparser.add_argument("--bias_AA_jsonl", type=str, default='', help="Path to a dictionary which specifies AA composion bias if needed, e.g. {A: -1.1, F: 0.7} would make A less likely and F more likely.")
 
 argparser.add_argument("--bias_by_res_jsonl", default='', help="Path to dictionary with per position bias.")
 argparser.add_argument("--omit_AA_jsonl", type=str, default='', help="Path to a dictionary which specifies which amino acids need to be omited from design at specific chain indices")
@@ -176,122 +176,45 @@ def optimize_and_relax(pose):
     FastRelax.apply(pose)
     return pose
 
-def sequence_optimize(pdbfile, args):
+def sequence_optimize(pdbfile, binder_len, args):
     """Optimize sequence for a given PDB file."""
-    
-    t0 = time.time()
 
-    feature_dict = generate_seqopt_features(pdbfile)
-    chain_mask_dict = chain_mask(feature_dict, args.design_these_chains, args.keep_these_chains)
+    binder_probs = {}
+    aa_order = "ACDEFGHIKLMNPQRSTVWY"
+    for pos_i in range(1, binder_len+1):
+        binder_res = list(range(1, binder_len+1))
+        binder_res.remove(pos_i)
+        args.fix_a = ",".join([str(x) for x in binder_res])
 
-    tied_positions_out = tied_positions(feature_dict, args.tie_chainsb, args.tie_chainsa, args.tie_repeats)
-    fixed_positions_out = fixed_positions(feature_dict, args.fix_a, args.fix_b)
-    
-    args.tied_positions_jsonl = tied_positions_out
-    args.fixed_positions_jsonl = fixed_positions_out
-    args.chain_id_jsonl = chain_mask_dict
-    args.jsonl_path = feature_dict
+        feature_dict = generate_seqopt_features(pdbfile)
+        chain_mask_dict = chain_mask(feature_dict, args.design_these_chains, args.keep_these_chains)
 
-    args.pdb_path = pdbfile
-    sequences = mpnn_util.main(args)
-
-    # Step 1: Remove redundant sequences while keeping the best (lowest) score
-    unique_sequences = {}
-    for seq, score in sequences:
-        if seq not in unique_sequences or float(score) < float(unique_sequences[seq]):
-            unique_sequences[seq] = score
-
-    # Step 2: Convert the dictionary back to a list of tuples
-    unique_sequence_list = [(seq, score) for seq, score in unique_sequences.items()]
-
-    # Step 3: Sort the list by score
-    unique_sequence_list.sort(key=lambda x: float(x[1]))
-
-    sequences = unique_sequence_list
-
-    print(f"MPNN generated {len(sequences)} sequences in {int(time.time() - t0)} seconds")
-    print("seq:score")
-    for seq in sequences:
-        print(f"{seq[0]}:{seq[1]}")
-
-    sequences = [seq[0] for seq in sequences]
-
-    return split_sequence_by_chain(sequences, feature_dict, chain_mask_dict, args.design_these_chains)
-
-def split_sequence_by_chain(sequences, feature_dict, chain_mask_dict, design_these_chains):
-    """Split sequences by chain based on mask and feature dictionary."""
-    
-    masked_list = [letter for letter in chain_mask_dict[feature_dict['name']][0]]
-    masked_chain_length_list = [len(feature_dict[f'seq_chain_{letter}']) for letter in masked_list]
-    
-    split_sequences = []
-    if len(design_these_chains.split(",")) > 1:
-        for seq in sequences:
-            l0 = 0
-            for mc_length in sorted(masked_chain_length_list)[:-1]:
-                l0 += mc_length
-                seq = seq[:l0] + '/' + seq[l0:]
-                l0 += 1
-            split_sequences.append(seq)
-    else:
-        split_sequences = sequences
+        tied_positions_out = tied_positions(feature_dict, args.tie_chainsb, args.tie_chainsa, args.tie_repeats)
+        fixed_positions_out = fixed_positions(feature_dict, args.fix_a, args.fix_b)
         
-    return split_sequences
+        args.tied_positions_jsonl = tied_positions_out
+        args.fixed_positions_jsonl = fixed_positions_out
+        args.chain_id_jsonl = chain_mask_dict
+        args.jsonl_path = feature_dict
+
+        args.pdb_path = pdbfile
+        aa_probs = mpnn_util.main(args)
+        aa_probs = aa_probs[0][pos_i-1]
+        binder_probs[pos_i] = {aa_order[i]: aa_probs[i] for i in range(len(aa_order))}
+
+    return binder_probs
 
 
 def dl_design( pose, tag, silent_out, sfd_out , args):
-
-    design_counter = 0
-
-    prefix = f"{tag}_dldesign"
-
     pdb_stream = ostringstream()
     pose.dump_pdb(pdb_stream)
     pdbfile = pdb_stream.str()
 
-    seqs = sequence_optimize( pdbfile, args )
+    probs = sequence_optimize( pdbfile, pose.chain_end(1), args )
 
-    for idx,seq in enumerate( seqs ):
-        tag = f"{prefix}_{idx}"
+    print(probs)
 
-        pose = thread_mpnn_seq(pose, seq)
-
-        remove_massive_clashes.apply(pose)
-
-        if args.optimize_sap_and_relax:
-            pose = optimize_and_relax(pose)
-
-        if args.relax:
-            FastRelax.apply(pose)
-
-        if args.ddg_filter:
-            try:
-                ddg = ddg_filter.compute(pose)
-                if ddg > args.ddg_cutoff: continue
-            except: 
-                ddg = 999
-        else:
-            ddg = 999
-        
-        try:
-            contact_molecular_surface = cms_filter.compute(pose)
-        except:
-            contact_molecular_surface = 0
-
-        try:
-            sap_score = get_sap(pose.split_by_chain()[1])
-        except:
-            sap_score = 999
-
-        add2silent( pose, tag, sfd_out , silent_out)
-
-        add2scorefile( tag, f"{args.out_name}.sc", {'ddg':ddg, 'contact_molecular_surface':contact_molecular_surface, 'sap':sap_score} )
-
-        design_counter += 1
-    
-        if design_counter >= args.max_out: return design_counter
-
-    return design_counter
+    return probs
 
 def main( pdb, silent_out, sfd_in, sfd_out ):
 
@@ -320,8 +243,6 @@ def main( pdb, silent_out, sfd_in, sfd_out ):
         good_designs = dl_design( pose, pdb, silent_out, sfd_out, args)
 
         seconds = int(time.time() - t0)
-
-        print( f"protocols.jd2.JobDistributor: {pdb} reported success. {good_designs} designs generated in {seconds} seconds" )
     
     else:
         print(f"{pdb} failed quality checks")

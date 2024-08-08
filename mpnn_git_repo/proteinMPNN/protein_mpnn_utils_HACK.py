@@ -1232,7 +1232,7 @@ class ProteinMPNN(nn.Module):
 
 
 
-
+        h_V_enc = torch.zeros((E.shape[0], E.shape[1], E.shape[-1]), device=E.device)
         h_E = self.W_e(E)
 
         # Encoder is unmasked self-attention

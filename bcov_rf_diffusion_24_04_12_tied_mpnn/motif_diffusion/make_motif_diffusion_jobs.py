@@ -4,6 +4,8 @@ import numpy as np
 import math
 import pyrosetta
 import argparse
+from pyrosetta.rosetta.core.scoring.dssp import Dssp
+
 
 def initialize_pyrosetta():
     pyrosetta.init("-beta -mute all")
@@ -12,6 +14,8 @@ def get_parser():
     parser = argparse.ArgumentParser(description="Process some pdb files and residue interfaces and output diffusion job.")
     parser.add_argument("pdb", help="The path to the PDB file.")
     parser.add_argument("--manual_interface", type=str, help="Comma-separated list of manual interface residues (e.g., 23,24,25).")
+    parser.add_argument("--pads", type=float, nargs='+', default=[0.0, 0.25], 
+        help="List of floats for modifiying fixed length contigs to be a range. The range will likely produce millions-billions of possibilities for diffusion to sample, which is too many, so we suggest sampling fixed length and a range. Default is [0.0, 0.25].")
     return parser
 
 def parse_interface_arg(interface_str):
@@ -158,65 +162,96 @@ def get_close_contacts(pose, residue_list1, residue_list2, threshold=5.0):
 
 def ranges(nums):
     nums = sorted(set(nums))
-    gaps = [[s, e] for s, e in zip(nums, nums[1:]) if s+1 < e]
-    edges = iter(nums[:1] + sum(gaps, []) + nums[-1:])
-    return list(zip(edges, edges))
+    edges = []
+    
+    start = nums[0]
+    for i in range(1, len(nums)):
+        if nums[i] != nums[i-1] + 1:
+            edges.append((start, nums[i-1]))
+            start = nums[i]
+    
+    edges.append((start, nums[-1]))
+    return edges
 
 def range_blocks(nums):
-    tups = ranges(nums)
-    blocks = []
-    for tup in tups:
-        blocks.append(list(range(tup[0], tup[1]+1)))
-    return blocks
+    return [list(range(start, end+1)) for start, end in ranges(nums)]
+
+def create_blocks(range_list, interface_res, label):
+    resi = [x for x in range_list if (x not in interface_res) == (label == "paint")]
+    blocks = range_blocks(resi)
+    return [block + [label] for block in blocks]
+
+def process_pose(pose, poseA, interface_res, pad=0.25):
+    inpaint_range = list(range(pose.chain_begin(1), pose.chain_end(1) + 1))
+    inpaint_blocks = create_blocks(inpaint_range, interface_res, "paint")
+    not_inpaint_blocks = create_blocks(inpaint_range, interface_res, "not")
+    all_blocks = sorted(inpaint_blocks + not_inpaint_blocks, key=lambda x: x[0])
+    
+    # Get DSSP secondary structure information
+    secstruct = calculate_dssp_segments(pose)
+    
+    contigA = ""
+    
+    for block in all_blocks:
+        if block[-1] == "paint":
+            start_res = block[0]
+            end_res = block[-2]
+            length = end_res - start_res + 1
+
+            # Check if the segment is longer than 7 residues or contains a loop
+            contains_loop = any(secstruct[i-1] == 'L' for i in range(start_res, end_res + 1))
+            
+            if length > 7 or contains_loop:
+                # Calculate 0.75x to 1.25x the segment length
+                min_length = max(1, int(round((1 - pad) * length)))
+                max_length = int(round((1 + pad) * length))
+                contigA += f"{min_length}-{max_length},"
+            else:
+                contigA += f"{length},"
+        else:
+            contigA += f"A{block[0]}-{block[-2]},"
+    
+    return contigA.rstrip(',')
+
+def get_filtered_interface_res(pose, chain1_range, chain2_range):
+    interface_res = set(get_interface_by_vector(pose, chain1_range, chain2_range))
+    surface_res = set(select_surface(pose))
+    close_contacts = set(get_close_contacts(pose, chain1_range, chain2_range))
+
+    # Filter out residues not in close_contacts or present in surface_res
+    filtered_residues = sorted(interface_res.intersection(close_contacts) - surface_res)
+
+    return filtered_residues
+
+def calculate_dssp_segments(pose):
+    """Calculates DSSP for a given pose and returns a list of secondary structures."""
+    dssp = Dssp(pose)
+    return dssp.get_dssp_secstruct()
 
 def main():
     parser = get_parser()
-    args = parser.parse_args()
+    args = parser.parse_args() 
     
     initialize_pyrosetta()
-    pose = pyrosetta.pose_from_pdb(args.pdb)
-    
-    poseA = pose.split_by_chain()[1]
-    poseB = pose.split_by_chain()[2]
-    
-    chain1_range = list(range(pose.chain_begin(1), pose.chain_end(1) + 1))
-    chain2_range = list(range(pose.chain_begin(2), pose.chain_end(2) + 1))
-    
-    if args.manual_interface:
-        interface_res = parse_interface_arg(args.manual_interface)
-    else:
-        interface_res = get_interface_by_vector(pose, chain1_range, chain2_range)
-        surface_res = select_surface(pose)
-        close_contacts = get_close_contacts(pose, chain1_range, chain2_range)
-        interface_res = [x for x in interface_res if x in close_contacts]
-        interface_res = [x for x in interface_res if x not in surface_res]
-        interface_res = list(set(interface_res))
-        interface_res.sort()
 
-    
-    inpaint_range = list(range(pose.chain_begin(1), pose.chain_end(1)+1))
-    inpaint_resi = [x for x in inpaint_range if x not in interface_res]
-    inpaint_blocks = range_blocks(inpaint_resi)
-    inpaint_blocks = [x + ["paint"] for x in inpaint_blocks]
-    not_inpaint_resi = [x for x in inpaint_range if x in interface_res]
-    not_inpaint_blocks = range_blocks(not_inpaint_resi)
-    not_inpaint_blocks = [x + ["not"] for x in not_inpaint_blocks]
-    all_blocks = inpaint_blocks+not_inpaint_blocks
-    all_blocks = sorted(all_blocks, key=lambda x: x[0])
-
-    binder_len = poseA.size()
-    contigA=""
-    for block in all_blocks:
-        if block[-1] == "paint":
-            pad = 0
-            binder_len += pad
-            contigA = contigA + f"{block[-2]-block[0]+1+pad},"
+    for pad in args.pads:
+        pose = pyrosetta.pose_from_pdb(args.pdb)
+        
+        poseA = pose.split_by_chain()[1]
+        poseB = pose.split_by_chain()[2]
+        
+        chain1_range = list(range(pose.chain_begin(1), pose.chain_end(1) + 1))
+        chain2_range = list(range(pose.chain_begin(2), pose.chain_end(2) + 1))
+        
+        if args.manual_interface:
+            interface_res = parse_interface_arg(args.manual_interface)
         else:
-            contigA = contigA + f"A{block[0]}-{block[-2]},"
-    contigA = contigA[:-1]
-    contigB = f"B1-{poseB.size()}"
-    
-    print_diffusion_job(args.pdb, contigA, contigB)
+            interface_res = get_filtered_interface_res(pose, chain1_range, chain2_range)
+
+        contigA = process_pose(pose, poseA, interface_res, pad=pad)
+        contigB = f"B1-{poseB.size()}"
+        
+        print_diffusion_job(args.pdb, contigA, contigB)
 
 if __name__ == "__main__":
     main()

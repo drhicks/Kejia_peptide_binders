@@ -154,32 +154,32 @@ def main(conf: HydraConfig) -> None:
 
             regular_output = hax.hacks().finish_run(sampler.binderlen, pose_dict )
 
-            if ( regular_output ):
-                # run metadata
-                trb = dict(
-                    config = OmegaConf.to_container(sampler._conf, resolve=True),
-                    plddt = plddt_stack.cpu().numpy(),
-                    device = torch.cuda.get_device_name(torch.cuda.current_device()) if torch.cuda.is_available() else 'CPU',
-                    time = time.time() - start_time
-                )
-                if hasattr(sampler, 'contig_map'):
-                    for key, value in sampler.contig_map.get_mappings().items():
-                        trb[key] = value
-                with open(f'{out_prefix}.trb','wb') as f_out:
-                    pickle.dump(trb, f_out)
+            #if ( regular_output ):
+            #    # run metadata
+            #    trb = dict(
+            #        config = OmegaConf.to_container(sampler._conf, resolve=True),
+            #        plddt = plddt_stack.cpu().numpy(),
+            #        device = torch.cuda.get_device_name(torch.cuda.current_device()) if torch.cuda.is_available() else 'CPU',
+            #        time = time.time() - start_time
+            #    )
+            #    if hasattr(sampler, 'contig_map'):
+            #        for key, value in sampler.contig_map.get_mappings().items():
+            #            trb[key] = value
+            #    with open(f'{out_prefix}.trb','wb') as f_out:
+            #        pickle.dump(trb, f_out)
 
-                # trajectory pdbs
-                traj_prefix = os.path.dirname(out_prefix)+'/traj/'+os.path.basename(out_prefix)
-                os.makedirs(os.path.dirname(traj_prefix), exist_ok=True)
+                ## trajectory pdbs
+                #traj_prefix = os.path.dirname(out_prefix)+'/traj/'+os.path.basename(out_prefix)
+                #os.makedirs(os.path.dirname(traj_prefix), exist_ok=True)
 
-                if ( True ):
-                    out = f'{traj_prefix}_Xt-1_traj.pdb'
-                    writepdb_multi(out, denoised_xyz_stack, bfacts, 
-                        final_seq.squeeze(), use_hydrogens=False, backbone_only=False, chain_ids=sampler.chain_idx)
+                #if ( True ):
+                #    out = f'{traj_prefix}_Xt-1_traj.pdb'
+                #    writepdb_multi(out, denoised_xyz_stack, bfacts, 
+                #        final_seq.squeeze(), use_hydrogens=False, backbone_only=False, chain_ids=sampler.chain_idx)
 
-                    out=f'{traj_prefix}_pX0_traj.pdb'
-                    writepdb_multi(out, px0_xyz_stack, bfacts, 
-                        final_seq.squeeze(), use_hydrogens=False, backbone_only=False, chain_ids=sampler.chain_idx)
+                #    out=f'{traj_prefix}_pX0_traj.pdb'
+                #    writepdb_multi(out, px0_xyz_stack, bfacts, 
+                #        final_seq.squeeze(), use_hydrogens=False, backbone_only=False, chain_ids=sampler.chain_idx)
 
 
 

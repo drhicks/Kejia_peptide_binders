@@ -15,7 +15,7 @@ def get_parser():
     parser.add_argument("pdb", help="The path to the PDB file.")
     parser.add_argument("--manual_interface", type=str, help="Comma-separated list of manual interface residues (e.g., 23,24,25).")
     parser.add_argument("--pads", type=float, nargs='+', default=[0.0, 0.25], 
-        help="List of floats for modifiying fixed length contigs to be a range. The range will likely produce millions-billions of possibilities for diffusion to sample, which is too many, so we suggest sampling fixed length and a range. Default is [0.0, 0.25].")
+        help="List of floats for modifiying fixed length contigs to be a range. The range may produce millions of possibilities for diffusion to sample, which we would sparsely sample, so we suggest sampling both fixed length and a range. Default is [0.0, 0.25].")
     return parser
 
 def parse_interface_arg(interface_str):

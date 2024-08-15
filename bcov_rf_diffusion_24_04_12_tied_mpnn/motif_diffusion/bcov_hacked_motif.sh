@@ -8,17 +8,10 @@ contigB=${3}
 
 #TODO
 
-#NOTES
-#full diffusion is really slow, in order to decrease the cpu seconds per pdb,
-#we take each diffusion output and generate an ensemble
-#we do this by:
-#1. we generate 10 fast partial diffusion outputs
-
 # i/o 
 ckpt=$4
 BFF=$(basename $ckpt ".pt")
-# script='/home/bcov/sc/diffusion/st/23_01_04_time_warp/rf_diffusion/run_inference.py'
-script='/home/bcov/sc/diffusion/st/23_01_20_really_slow_mpnn/rf_diffusion/run_inference.py'
+script='/home/drhicks1/scripts/Kejia_peptide_binders/bcov_rf_diffusion_24_04_12_tied_mpnn/run_inference.py'
 
 
 #reduce these values to sample less
@@ -26,7 +19,7 @@ num_tries=500
 
 out_folder="diffusion_outputs/${base}_${BFF}_"
 
-apptainer exec -B /home/bcov -B /home/drhicks1 --nv \
+apptainer exec -B /home/drhicks1 --nv \
      /software/containers/SE3nv.sif python \
      $script --config-name=base \
      inference.output_prefix=$out_folder \

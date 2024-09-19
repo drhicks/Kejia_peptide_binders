@@ -249,7 +249,7 @@ def main():
             interface_res = get_filtered_interface_res(pose, chain1_range, chain2_range)
 
         contigA = process_pose(pose, poseA, interface_res, pad=pad)
-        contigB = f"B1-{poseB.size()}"
+        contigB = f"B{pose.chain_begin(2)}-{pose.chain_end(2)}"
         
         print_diffusion_job(args.pdb, contigA, contigB)
 

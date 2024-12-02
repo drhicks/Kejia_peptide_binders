@@ -124,7 +124,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
     
 2. **Run colabfold**.
     ```sh
-    /home/drhicks1/scripts/Kejia_peptide_binders/colabfold_initial_guess/make_apptainer/colab_fold_ig_cuda12.sif path_to/colabfold_initial_guess/AlphaFold2_jupyter-batch_hack_new_v2.py --fasta colabfold_input.fasta --num_recycles 10
+    apptainer exec -B /home/drhicks1 -B /mnt/home/drhicks1 --nv /home/drhicks1/scripts/Kejia_peptide_binders/colabfold_initial_guess/make_apptainer/colab_fold_ig_cuda12.sif python path_to/colabfold_initial_guess/AlphaFold2_jupyter-batch_hack_new_v2.py --fasta colabfold_input.fasta --num_recycles 10
     ```
 
 3. **Concatenate all the silent files together**:

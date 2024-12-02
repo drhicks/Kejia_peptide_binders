@@ -121,7 +121,7 @@ def main():
                         args.is_complex,
                         args.do_not_overwrite_results,
                         args.pair_mode,
-                        args.dpi
+                        args.dpi,
                         args.outname
                     )
 

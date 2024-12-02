@@ -27,13 +27,12 @@ IncludeCmd: yes
     bash /opt/miniconda.sh -b -u -p /usr
     rm /opt/miniconda.sh
 
-    # Initialize Conda
-    /usr/bin/conda init bash
-    echo "source /usr/etc/profile.d/conda.sh && conda activate colabfold_ig" >> ~/.bashrc
+    # Install Mamba (via conda-forge channel)
+    /usr/bin/conda install -n base -c conda-forge mamba -y
 
-    # Create and activate the Conda environment
-    echo -e "Creating Conda environment with GPU-enabled JAX and Pyrosetta for CUDA 12.0\n"
-    CONDA_OVERRIDE_CUDA='12.0' /usr/bin/conda create --name colabfold_ig python=3.11 \
+    # Create and activate the Mamba environment
+    echo -e "Creating Mamba environment with GPU-enabled JAX and Pyrosetta for CUDA 12.0\n"
+    CONDA_OVERRIDE_CUDA='12.0' /usr/bin/mamba create --name colabfold_ig python=3.11 \
         pip pandas matplotlib numpy'<2.0.0' biopython=1.81 scipy pdbfixer seaborn \
         kalign2=2.04 hhsuite=3.3.0 mmseqs2=14.7 openmm=8.0.0 \
         libgfortran5 tqdm jupyter ffmpeg pyrosetta fsspec py3dmol chex \
@@ -41,18 +40,13 @@ IncludeCmd: yes
         jaxlib=0.4.23=cuda120py311h5a49573_202 jax[cuda] cuda-nvcc cudnn appdirs tensorflow \
         -c conda-forge -c nvidia -c bioconda --channel https://conda.graylab.jhu.edu -y
 
-# jaxlib                        0.4.23 cuda120py311h5a49573_201  conda-forge
-# jaxlib                        0.4.23 cuda120py311h5a49573_202  conda-forge
-# jaxlib                        0.4.23 cuda120py311hfb00743_200  conda-forge
-# jaxlib                        0.4.23 cuda120py311hfb00743_201  conda-forge
-
     # Clean up
     apt-get clean
-    conda clean -y --all
+    mamba clean -y --all
     pip cache purge
 
 %environment
-    # Add CUDA 12.0 and Conda to the environment path
+    # Add CUDA 12.0 and Mamba environment to the PATH
     export PATH=/usr/local/cuda-12.0/bin:/usr/envs/colabfold_ig/bin:$PATH
     export LD_LIBRARY_PATH=/usr/local/cuda-12.0/lib64:$LD_LIBRARY_PATH
     export CUDA_HOME=/usr/local/cuda-12.0

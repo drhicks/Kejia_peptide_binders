@@ -7,3 +7,5 @@ colabfold_initial_guess/make_apptainer/log
 colabfold_initial_guess/make_apptainer/pyro.list
 colabfold_initial_guess/make_apptainer/colab_fold_ig.sif
 colabfold_initial_guess/make_apptainer/colab_fold_ig_cuda12.sif
+colabfold_initial_guess/make_apptainer/log12
+colabfold_initial_guess/make_apptainer/jaxlib.list

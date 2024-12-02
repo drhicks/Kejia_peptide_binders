@@ -70,7 +70,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
     ./run_submit.sh
     ```
 
-    In the paper, we have been routinely doing 2-rounds sequence design (i.e., MPNN-relax-MPNN-relax) for many targets in an ealier time. To do this, one can simply run the above script twice with the flag --relax on. Set --num_seq_per_target 1 in the first run and --num_seq_per_target 5 in the second.
+    In the paper, we had been routinely doing 2-rounds of sequence design (i.e., MPNN-relax-MPNN-relax) for many targets in an ealier time. To do this, one can simply run the above script twice with the flag --relax on. Set --num_seq_per_target 1 in the first run and --num_seq_per_target 5 in the second.
     
 
 4. **Concatenate all the silent files together**:
@@ -88,7 +88,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 
 2. **Make array jobs**:
     ```sh
-    path_to/job_creation/interfaceaf2create -prefix af2 -script path_to/colabfold_initial_guess/AlphaFold2_initial_guess_multimer.py -silent ../2_mpnn/mpnn_out.silent -gres "gpu:1" -apptainer /home/drhicks1/scripts/Kejia_peptide_binders/colabfold_initial_guess/make_apptainer/colab_fold_ig.sif -structs_per_job 300 -p gpu-bf -t 06:00:00
+    path_to/job_creation/interfaceaf2create -prefix af2 -script path_to/colabfold_initial_guess/AlphaFold2_initial_guess_multimer.py -silent ../2_mpnn/mpnn_out.silent -gres "gpu:1" -apptainer /home/drhicks1/scripts/Kejia_peptide_binders/colabfold_initial_guess/make_apptainer/colab_fold_ig_cuda12.sif -structs_per_job 300 -p gpu-bf -t 06:00:00
     ./run_submit.sh
     ```
 
@@ -109,6 +109,8 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
     column_number=$(head -1 cluster.log | tr '\t' '\n' | grep -n 'description' | cut -d: -f1); awk -v col=$column_number 'NR > 1 {print $col}' cluster.log | grep -oE '[a-zA-Z0-9_]+_af2mv3_[0-9]+' > tags
     ```
 
+    You could alternatively run the filtering without averaging all 5 alphafold models and it will simply select the 1 of 5 prediction with best iptm. For easier targets where all 5 predictions tend to converge, averaging may be better. For more difficult targets with low prediction pass rates, not averaging may be needed.
+
 ### 4. MPNN/AF2 cycle
 1. **Repeat MPNN step on filtered silent file**.
 
@@ -122,7 +124,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
     
 2. **Run colabfold**.
     ```sh
-    /home/drhicks1/scripts/Kejia_peptide_binders/colabfold_initial_guess/make_apptainer/colab_fold_ig.sif AlphaFold2_jupyter-batch_hack_new_v2.py --fasta colabfold_input.fasta --num_recycles 10
+    /home/drhicks1/scripts/Kejia_peptide_binders/colabfold_initial_guess/make_apptainer/colab_fold_ig_cuda12.sif path_to/colabfold_initial_guess/AlphaFold2_jupyter-batch_hack_new_v2.py --fasta colabfold_input.fasta --num_recycles 10
     ```
 
 3. **Concatenate all the silent files together**:
@@ -141,6 +143,8 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
     python path_to/af2_filtering/dynamic_filtering_by_group.py af2_out_averaged.sc af2_out.silent --not_initial_guess
     ```
 
+    You could alternatively run the filtering without averaging all 5 alphafold models and it will simply select the 1 of 5 prediction with best iptm. For easier targets where all 5 predictions tend to converge, averaging may be better. For more difficult targets with low prediction pass rates, not averaging may be needed.
+
 ### Additional Steps
 
 - **Other filtering steps as desired such as af2_filtering/rosetta_min_ddg.py and visual inspection to order**.
@@ -149,12 +153,15 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 ## Notes
 
 - You may choose to run MPNN with Rosetta relax, but this is slow and questionably useful. If you do, add the flag `--relax`.
-- If you run relax or minimization methods that can perturb the rigid body and/or binder/target backbones, you could run a second MPNN on the output of the first to potentially design a better sequence. However, the current preference is to go straight to AlphaFold filtering/refinement.
+- If you run relax or minimization methods that can perturb the rigid body and/or binder/target backbones, you could run a second MPNN on the output of the first to potentially design a better sequence. However, the current preference is to skip relax and go straight to AlphaFold filtering/refinement.
 - Diffusion can be run at various steps such as:
 1. After 1 or 2 rounds of mpnn/af2 , if not enough designs (< 70) passing the final filtering criteria, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion.
-2. On the final designs before ordering, if enough designs (>= 70) passing the final filtering criteria, but one may want to order on chips and/or include arbitrary refined designs in initial test, in which case you can repeat either the one cycle or two cycles of mpnn/af2 on the output from diffusion. Depending on available computation resources and chip quota.
+2. On the final designs before ordering, if enough designs (>= 70) passing the final filtering criteria, but one may want to order on chips (i.e. oligo library) and/or include arbitrary refined designs in initial test, in which case you can repeat either the one cycle or two cycles of mpnn/af2 on the output from diffusion. Depending on available computation resources and chip quota.
 3. On the initial hits after experimental screeining and characterization, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion.
 - In general the pipeline works most times without the use of diffusion, however, intellegent use of diffusion can increase in silico success rates for difficult targets and potentially improve the affinity and specificty of characterized binders.
+- We provide two scripts to help make jobs for running diffusion. The first uses motif diffusion which helps preserve interface interactions. The second is partial diffusion, which is more aggressive and will often lose good interface interactions like bidentate hydrogen bonds built into the inital template library.
+1. path_to/bcov_rf_diffusion_24_04_12_tied_mpnn/motif_diffusion/make_motif_diffusion_jobs.py
+2. path_to/bcov_rf_diffusion_24_04_12_tied_mpnn/partial_diffusion/make_partial_diffusion_jobs.py
 - There are many knobs that can be tuned and variations of the pipeline that can be run depending on the ease or difficulty of individual targets.
-- Diverse + good in silico designs generated by the pipeline (regardless of experimental characterization) can be added into the templates to continue building new diverse binding modes for the future.
+- Diverse + good in silico designs generated by the pipeline (regardless of experimental characterization) can be added back into the templates to continue building new diverse binding modes for the future.
 

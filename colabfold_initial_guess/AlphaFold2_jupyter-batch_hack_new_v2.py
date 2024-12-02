@@ -58,6 +58,7 @@ def setup_argparse():
     parser = argparse.ArgumentParser(description='Run AlphaFold predictions with customizable parameters.')
     parser.add_argument('--fasta', type=str, required=True, help='Path to the FASTA file containing query sequences.')
     parser.add_argument('--result_dir', type=str, default='./', help='Directory where results will be saved.')
+    parser.add_argument('--outname', type=str, default='out', help='name prefix for score file, silent file, and check point file')
     parser.add_argument('--msa_mode', type=str, default='single_sequence', choices=['MMseqs2 (UniRef+Environmental)', 'MMseqs2 (UniRef only)', 'single_sequence', 'custom'], help='Mode for multiple sequence alignment.')
     parser.add_argument('--pair_mode', type=str, default='unpaired+paired', choices=['unpaired+paired', 'paired', 'unpaired'], help='Pairing mode for sequences.')
     parser.add_argument('--model_type', type=str, default='auto', choices=['AlphaFold2-ptm', 'AlphaFold2-multimer-v3', 'auto'], help='Type of AlphaFold model to use.')
@@ -71,7 +72,7 @@ def setup_argparse():
     parser.add_argument('--custom_template_path', type=str, default=None, help='path to custom templates; currently not implemented')
     return parser.parse_args()
 
-def run_prediction(queries, result_dir, use_templates, custom_template_path, msa_mode, model_type, num_recycles, is_complex, do_not_overwrite_results, pair_mode, dpi):
+def run_prediction(queries, result_dir, use_templates, custom_template_path, msa_mode, model_type, num_recycles, is_complex, do_not_overwrite_results, pair_mode, dpi, outname):
     run(
         queries=queries,
         result_dir=result_dir,
@@ -94,7 +95,8 @@ def run_prediction(queries, result_dir, use_templates, custom_template_path, msa
         dpi=dpi,
         recycle_early_stop_tolerance=0.05,
         max_seq=256,
-        max_extra_seq=512
+        max_extra_seq=512,
+        outname=outname
     )
 
 def main():
@@ -120,6 +122,7 @@ def main():
                         args.do_not_overwrite_results,
                         args.pair_mode,
                         args.dpi
+                        args.outname
                     )
 
     except Exception as e:

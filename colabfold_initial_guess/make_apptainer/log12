@@ -1,0 +1,1907 @@
+INFO:    User not listed in /etc/subuid, trying root-mapped namespace
+INFO:    The %post section will be run under fakeroot
+INFO:    Starting build...
+Getting image source signatures
+Copying blob sha256:afad30e59d72d5c8df4023014c983e457f21818971775c4224163595ec20b69f
+Copying config sha256:fec8bfd95b54439b934c5033dc62d79b946291c327814f2d4df181e1d7536806
+Writing manifest to image destination
+Storing signatures
+2024/12/02 00:26:43  info unpack layer: sha256:afad30e59d72d5c8df4023014c983e457f21818971775c4224163595ec20b69f
+INFO:    Running setup scriptlet
++ mkdir -p /scratch/drhicks1/32366989/build-temp-3583227704/rootfs/apptainer_python_packages/
++ cp -r /home/drhicks1/silent_tools/ /scratch/drhicks1/32366989/build-temp-3583227704/rootfs/apptainer_python_packages/
++ rsync -a --ignore-existing --no-o --no-g /usr/local/cuda-12.0/lib64/ /scratch/drhicks1/32366989/build-temp-3583227704/rootfs/usr/lib/x86_64-linux-gnu/
++ rsync -a --ignore-existing --no-o --no-g /usr/local/cuda-12.0/bin/ /scratch/drhicks1/32366989/build-temp-3583227704/rootfs/usr/bin/
++ cp /usr/local/cuda/bin/ptxas /scratch/drhicks1/32366989/build-temp-3583227704/rootfs/apptainer_python_packages/
+INFO:    Copying /etc/localtime to 
+INFO:    Copying /etc/apt/sources.list to 
+INFO:    Copying /archive/software/Miniconda3-latest-Linux-x86_64.sh to /opt/miniconda.sh
+INFO:    Running post scriptlet
++ apt-get update
+Get:1 http://mirrors.ipd.uw.edu/ubuntu jammy InRelease [270 kB]
+Get:2 http://mirrors.ipd.uw.edu/ubuntu jammy-updates InRelease [128 kB]
+Get:3 http://mirrors.ipd.uw.edu/ubuntu jammy-security InRelease [129 kB]
+Ign:4 http://mirrors.ipd.uw.edu/ubuntu jammy/main amd64 Packages
+Ign:5 http://mirrors.ipd.uw.edu/ubuntu jammy/multiverse amd64 Packages
+Ign:6 http://mirrors.ipd.uw.edu/ubuntu jammy/universe amd64 Packages
+Get:4 http://mirrors.ipd.uw.edu/ubuntu jammy/main amd64 Packages [1792 kB]
+Get:5 http://mirrors.ipd.uw.edu/ubuntu jammy/multiverse amd64 Packages [266 kB]
+Get:7 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Get:6 http://mirrors.ipd.uw.edu/ubuntu jammy/universe amd64 Packages [17.5 MB]
+Ign:8 http://mirrors.ipd.uw.edu/ubuntu jammy-updates/universe amd64 Packages
+Ign:9 http://mirrors.ipd.uw.edu/ubuntu jammy-updates/multiverse amd64 Packages
+Ign:10 http://mirrors.ipd.uw.edu/ubuntu jammy-updates/main amd64 Packages
+Get:8 http://mirrors.ipd.uw.edu/ubuntu jammy-updates/universe amd64 Packages [1513 kB]
+Get:9 http://mirrors.ipd.uw.edu/ubuntu jammy-updates/multiverse amd64 Packages [52.2 kB]
+Get:10 http://mirrors.ipd.uw.edu/ubuntu jammy-updates/main amd64 Packages [2738 kB]
+Ign:11 http://mirrors.ipd.uw.edu/ubuntu jammy-security/multiverse amd64 Packages
+Ign:12 http://mirrors.ipd.uw.edu/ubuntu jammy-security/universe amd64 Packages
+Ign:13 http://mirrors.ipd.uw.edu/ubuntu jammy-security/main amd64 Packages
+Get:11 http://mirrors.ipd.uw.edu/ubuntu jammy-security/multiverse amd64 Packages [45.2 kB]
+Get:12 http://mirrors.ipd.uw.edu/ubuntu jammy-security/universe amd64 Packages [1224 kB]
+Get:13 http://mirrors.ipd.uw.edu/ubuntu jammy-security/main amd64 Packages [2454 kB]
+Get:14 http://archive.ubuntu.com/ubuntu noble InRelease [256 kB]
+Get:15 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [607 kB]
+Get:16 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [726 kB]
+Get:17 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [626 kB]
+Get:18 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Packages [15.3 kB]
+Get:19 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Get:20 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Get:21 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages [1808 kB]
+Get:22 http://archive.ubuntu.com/ubuntu noble/restricted amd64 Packages [117 kB]
+Get:23 http://archive.ubuntu.com/ubuntu noble/multiverse amd64 Packages [331 kB]
+Get:24 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages [19.3 MB]
+Get:25 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [607 kB]
+Get:26 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [935 kB]
+Get:27 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [18.4 kB]
+Get:28 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [856 kB]
+Get:29 http://archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [11.9 kB]
+Fetched 54.7 MB in 4s (12.6 MB/s)
+Reading package lists...
++ apt-get install -y wget git build-essential
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  adduser binutils binutils-common binutils-x86-64-linux-gnu bzip2
+  ca-certificates cpp cpp-13 cpp-13-x86-64-linux-gnu cpp-x86-64-linux-gnu
+  dirmngr dpkg-dev fakeroot fontconfig-config fonts-dejavu-core
+  fonts-dejavu-mono g++ g++-13 g++-13-x86-64-linux-gnu g++-x86-64-linux-gnu
+  gcc gcc-13 gcc-13-base gcc-13-x86-64-linux-gnu gcc-x86-64-linux-gnu git-man
+  gnupg gnupg-l10n gnupg-utils gpg gpg-agent gpg-wks-client gpgconf gpgsm
+  keyboxd krb5-locales less libalgorithm-diff-perl libalgorithm-diff-xs-perl
+  libalgorithm-merge-perl libaom3 libasan8 libatomic1 libbinutils libbrotli1
+  libbsd0 libc-dev-bin libc-devtools libc6-dev libcbor0.10 libcc1-0
+  libcrypt-dev libctf-nobfd0 libctf0 libcurl3t64-gnutls libde265-0 libdeflate0
+  libdpkg-perl libedit2 liberror-perl libexpat1 libfakeroot libfido2-1
+  libfile-fcntllock-perl libfontconfig1 libfreetype6 libgcc-13-dev libgd3
+  libgdbm-compat4t64 libgdbm6t64 libgomp1 libgprofng0 libgssapi-krb5-2
+  libheif-plugin-aomdec libheif-plugin-aomenc libheif-plugin-libde265 libheif1
+  libhwasan0 libisl23 libitm1 libjansson4 libjbig0 libjpeg-turbo8 libjpeg8
+  libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 libksba8 libldap-common
+  libldap2 liblerc4 liblocale-gettext-perl liblsan0 libmpc3 libmpfr6
+  libnghttp2-14 libperl5.38t64 libpng16-16t64 libpsl5t64 libquadmath0
+  libreadline8t64 librtmp1 libsasl2-2 libsasl2-modules libsasl2-modules-db
+  libsframe1 libsharpyuv0 libsqlite3-0 libssh-4 libstdc++-13-dev libtiff6
+  libtsan2 libubsan1 libwebp7 libx11-6 libx11-data libxau6 libxcb1 libxdmcp6
+  libxext6 libxmuu1 libxpm4 linux-libc-dev lto-disabled-list make manpages
+  manpages-dev netbase openssh-client openssl patch perl perl-modules-5.38
+  pinentry-curses publicsuffix readline-common rpcsvc-proto xauth xz-utils
+Suggested packages:
+  cron quota ecryptfs-utils binutils-doc gprofng-gui bzip2-doc cpp-doc
+  gcc-13-locales cpp-13-doc dbus-user-session libpam-systemd pinentry-gnome3
+  tor debian-keyring g++-multilib g++-13-multilib gcc-13-doc gcc-multilib
+  autoconf automake libtool flex bison gdb gcc-doc gcc-13-multilib
+  gdb-x86-64-linux-gnu gettext-base git-daemon-run | git-daemon-sysvinit
+  git-doc git-email git-gui gitk gitweb git-cvs git-mediawiki git-svn
+  parcimonie xloadimage gpg-wks-server scdaemon glibc-doc bzr libgd-tools
+  gdbm-l10n krb5-doc krb5-user libheif-plugin-x265 libheif-plugin-ffmpegdec
+  libheif-plugin-jpegdec libheif-plugin-jpegenc libheif-plugin-j2kdec
+  libheif-plugin-j2kenc libheif-plugin-rav1e libheif-plugin-svtenc
+  libsasl2-modules-gssapi-mit | libsasl2-modules-gssapi-heimdal
+  libsasl2-modules-ldap libsasl2-modules-otp libsasl2-modules-sql
+  libstdc++-13-doc make-doc man-browser keychain libpam-ssh monkeysphere
+  ssh-askpass ed diffutils-doc perl-doc libterm-readline-gnu-perl
+  | libterm-readline-perl-perl libtap-harness-archive-perl pinentry-doc
+  readline-doc
+The following NEW packages will be installed:
+  adduser binutils binutils-common binutils-x86-64-linux-gnu build-essential
+  bzip2 ca-certificates cpp cpp-13 cpp-13-x86-64-linux-gnu
+  cpp-x86-64-linux-gnu dirmngr dpkg-dev fakeroot fontconfig-config
+  fonts-dejavu-core fonts-dejavu-mono g++ g++-13 g++-13-x86-64-linux-gnu
+  g++-x86-64-linux-gnu gcc gcc-13 gcc-13-base gcc-13-x86-64-linux-gnu
+  gcc-x86-64-linux-gnu git git-man gnupg gnupg-l10n gnupg-utils gpg gpg-agent
+  gpg-wks-client gpgconf gpgsm keyboxd krb5-locales less
+  libalgorithm-diff-perl libalgorithm-diff-xs-perl libalgorithm-merge-perl
+  libaom3 libasan8 libatomic1 libbinutils libbrotli1 libbsd0 libc-dev-bin
+  libc-devtools libc6-dev libcbor0.10 libcc1-0 libcrypt-dev libctf-nobfd0
+  libctf0 libcurl3t64-gnutls libde265-0 libdeflate0 libdpkg-perl libedit2
+  liberror-perl libexpat1 libfakeroot libfido2-1 libfile-fcntllock-perl
+  libfontconfig1 libfreetype6 libgcc-13-dev libgd3 libgdbm-compat4t64
+  libgdbm6t64 libgomp1 libgprofng0 libgssapi-krb5-2 libheif-plugin-aomdec
+  libheif-plugin-aomenc libheif-plugin-libde265 libheif1 libhwasan0 libisl23
+  libitm1 libjansson4 libjbig0 libjpeg-turbo8 libjpeg8 libk5crypto3
+  libkeyutils1 libkrb5-3 libkrb5support0 libksba8 libldap-common libldap2
+  liblerc4 liblocale-gettext-perl liblsan0 libmpc3 libmpfr6 libnghttp2-14
+  libperl5.38t64 libpng16-16t64 libpsl5t64 libquadmath0 libreadline8t64
+  librtmp1 libsasl2-2 libsasl2-modules libsasl2-modules-db libsframe1
+  libsharpyuv0 libsqlite3-0 libssh-4 libstdc++-13-dev libtiff6 libtsan2
+  libubsan1 libwebp7 libx11-6 libx11-data libxau6 libxcb1 libxdmcp6 libxext6
+  libxmuu1 libxpm4 linux-libc-dev lto-disabled-list make manpages manpages-dev
+  netbase openssh-client openssl patch perl perl-modules-5.38 pinentry-curses
+  publicsuffix readline-common rpcsvc-proto wget xauth xz-utils
+0 upgraded, 143 newly installed, 0 to remove and 3 not upgraded.
+Need to get 105 MB of archives.
+After this operation, 393 MB of additional disk space will be used.
+Get:1 http://mirrors.ipd.uw.edu/ubuntu jammy/main amd64 libalgorithm-diff-perl all 1.201-1 [41.8 kB]
+Get:2 http://archive.ubuntu.com/ubuntu noble/main amd64 liblocale-gettext-perl amd64 1.07-6ubuntu5 [15.8 kB]
+Get:3 http://archive.ubuntu.com/ubuntu noble/main amd64 perl-modules-5.38 all 5.38.2-3.2build2 [3110 kB]
+Get:4 http://archive.ubuntu.com/ubuntu noble/main amd64 libgdbm6t64 amd64 1.23-5.1build1 [34.4 kB]
+Get:5 http://archive.ubuntu.com/ubuntu noble/main amd64 libgdbm-compat4t64 amd64 1.23-5.1build1 [6710 B]
+Get:6 http://archive.ubuntu.com/ubuntu noble/main amd64 libperl5.38t64 amd64 5.38.2-3.2build2 [4873 kB]
+Get:7 http://archive.ubuntu.com/ubuntu noble/main amd64 perl amd64 5.38.2-3.2build2 [231 kB]
+Get:8 http://archive.ubuntu.com/ubuntu noble/main amd64 adduser all 3.137ubuntu1 [101 kB]
+Get:9 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 openssl amd64 3.0.13-0ubuntu3.4 [1003 kB]
+Get:10 http://archive.ubuntu.com/ubuntu noble/main amd64 ca-certificates all 20240203 [159 kB]
+Get:11 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 krb5-locales all 1.20.1-6ubuntu2.2 [14.0 kB]
+Get:12 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 less amd64 590-2ubuntu2.1 [142 kB]
+Get:13 http://archive.ubuntu.com/ubuntu noble/main amd64 libbsd0 amd64 0.12.1-1build1 [41.2 kB]
+Get:14 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libexpat1 amd64 2.6.1-2ubuntu0.1 [87.1 kB]
+Get:15 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libkrb5support0 amd64 1.20.1-6ubuntu2.2 [33.7 kB]
+Get:16 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libk5crypto3 amd64 1.20.1-6ubuntu2.2 [81.8 kB]
+Get:17 http://archive.ubuntu.com/ubuntu noble/main amd64 libkeyutils1 amd64 1.6.3-3build1 [9490 B]
+Get:18 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libkrb5-3 amd64 1.20.1-6ubuntu2.2 [347 kB]
+Get:19 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libgssapi-krb5-2 amd64 1.20.1-6ubuntu2.2 [143 kB]
+Get:20 http://archive.ubuntu.com/ubuntu noble/main amd64 readline-common all 8.2-4build1 [56.5 kB]
+Get:21 http://archive.ubuntu.com/ubuntu noble/main amd64 libreadline8t64 amd64 8.2-4build1 [153 kB]
+Get:22 http://archive.ubuntu.com/ubuntu noble/main amd64 libsqlite3-0 amd64 3.45.1-1ubuntu2 [701 kB]
+Get:23 http://archive.ubuntu.com/ubuntu noble/main amd64 netbase all 6.4 [13.1 kB]
+Get:24 http://archive.ubuntu.com/ubuntu noble/main amd64 libcbor0.10 amd64 0.10.2-1.2ubuntu2 [25.8 kB]
+Get:25 http://archive.ubuntu.com/ubuntu noble/main amd64 libedit2 amd64 3.1-20230828-1build1 [97.6 kB]
+Get:26 http://archive.ubuntu.com/ubuntu noble/main amd64 libfido2-1 amd64 1.14.0-1build3 [83.5 kB]
+Get:27 http://archive.ubuntu.com/ubuntu noble/main amd64 libjansson4 amd64 2.14-2build2 [32.8 kB]
+Get:28 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libnghttp2-14 amd64 1.59.0-1ubuntu0.1 [74.3 kB]
+Get:29 http://archive.ubuntu.com/ubuntu noble/main amd64 libpng16-16t64 amd64 1.6.43-5build1 [187 kB]
+Get:30 http://archive.ubuntu.com/ubuntu noble/main amd64 libpsl5t64 amd64 0.21.2-1.1build1 [57.1 kB]
+Get:31 http://archive.ubuntu.com/ubuntu noble/main amd64 libxau6 amd64 1:1.0.9-1build6 [7160 B]
+Get:32 http://archive.ubuntu.com/ubuntu noble/main amd64 libxdmcp6 amd64 1:1.1.3-0ubuntu6 [10.3 kB]
+Get:33 http://archive.ubuntu.com/ubuntu noble/main amd64 libxcb1 amd64 1.15-1ubuntu2 [47.7 kB]
+Get:34 http://archive.ubuntu.com/ubuntu noble/main amd64 libx11-data all 2:1.8.7-1build1 [115 kB]
+Get:35 http://archive.ubuntu.com/ubuntu noble/main amd64 libx11-6 amd64 2:1.8.7-1build1 [650 kB]
+Get:36 http://archive.ubuntu.com/ubuntu noble/main amd64 libxext6 amd64 2:1.3.4-1build2 [30.4 kB]
+Get:37 http://archive.ubuntu.com/ubuntu noble/main amd64 libxmuu1 amd64 2:1.1.3-3build2 [8958 B]
+Get:38 http://archive.ubuntu.com/ubuntu noble/main amd64 manpages all 6.7-2 [1384 kB]
+Get:39 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 openssh-client amd64 1:9.6p1-3ubuntu13.5 [905 kB]
+Get:40 http://archive.ubuntu.com/ubuntu noble/main amd64 publicsuffix all 20231001.0357-0.1 [129 kB]
+Get:41 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 wget amd64 1.21.4-1ubuntu4.1 [334 kB]
+Get:42 http://archive.ubuntu.com/ubuntu noble/main amd64 xauth amd64 1:1.1.2-1build1 [25.6 kB]
+Get:43 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 xz-utils amd64 5.6.1+really5.4.5-1build0.1 [267 kB]
+Get:44 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 binutils-common amd64 2.42-4ubuntu2.3 [239 kB]
+Get:45 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libsframe1 amd64 2.42-4ubuntu2.3 [14.9 kB]
+Get:46 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libbinutils amd64 2.42-4ubuntu2.3 [575 kB]
+Get:47 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libctf-nobfd0 amd64 2.42-4ubuntu2.3 [97.1 kB]
+Get:48 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libctf0 amd64 2.42-4ubuntu2.3 [94.5 kB]
+Get:49 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libgprofng0 amd64 2.42-4ubuntu2.3 [849 kB]
+Get:50 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 binutils-x86-64-linux-gnu amd64 2.42-4ubuntu2.3 [2463 kB]
+Get:51 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 binutils amd64 2.42-4ubuntu2.3 [18.1 kB]
+Get:52 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libc-dev-bin amd64 2.39-0ubuntu8.3 [60.8 kB]
+Get:53 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 linux-libc-dev amd64 6.8.0-49.49 [1716 kB]
+Get:54 http://archive.ubuntu.com/ubuntu noble/main amd64 libcrypt-dev amd64 1:4.4.36-4build1 [112 kB]
+Get:55 http://archive.ubuntu.com/ubuntu noble/main amd64 rpcsvc-proto amd64 1.4.2-0ubuntu7 [67.4 kB]
+Get:56 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libc6-dev amd64 2.39-0ubuntu8.3 [2164 kB]
+Get:57 http://archive.ubuntu.com/ubuntu noble/main amd64 gcc-13-base amd64 13.2.0-23ubuntu4 [49.0 kB]
+Get:58 http://archive.ubuntu.com/ubuntu noble/main amd64 libisl23 amd64 0.26-3build1 [680 kB]
+Get:59 http://archive.ubuntu.com/ubuntu noble/main amd64 libmpfr6 amd64 4.2.1-1build1 [355 kB]
+Get:60 http://archive.ubuntu.com/ubuntu noble/main amd64 libmpc3 amd64 1.3.1-1build1 [54.5 kB]
+Get:61 http://archive.ubuntu.com/ubuntu noble/main amd64 cpp-13-x86-64-linux-gnu amd64 13.2.0-23ubuntu4 [11.2 MB]
+Get:62 http://archive.ubuntu.com/ubuntu noble/main amd64 cpp-13 amd64 13.2.0-23ubuntu4 [1032 B]
+Get:63 http://archive.ubuntu.com/ubuntu noble/main amd64 cpp-x86-64-linux-gnu amd64 4:13.2.0-7ubuntu1 [5326 B]
+Get:64 http://archive.ubuntu.com/ubuntu noble/main amd64 cpp amd64 4:13.2.0-7ubuntu1 [22.4 kB]
+Get:65 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libcc1-0 amd64 14.2.0-4ubuntu2~24.04 [48.0 kB]
+Get:66 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libgomp1 amd64 14.2.0-4ubuntu2~24.04 [148 kB]
+Get:67 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libitm1 amd64 14.2.0-4ubuntu2~24.04 [29.7 kB]
+Get:68 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libatomic1 amd64 14.2.0-4ubuntu2~24.04 [10.5 kB]
+Get:69 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libasan8 amd64 14.2.0-4ubuntu2~24.04 [3031 kB]
+Get:70 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 liblsan0 amd64 14.2.0-4ubuntu2~24.04 [1322 kB]
+Get:71 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libtsan2 amd64 14.2.0-4ubuntu2~24.04 [2772 kB]
+Get:72 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libubsan1 amd64 14.2.0-4ubuntu2~24.04 [1184 kB]
+Get:73 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libhwasan0 amd64 14.2.0-4ubuntu2~24.04 [1641 kB]
+Get:74 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libquadmath0 amd64 14.2.0-4ubuntu2~24.04 [153 kB]
+Get:75 http://archive.ubuntu.com/ubuntu noble/main amd64 libgcc-13-dev amd64 13.2.0-23ubuntu4 [2688 kB]
+Get:76 http://archive.ubuntu.com/ubuntu noble/main amd64 gcc-13-x86-64-linux-gnu amd64 13.2.0-23ubuntu4 [21.9 MB]
+Get:77 http://archive.ubuntu.com/ubuntu noble/main amd64 gcc-13 amd64 13.2.0-23ubuntu4 [482 kB]
+Get:78 http://archive.ubuntu.com/ubuntu noble/main amd64 gcc-x86-64-linux-gnu amd64 4:13.2.0-7ubuntu1 [1212 B]
+Get:79 http://archive.ubuntu.com/ubuntu noble/main amd64 gcc amd64 4:13.2.0-7ubuntu1 [5018 B]
+Get:80 http://archive.ubuntu.com/ubuntu noble/main amd64 libstdc++-13-dev amd64 13.2.0-23ubuntu4 [2399 kB]
+Get:81 http://archive.ubuntu.com/ubuntu noble/main amd64 g++-13-x86-64-linux-gnu amd64 13.2.0-23ubuntu4 [12.5 MB]
+Get:82 http://archive.ubuntu.com/ubuntu noble/main amd64 g++-13 amd64 13.2.0-23ubuntu4 [14.5 kB]
+Get:83 http://archive.ubuntu.com/ubuntu noble/main amd64 g++-x86-64-linux-gnu amd64 4:13.2.0-7ubuntu1 [964 B]
+Get:84 http://archive.ubuntu.com/ubuntu noble/main amd64 g++ amd64 4:13.2.0-7ubuntu1 [1100 B]
+Get:85 http://archive.ubuntu.com/ubuntu noble/main amd64 make amd64 4.3-4.1build2 [180 kB]
+Get:86 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libdpkg-perl all 1.22.6ubuntu6.1 [269 kB]
+Get:87 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 bzip2 amd64 1.0.8-5.1build0.1 [34.5 kB]
+Get:88 http://archive.ubuntu.com/ubuntu noble/main amd64 patch amd64 2.7.6-7build3 [104 kB]
+Get:89 http://archive.ubuntu.com/ubuntu noble/main amd64 lto-disabled-list all 47 [12.4 kB]
+Get:90 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 dpkg-dev all 1.22.6ubuntu6.1 [1074 kB]
+Get:91 http://archive.ubuntu.com/ubuntu noble/main amd64 build-essential amd64 12.10ubuntu1 [4928 B]
+Get:92 http://archive.ubuntu.com/ubuntu noble/main amd64 gpgconf amd64 2.4.4-2ubuntu17 [103 kB]
+Get:93 http://archive.ubuntu.com/ubuntu noble/main amd64 libksba8 amd64 1.6.6-1build1 [122 kB]
+Get:94 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libsasl2-modules-db amd64 2.1.28+dfsg1-5ubuntu3.1 [20.4 kB]
+Get:95 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libsasl2-2 amd64 2.1.28+dfsg1-5ubuntu3.1 [53.2 kB]
+Get:96 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libldap2 amd64 2.6.7+dfsg-1~exp1ubuntu8.1 [195 kB]
+Get:97 http://archive.ubuntu.com/ubuntu noble/main amd64 dirmngr amd64 2.4.4-2ubuntu17 [323 kB]
+Get:98 http://archive.ubuntu.com/ubuntu noble/main amd64 libfakeroot amd64 1.33-1 [32.4 kB]
+Get:99 http://archive.ubuntu.com/ubuntu noble/main amd64 fakeroot amd64 1.33-1 [67.2 kB]
+Get:100 http://archive.ubuntu.com/ubuntu noble/main amd64 fonts-dejavu-mono all 2.37-8 [502 kB]
+Get:101 http://archive.ubuntu.com/ubuntu noble/main amd64 fonts-dejavu-core all 2.37-8 [835 kB]
+Get:102 http://archive.ubuntu.com/ubuntu noble/main amd64 fontconfig-config amd64 2.15.0-1.1ubuntu2 [37.3 kB]
+Get:103 http://archive.ubuntu.com/ubuntu noble/main amd64 libbrotli1 amd64 1.1.0-2build2 [331 kB]
+Get:104 http://archive.ubuntu.com/ubuntu noble/main amd64 librtmp1 amd64 2.4+20151223.gitfa8646d.1-2build7 [56.3 kB]
+Get:105 http://archive.ubuntu.com/ubuntu noble/main amd64 libssh-4 amd64 0.10.6-2build2 [188 kB]
+Get:106 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libcurl3t64-gnutls amd64 8.5.0-2ubuntu10.5 [333 kB]
+Get:107 http://archive.ubuntu.com/ubuntu noble/main amd64 liberror-perl all 0.17029-2 [25.6 kB]
+Get:108 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 git-man all 1:2.43.0-1ubuntu7.1 [1100 kB]
+Get:109 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 git amd64 1:2.43.0-1ubuntu7.1 [3679 kB]
+Get:110 http://archive.ubuntu.com/ubuntu noble/main amd64 gnupg-utils amd64 2.4.4-2ubuntu17 [108 kB]
+Get:111 http://archive.ubuntu.com/ubuntu noble/main amd64 gpg amd64 2.4.4-2ubuntu17 [565 kB]
+Get:112 http://archive.ubuntu.com/ubuntu noble/main amd64 pinentry-curses amd64 1.2.1-3ubuntu5 [35.2 kB]
+Get:113 http://archive.ubuntu.com/ubuntu noble/main amd64 gpg-agent amd64 2.4.4-2ubuntu17 [227 kB]
+Get:114 http://archive.ubuntu.com/ubuntu noble/main amd64 gpgsm amd64 2.4.4-2ubuntu17 [232 kB]
+Get:115 http://archive.ubuntu.com/ubuntu noble/main amd64 keyboxd amd64 2.4.4-2ubuntu17 [78.3 kB]
+Get:116 http://archive.ubuntu.com/ubuntu noble/main amd64 gnupg all 2.4.4-2ubuntu17 [359 kB]
+Get:117 http://archive.ubuntu.com/ubuntu noble/main amd64 gnupg-l10n all 2.4.4-2ubuntu17 [65.9 kB]
+Get:118 http://archive.ubuntu.com/ubuntu noble/main amd64 gpg-wks-client amd64 2.4.4-2ubuntu17 [70.9 kB]
+Get:119 http://archive.ubuntu.com/ubuntu noble/main amd64 libalgorithm-diff-xs-perl amd64 0.04-8build3 [11.2 kB]
+Get:120 http://archive.ubuntu.com/ubuntu noble/main amd64 libalgorithm-merge-perl all 0.08-5 [11.4 kB]
+Get:121 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libaom3 amd64 3.8.2-2ubuntu0.1 [1941 kB]
+Get:122 http://archive.ubuntu.com/ubuntu noble/main amd64 libfreetype6 amd64 2.13.2+dfsg-1build3 [402 kB]
+Get:123 http://archive.ubuntu.com/ubuntu noble/main amd64 libfontconfig1 amd64 2.15.0-1.1ubuntu2 [139 kB]
+Get:124 http://archive.ubuntu.com/ubuntu noble/main amd64 libsharpyuv0 amd64 1.3.2-0.4build3 [15.8 kB]
+Get:125 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libheif-plugin-aomdec amd64 1.17.6-1ubuntu4.1 [10.4 kB]
+Get:126 http://archive.ubuntu.com/ubuntu noble/main amd64 libde265-0 amd64 1.0.15-1build3 [166 kB]
+Get:127 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libheif-plugin-libde265 amd64 1.17.6-1ubuntu4.1 [8176 B]
+Get:128 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libheif1 amd64 1.17.6-1ubuntu4.1 [275 kB]
+Get:129 http://archive.ubuntu.com/ubuntu noble/main amd64 libjpeg-turbo8 amd64 2.1.5-2ubuntu2 [150 kB]
+Get:130 http://archive.ubuntu.com/ubuntu noble/main amd64 libjpeg8 amd64 8c-2ubuntu11 [2148 B]
+Get:131 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libdeflate0 amd64 1.19-1build1.1 [43.9 kB]
+Get:132 http://archive.ubuntu.com/ubuntu noble/main amd64 libjbig0 amd64 2.1-6.1ubuntu2 [29.7 kB]
+Get:133 http://archive.ubuntu.com/ubuntu noble/main amd64 liblerc4 amd64 4.0.0+ds-4ubuntu2 [179 kB]
+Get:134 http://archive.ubuntu.com/ubuntu noble/main amd64 libwebp7 amd64 1.3.2-0.4build3 [230 kB]
+Get:135 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libtiff6 amd64 4.5.1+git230720-4ubuntu2.2 [199 kB]
+Get:136 http://archive.ubuntu.com/ubuntu noble/main amd64 libxpm4 amd64 1:3.5.17-1build2 [36.5 kB]
+Get:137 http://archive.ubuntu.com/ubuntu noble/main amd64 libgd3 amd64 2.3.3-9ubuntu5 [128 kB]
+Get:138 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libc-devtools amd64 2.39-0ubuntu8.3 [69.7 kB]
+Get:139 http://archive.ubuntu.com/ubuntu noble/main amd64 libfile-fcntllock-perl amd64 0.22-4ubuntu5 [30.7 kB]
+Get:140 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libheif-plugin-aomenc amd64 1.17.6-1ubuntu4.1 [14.7 kB]
+Get:141 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libldap-common all 2.6.7+dfsg-1~exp1ubuntu8.1 [31.5 kB]
+Get:142 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libsasl2-modules amd64 2.1.28+dfsg1-5ubuntu3.1 [69.9 kB]
+Get:143 http://archive.ubuntu.com/ubuntu noble/main amd64 manpages-dev all 6.7-2 [2013 kB]
+debconf: delaying package configuration, since apt-utils is not installed
+Fetched 105 MB in 29s (3639 kB/s)
+Selecting previously unselected package liblocale-gettext-perl.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 4379 files and directories currently installed.)
+Preparing to unpack .../0-liblocale-gettext-perl_1.07-6ubuntu5_amd64.deb ...
+Unpacking liblocale-gettext-perl (1.07-6ubuntu5) ...
+Selecting previously unselected package perl-modules-5.38.
+Preparing to unpack .../1-perl-modules-5.38_5.38.2-3.2build2_all.deb ...
+Unpacking perl-modules-5.38 (5.38.2-3.2build2) ...
+Selecting previously unselected package libgdbm6t64:amd64.
+Preparing to unpack .../2-libgdbm6t64_1.23-5.1build1_amd64.deb ...
+Unpacking libgdbm6t64:amd64 (1.23-5.1build1) ...
+Selecting previously unselected package libgdbm-compat4t64:amd64.
+Preparing to unpack .../3-libgdbm-compat4t64_1.23-5.1build1_amd64.deb ...
+Unpacking libgdbm-compat4t64:amd64 (1.23-5.1build1) ...
+Selecting previously unselected package libperl5.38t64:amd64.
+Preparing to unpack .../4-libperl5.38t64_5.38.2-3.2build2_amd64.deb ...
+Unpacking libperl5.38t64:amd64 (5.38.2-3.2build2) ...
+Selecting previously unselected package perl.
+Preparing to unpack .../5-perl_5.38.2-3.2build2_amd64.deb ...
+Unpacking perl (5.38.2-3.2build2) ...
+Selecting previously unselected package adduser.
+Preparing to unpack .../6-adduser_3.137ubuntu1_all.deb ...
+Unpacking adduser (3.137ubuntu1) ...
+Setting up adduser (3.137ubuntu1) ...
+Selecting previously unselected package openssl.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 6453 files and directories currently installed.)
+Preparing to unpack .../000-openssl_3.0.13-0ubuntu3.4_amd64.deb ...
+Unpacking openssl (3.0.13-0ubuntu3.4) ...
+Selecting previously unselected package ca-certificates.
+Preparing to unpack .../001-ca-certificates_20240203_all.deb ...
+Unpacking ca-certificates (20240203) ...
+Selecting previously unselected package krb5-locales.
+Preparing to unpack .../002-krb5-locales_1.20.1-6ubuntu2.2_all.deb ...
+Unpacking krb5-locales (1.20.1-6ubuntu2.2) ...
+Selecting previously unselected package less.
+Preparing to unpack .../003-less_590-2ubuntu2.1_amd64.deb ...
+Unpacking less (590-2ubuntu2.1) ...
+Selecting previously unselected package libbsd0:amd64.
+Preparing to unpack .../004-libbsd0_0.12.1-1build1_amd64.deb ...
+Unpacking libbsd0:amd64 (0.12.1-1build1) ...
+Selecting previously unselected package libexpat1:amd64.
+Preparing to unpack .../005-libexpat1_2.6.1-2ubuntu0.1_amd64.deb ...
+Unpacking libexpat1:amd64 (2.6.1-2ubuntu0.1) ...
+Selecting previously unselected package libkrb5support0:amd64.
+Preparing to unpack .../006-libkrb5support0_1.20.1-6ubuntu2.2_amd64.deb ...
+Unpacking libkrb5support0:amd64 (1.20.1-6ubuntu2.2) ...
+Selecting previously unselected package libk5crypto3:amd64.
+Preparing to unpack .../007-libk5crypto3_1.20.1-6ubuntu2.2_amd64.deb ...
+Unpacking libk5crypto3:amd64 (1.20.1-6ubuntu2.2) ...
+Selecting previously unselected package libkeyutils1:amd64.
+Preparing to unpack .../008-libkeyutils1_1.6.3-3build1_amd64.deb ...
+Unpacking libkeyutils1:amd64 (1.6.3-3build1) ...
+Selecting previously unselected package libkrb5-3:amd64.
+Preparing to unpack .../009-libkrb5-3_1.20.1-6ubuntu2.2_amd64.deb ...
+Unpacking libkrb5-3:amd64 (1.20.1-6ubuntu2.2) ...
+Selecting previously unselected package libgssapi-krb5-2:amd64.
+Preparing to unpack .../010-libgssapi-krb5-2_1.20.1-6ubuntu2.2_amd64.deb ...
+Unpacking libgssapi-krb5-2:amd64 (1.20.1-6ubuntu2.2) ...
+Selecting previously unselected package readline-common.
+Preparing to unpack .../011-readline-common_8.2-4build1_all.deb ...
+Unpacking readline-common (8.2-4build1) ...
+Selecting previously unselected package libreadline8t64:amd64.
+Preparing to unpack .../012-libreadline8t64_8.2-4build1_amd64.deb ...
+Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8 to /lib/x86_64-linux-gnu/libhistory.so.8.usr-is-merged by libreadline8t64'
+Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8.2 to /lib/x86_64-linux-gnu/libhistory.so.8.2.usr-is-merged by libreadline8t64'
+Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8 to /lib/x86_64-linux-gnu/libreadline.so.8.usr-is-merged by libreadline8t64'
+Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8.2 to /lib/x86_64-linux-gnu/libreadline.so.8.2.usr-is-merged by libreadline8t64'
+Unpacking libreadline8t64:amd64 (8.2-4build1) ...
+Selecting previously unselected package libsqlite3-0:amd64.
+Preparing to unpack .../013-libsqlite3-0_3.45.1-1ubuntu2_amd64.deb ...
+Unpacking libsqlite3-0:amd64 (3.45.1-1ubuntu2) ...
+Selecting previously unselected package netbase.
+Preparing to unpack .../014-netbase_6.4_all.deb ...
+Unpacking netbase (6.4) ...
+Selecting previously unselected package libcbor0.10:amd64.
+Preparing to unpack .../015-libcbor0.10_0.10.2-1.2ubuntu2_amd64.deb ...
+Unpacking libcbor0.10:amd64 (0.10.2-1.2ubuntu2) ...
+Selecting previously unselected package libedit2:amd64.
+Preparing to unpack .../016-libedit2_3.1-20230828-1build1_amd64.deb ...
+Unpacking libedit2:amd64 (3.1-20230828-1build1) ...
+Selecting previously unselected package libfido2-1:amd64.
+Preparing to unpack .../017-libfido2-1_1.14.0-1build3_amd64.deb ...
+Unpacking libfido2-1:amd64 (1.14.0-1build3) ...
+Selecting previously unselected package libjansson4:amd64.
+Preparing to unpack .../018-libjansson4_2.14-2build2_amd64.deb ...
+Unpacking libjansson4:amd64 (2.14-2build2) ...
+Selecting previously unselected package libnghttp2-14:amd64.
+Preparing to unpack .../019-libnghttp2-14_1.59.0-1ubuntu0.1_amd64.deb ...
+Unpacking libnghttp2-14:amd64 (1.59.0-1ubuntu0.1) ...
+Selecting previously unselected package libpng16-16t64:amd64.
+Preparing to unpack .../020-libpng16-16t64_1.6.43-5build1_amd64.deb ...
+Unpacking libpng16-16t64:amd64 (1.6.43-5build1) ...
+Selecting previously unselected package libpsl5t64:amd64.
+Preparing to unpack .../021-libpsl5t64_0.21.2-1.1build1_amd64.deb ...
+Unpacking libpsl5t64:amd64 (0.21.2-1.1build1) ...
+Selecting previously unselected package libxau6:amd64.
+Preparing to unpack .../022-libxau6_1%3a1.0.9-1build6_amd64.deb ...
+Unpacking libxau6:amd64 (1:1.0.9-1build6) ...
+Selecting previously unselected package libxdmcp6:amd64.
+Preparing to unpack .../023-libxdmcp6_1%3a1.1.3-0ubuntu6_amd64.deb ...
+Unpacking libxdmcp6:amd64 (1:1.1.3-0ubuntu6) ...
+Selecting previously unselected package libxcb1:amd64.
+Preparing to unpack .../024-libxcb1_1.15-1ubuntu2_amd64.deb ...
+Unpacking libxcb1:amd64 (1.15-1ubuntu2) ...
+Selecting previously unselected package libx11-data.
+Preparing to unpack .../025-libx11-data_2%3a1.8.7-1build1_all.deb ...
+Unpacking libx11-data (2:1.8.7-1build1) ...
+Selecting previously unselected package libx11-6:amd64.
+Preparing to unpack .../026-libx11-6_2%3a1.8.7-1build1_amd64.deb ...
+Unpacking libx11-6:amd64 (2:1.8.7-1build1) ...
+Selecting previously unselected package libxext6:amd64.
+Preparing to unpack .../027-libxext6_2%3a1.3.4-1build2_amd64.deb ...
+Unpacking libxext6:amd64 (2:1.3.4-1build2) ...
+Selecting previously unselected package libxmuu1:amd64.
+Preparing to unpack .../028-libxmuu1_2%3a1.1.3-3build2_amd64.deb ...
+Unpacking libxmuu1:amd64 (2:1.1.3-3build2) ...
+Selecting previously unselected package manpages.
+Preparing to unpack .../029-manpages_6.7-2_all.deb ...
+Unpacking manpages (6.7-2) ...
+Selecting previously unselected package openssh-client.
+Preparing to unpack .../030-openssh-client_1%3a9.6p1-3ubuntu13.5_amd64.deb ...
+Unpacking openssh-client (1:9.6p1-3ubuntu13.5) ...
+Selecting previously unselected package publicsuffix.
+Preparing to unpack .../031-publicsuffix_20231001.0357-0.1_all.deb ...
+Unpacking publicsuffix (20231001.0357-0.1) ...
+Selecting previously unselected package wget.
+Preparing to unpack .../032-wget_1.21.4-1ubuntu4.1_amd64.deb ...
+Unpacking wget (1.21.4-1ubuntu4.1) ...
+Selecting previously unselected package xauth.
+Preparing to unpack .../033-xauth_1%3a1.1.2-1build1_amd64.deb ...
+Unpacking xauth (1:1.1.2-1build1) ...
+Selecting previously unselected package xz-utils.
+Preparing to unpack .../034-xz-utils_5.6.1+really5.4.5-1build0.1_amd64.deb ...
+Unpacking xz-utils (5.6.1+really5.4.5-1build0.1) ...
+Selecting previously unselected package binutils-common:amd64.
+Preparing to unpack .../035-binutils-common_2.42-4ubuntu2.3_amd64.deb ...
+Unpacking binutils-common:amd64 (2.42-4ubuntu2.3) ...
+Selecting previously unselected package libsframe1:amd64.
+Preparing to unpack .../036-libsframe1_2.42-4ubuntu2.3_amd64.deb ...
+Unpacking libsframe1:amd64 (2.42-4ubuntu2.3) ...
+Selecting previously unselected package libbinutils:amd64.
+Preparing to unpack .../037-libbinutils_2.42-4ubuntu2.3_amd64.deb ...
+Unpacking libbinutils:amd64 (2.42-4ubuntu2.3) ...
+Selecting previously unselected package libctf-nobfd0:amd64.
+Preparing to unpack .../038-libctf-nobfd0_2.42-4ubuntu2.3_amd64.deb ...
+Unpacking libctf-nobfd0:amd64 (2.42-4ubuntu2.3) ...
+Selecting previously unselected package libctf0:amd64.
+Preparing to unpack .../039-libctf0_2.42-4ubuntu2.3_amd64.deb ...
+Unpacking libctf0:amd64 (2.42-4ubuntu2.3) ...
+Selecting previously unselected package libgprofng0:amd64.
+Preparing to unpack .../040-libgprofng0_2.42-4ubuntu2.3_amd64.deb ...
+Unpacking libgprofng0:amd64 (2.42-4ubuntu2.3) ...
+Selecting previously unselected package binutils-x86-64-linux-gnu.
+Preparing to unpack .../041-binutils-x86-64-linux-gnu_2.42-4ubuntu2.3_amd64.deb ...
+Unpacking binutils-x86-64-linux-gnu (2.42-4ubuntu2.3) ...
+Selecting previously unselected package binutils.
+Preparing to unpack .../042-binutils_2.42-4ubuntu2.3_amd64.deb ...
+Unpacking binutils (2.42-4ubuntu2.3) ...
+Selecting previously unselected package libc-dev-bin.
+Preparing to unpack .../043-libc-dev-bin_2.39-0ubuntu8.3_amd64.deb ...
+Unpacking libc-dev-bin (2.39-0ubuntu8.3) ...
+Selecting previously unselected package linux-libc-dev:amd64.
+Preparing to unpack .../044-linux-libc-dev_6.8.0-49.49_amd64.deb ...
+Unpacking linux-libc-dev:amd64 (6.8.0-49.49) ...
+Selecting previously unselected package libcrypt-dev:amd64.
+Preparing to unpack .../045-libcrypt-dev_1%3a4.4.36-4build1_amd64.deb ...
+Unpacking libcrypt-dev:amd64 (1:4.4.36-4build1) ...
+Selecting previously unselected package rpcsvc-proto.
+Preparing to unpack .../046-rpcsvc-proto_1.4.2-0ubuntu7_amd64.deb ...
+Unpacking rpcsvc-proto (1.4.2-0ubuntu7) ...
+Selecting previously unselected package libc6-dev:amd64.
+Preparing to unpack .../047-libc6-dev_2.39-0ubuntu8.3_amd64.deb ...
+Unpacking libc6-dev:amd64 (2.39-0ubuntu8.3) ...
+Selecting previously unselected package gcc-13-base:amd64.
+Preparing to unpack .../048-gcc-13-base_13.2.0-23ubuntu4_amd64.deb ...
+Unpacking gcc-13-base:amd64 (13.2.0-23ubuntu4) ...
+Selecting previously unselected package libisl23:amd64.
+Preparing to unpack .../049-libisl23_0.26-3build1_amd64.deb ...
+Unpacking libisl23:amd64 (0.26-3build1) ...
+Selecting previously unselected package libmpfr6:amd64.
+Preparing to unpack .../050-libmpfr6_4.2.1-1build1_amd64.deb ...
+Unpacking libmpfr6:amd64 (4.2.1-1build1) ...
+Selecting previously unselected package libmpc3:amd64.
+Preparing to unpack .../051-libmpc3_1.3.1-1build1_amd64.deb ...
+Unpacking libmpc3:amd64 (1.3.1-1build1) ...
+Selecting previously unselected package cpp-13-x86-64-linux-gnu.
+Preparing to unpack .../052-cpp-13-x86-64-linux-gnu_13.2.0-23ubuntu4_amd64.deb ...
+Unpacking cpp-13-x86-64-linux-gnu (13.2.0-23ubuntu4) ...
+Selecting previously unselected package cpp-13.
+Preparing to unpack .../053-cpp-13_13.2.0-23ubuntu4_amd64.deb ...
+Unpacking cpp-13 (13.2.0-23ubuntu4) ...
+Selecting previously unselected package cpp-x86-64-linux-gnu.
+Preparing to unpack .../054-cpp-x86-64-linux-gnu_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking cpp-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package cpp.
+Preparing to unpack .../055-cpp_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking cpp (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package libcc1-0:amd64.
+Preparing to unpack .../056-libcc1-0_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libcc1-0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libgomp1:amd64.
+Preparing to unpack .../057-libgomp1_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libgomp1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libitm1:amd64.
+Preparing to unpack .../058-libitm1_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libitm1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libatomic1:amd64.
+Preparing to unpack .../059-libatomic1_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libatomic1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libasan8:amd64.
+Preparing to unpack .../060-libasan8_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libasan8:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package liblsan0:amd64.
+Preparing to unpack .../061-liblsan0_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking liblsan0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libtsan2:amd64.
+Preparing to unpack .../062-libtsan2_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libtsan2:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libubsan1:amd64.
+Preparing to unpack .../063-libubsan1_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libubsan1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libhwasan0:amd64.
+Preparing to unpack .../064-libhwasan0_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libhwasan0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libquadmath0:amd64.
+Preparing to unpack .../065-libquadmath0_14.2.0-4ubuntu2~24.04_amd64.deb ...
+Unpacking libquadmath0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Selecting previously unselected package libgcc-13-dev:amd64.
+Preparing to unpack .../066-libgcc-13-dev_13.2.0-23ubuntu4_amd64.deb ...
+Unpacking libgcc-13-dev:amd64 (13.2.0-23ubuntu4) ...
+Selecting previously unselected package gcc-13-x86-64-linux-gnu.
+Preparing to unpack .../067-gcc-13-x86-64-linux-gnu_13.2.0-23ubuntu4_amd64.deb ...
+Unpacking gcc-13-x86-64-linux-gnu (13.2.0-23ubuntu4) ...
+Selecting previously unselected package gcc-13.
+Preparing to unpack .../068-gcc-13_13.2.0-23ubuntu4_amd64.deb ...
+Unpacking gcc-13 (13.2.0-23ubuntu4) ...
+Selecting previously unselected package gcc-x86-64-linux-gnu.
+Preparing to unpack .../069-gcc-x86-64-linux-gnu_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking gcc-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package gcc.
+Preparing to unpack .../070-gcc_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking gcc (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package libstdc++-13-dev:amd64.
+Preparing to unpack .../071-libstdc++-13-dev_13.2.0-23ubuntu4_amd64.deb ...
+Unpacking libstdc++-13-dev:amd64 (13.2.0-23ubuntu4) ...
+Selecting previously unselected package g++-13-x86-64-linux-gnu.
+Preparing to unpack .../072-g++-13-x86-64-linux-gnu_13.2.0-23ubuntu4_amd64.deb ...
+Unpacking g++-13-x86-64-linux-gnu (13.2.0-23ubuntu4) ...
+Selecting previously unselected package g++-13.
+Preparing to unpack .../073-g++-13_13.2.0-23ubuntu4_amd64.deb ...
+Unpacking g++-13 (13.2.0-23ubuntu4) ...
+Selecting previously unselected package g++-x86-64-linux-gnu.
+Preparing to unpack .../074-g++-x86-64-linux-gnu_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking g++-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package g++.
+Preparing to unpack .../075-g++_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking g++ (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package make.
+Preparing to unpack .../076-make_4.3-4.1build2_amd64.deb ...
+Unpacking make (4.3-4.1build2) ...
+Selecting previously unselected package libdpkg-perl.
+Preparing to unpack .../077-libdpkg-perl_1.22.6ubuntu6.1_all.deb ...
+Unpacking libdpkg-perl (1.22.6ubuntu6.1) ...
+Selecting previously unselected package bzip2.
+Preparing to unpack .../078-bzip2_1.0.8-5.1build0.1_amd64.deb ...
+Unpacking bzip2 (1.0.8-5.1build0.1) ...
+Selecting previously unselected package patch.
+Preparing to unpack .../079-patch_2.7.6-7build3_amd64.deb ...
+Unpacking patch (2.7.6-7build3) ...
+Selecting previously unselected package lto-disabled-list.
+Preparing to unpack .../080-lto-disabled-list_47_all.deb ...
+Unpacking lto-disabled-list (47) ...
+Selecting previously unselected package dpkg-dev.
+Preparing to unpack .../081-dpkg-dev_1.22.6ubuntu6.1_all.deb ...
+Unpacking dpkg-dev (1.22.6ubuntu6.1) ...
+Selecting previously unselected package build-essential.
+Preparing to unpack .../082-build-essential_12.10ubuntu1_amd64.deb ...
+Unpacking build-essential (12.10ubuntu1) ...
+Selecting previously unselected package gpgconf.
+Preparing to unpack .../083-gpgconf_2.4.4-2ubuntu17_amd64.deb ...
+Unpacking gpgconf (2.4.4-2ubuntu17) ...
+Selecting previously unselected package libksba8:amd64.
+Preparing to unpack .../084-libksba8_1.6.6-1build1_amd64.deb ...
+Unpacking libksba8:amd64 (1.6.6-1build1) ...
+Selecting previously unselected package libsasl2-modules-db:amd64.
+Preparing to unpack .../085-libsasl2-modules-db_2.1.28+dfsg1-5ubuntu3.1_amd64.deb ...
+Unpacking libsasl2-modules-db:amd64 (2.1.28+dfsg1-5ubuntu3.1) ...
+Selecting previously unselected package libsasl2-2:amd64.
+Preparing to unpack .../086-libsasl2-2_2.1.28+dfsg1-5ubuntu3.1_amd64.deb ...
+Unpacking libsasl2-2:amd64 (2.1.28+dfsg1-5ubuntu3.1) ...
+Selecting previously unselected package libldap2:amd64.
+Preparing to unpack .../087-libldap2_2.6.7+dfsg-1~exp1ubuntu8.1_amd64.deb ...
+Unpacking libldap2:amd64 (2.6.7+dfsg-1~exp1ubuntu8.1) ...
+Selecting previously unselected package dirmngr.
+Preparing to unpack .../088-dirmngr_2.4.4-2ubuntu17_amd64.deb ...
+Unpacking dirmngr (2.4.4-2ubuntu17) ...
+Selecting previously unselected package libfakeroot:amd64.
+Preparing to unpack .../089-libfakeroot_1.33-1_amd64.deb ...
+Unpacking libfakeroot:amd64 (1.33-1) ...
+Selecting previously unselected package fakeroot.
+Preparing to unpack .../090-fakeroot_1.33-1_amd64.deb ...
+Unpacking fakeroot (1.33-1) ...
+Selecting previously unselected package fonts-dejavu-mono.
+Preparing to unpack .../091-fonts-dejavu-mono_2.37-8_all.deb ...
+Unpacking fonts-dejavu-mono (2.37-8) ...
+Selecting previously unselected package fonts-dejavu-core.
+Preparing to unpack .../092-fonts-dejavu-core_2.37-8_all.deb ...
+Unpacking fonts-dejavu-core (2.37-8) ...
+Selecting previously unselected package fontconfig-config.
+Preparing to unpack .../093-fontconfig-config_2.15.0-1.1ubuntu2_amd64.deb ...
+Unpacking fontconfig-config (2.15.0-1.1ubuntu2) ...
+Selecting previously unselected package libbrotli1:amd64.
+Preparing to unpack .../094-libbrotli1_1.1.0-2build2_amd64.deb ...
+Unpacking libbrotli1:amd64 (1.1.0-2build2) ...
+Selecting previously unselected package librtmp1:amd64.
+Preparing to unpack .../095-librtmp1_2.4+20151223.gitfa8646d.1-2build7_amd64.deb ...
+Unpacking librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2build7) ...
+Selecting previously unselected package libssh-4:amd64.
+Preparing to unpack .../096-libssh-4_0.10.6-2build2_amd64.deb ...
+Unpacking libssh-4:amd64 (0.10.6-2build2) ...
+Selecting previously unselected package libcurl3t64-gnutls:amd64.
+Preparing to unpack .../097-libcurl3t64-gnutls_8.5.0-2ubuntu10.5_amd64.deb ...
+Unpacking libcurl3t64-gnutls:amd64 (8.5.0-2ubuntu10.5) ...
+Selecting previously unselected package liberror-perl.
+Preparing to unpack .../098-liberror-perl_0.17029-2_all.deb ...
+Unpacking liberror-perl (0.17029-2) ...
+Selecting previously unselected package git-man.
+Preparing to unpack .../099-git-man_1%3a2.43.0-1ubuntu7.1_all.deb ...
+Unpacking git-man (1:2.43.0-1ubuntu7.1) ...
+Selecting previously unselected package git.
+Preparing to unpack .../100-git_1%3a2.43.0-1ubuntu7.1_amd64.deb ...
+Unpacking git (1:2.43.0-1ubuntu7.1) ...
+Selecting previously unselected package gnupg-utils.
+Preparing to unpack .../101-gnupg-utils_2.4.4-2ubuntu17_amd64.deb ...
+Unpacking gnupg-utils (2.4.4-2ubuntu17) ...
+Selecting previously unselected package gpg.
+Preparing to unpack .../102-gpg_2.4.4-2ubuntu17_amd64.deb ...
+Unpacking gpg (2.4.4-2ubuntu17) ...
+Selecting previously unselected package pinentry-curses.
+Preparing to unpack .../103-pinentry-curses_1.2.1-3ubuntu5_amd64.deb ...
+Unpacking pinentry-curses (1.2.1-3ubuntu5) ...
+Selecting previously unselected package gpg-agent.
+Preparing to unpack .../104-gpg-agent_2.4.4-2ubuntu17_amd64.deb ...
+Unpacking gpg-agent (2.4.4-2ubuntu17) ...
+Selecting previously unselected package gpgsm.
+Preparing to unpack .../105-gpgsm_2.4.4-2ubuntu17_amd64.deb ...
+Unpacking gpgsm (2.4.4-2ubuntu17) ...
+Selecting previously unselected package keyboxd.
+Preparing to unpack .../106-keyboxd_2.4.4-2ubuntu17_amd64.deb ...
+Unpacking keyboxd (2.4.4-2ubuntu17) ...
+Selecting previously unselected package gnupg.
+Preparing to unpack .../107-gnupg_2.4.4-2ubuntu17_all.deb ...
+Unpacking gnupg (2.4.4-2ubuntu17) ...
+Selecting previously unselected package gnupg-l10n.
+Preparing to unpack .../108-gnupg-l10n_2.4.4-2ubuntu17_all.deb ...
+Unpacking gnupg-l10n (2.4.4-2ubuntu17) ...
+Selecting previously unselected package gpg-wks-client.
+Preparing to unpack .../109-gpg-wks-client_2.4.4-2ubuntu17_amd64.deb ...
+Unpacking gpg-wks-client (2.4.4-2ubuntu17) ...
+Selecting previously unselected package libalgorithm-diff-perl.
+Preparing to unpack .../110-libalgorithm-diff-perl_1.201-1_all.deb ...
+Unpacking libalgorithm-diff-perl (1.201-1) ...
+Selecting previously unselected package libalgorithm-diff-xs-perl:amd64.
+Preparing to unpack .../111-libalgorithm-diff-xs-perl_0.04-8build3_amd64.deb ...
+Unpacking libalgorithm-diff-xs-perl:amd64 (0.04-8build3) ...
+Selecting previously unselected package libalgorithm-merge-perl.
+Preparing to unpack .../112-libalgorithm-merge-perl_0.08-5_all.deb ...
+Unpacking libalgorithm-merge-perl (0.08-5) ...
+Selecting previously unselected package libaom3:amd64.
+Preparing to unpack .../113-libaom3_3.8.2-2ubuntu0.1_amd64.deb ...
+Unpacking libaom3:amd64 (3.8.2-2ubuntu0.1) ...
+Selecting previously unselected package libfreetype6:amd64.
+Preparing to unpack .../114-libfreetype6_2.13.2+dfsg-1build3_amd64.deb ...
+Unpacking libfreetype6:amd64 (2.13.2+dfsg-1build3) ...
+Selecting previously unselected package libfontconfig1:amd64.
+Preparing to unpack .../115-libfontconfig1_2.15.0-1.1ubuntu2_amd64.deb ...
+Unpacking libfontconfig1:amd64 (2.15.0-1.1ubuntu2) ...
+Selecting previously unselected package libsharpyuv0:amd64.
+Preparing to unpack .../116-libsharpyuv0_1.3.2-0.4build3_amd64.deb ...
+Unpacking libsharpyuv0:amd64 (1.3.2-0.4build3) ...
+Selecting previously unselected package libheif-plugin-aomdec:amd64.
+Preparing to unpack .../117-libheif-plugin-aomdec_1.17.6-1ubuntu4.1_amd64.deb ...
+Unpacking libheif-plugin-aomdec:amd64 (1.17.6-1ubuntu4.1) ...
+Selecting previously unselected package libde265-0:amd64.
+Preparing to unpack .../118-libde265-0_1.0.15-1build3_amd64.deb ...
+Unpacking libde265-0:amd64 (1.0.15-1build3) ...
+Selecting previously unselected package libheif-plugin-libde265:amd64.
+Preparing to unpack .../119-libheif-plugin-libde265_1.17.6-1ubuntu4.1_amd64.deb ...
+Unpacking libheif-plugin-libde265:amd64 (1.17.6-1ubuntu4.1) ...
+Selecting previously unselected package libheif1:amd64.
+Preparing to unpack .../120-libheif1_1.17.6-1ubuntu4.1_amd64.deb ...
+Unpacking libheif1:amd64 (1.17.6-1ubuntu4.1) ...
+Selecting previously unselected package libjpeg-turbo8:amd64.
+Preparing to unpack .../121-libjpeg-turbo8_2.1.5-2ubuntu2_amd64.deb ...
+Unpacking libjpeg-turbo8:amd64 (2.1.5-2ubuntu2) ...
+Selecting previously unselected package libjpeg8:amd64.
+Preparing to unpack .../122-libjpeg8_8c-2ubuntu11_amd64.deb ...
+Unpacking libjpeg8:amd64 (8c-2ubuntu11) ...
+Selecting previously unselected package libdeflate0:amd64.
+Preparing to unpack .../123-libdeflate0_1.19-1build1.1_amd64.deb ...
+Unpacking libdeflate0:amd64 (1.19-1build1.1) ...
+Selecting previously unselected package libjbig0:amd64.
+Preparing to unpack .../124-libjbig0_2.1-6.1ubuntu2_amd64.deb ...
+Unpacking libjbig0:amd64 (2.1-6.1ubuntu2) ...
+Selecting previously unselected package liblerc4:amd64.
+Preparing to unpack .../125-liblerc4_4.0.0+ds-4ubuntu2_amd64.deb ...
+Unpacking liblerc4:amd64 (4.0.0+ds-4ubuntu2) ...
+Selecting previously unselected package libwebp7:amd64.
+Preparing to unpack .../126-libwebp7_1.3.2-0.4build3_amd64.deb ...
+Unpacking libwebp7:amd64 (1.3.2-0.4build3) ...
+Selecting previously unselected package libtiff6:amd64.
+Preparing to unpack .../127-libtiff6_4.5.1+git230720-4ubuntu2.2_amd64.deb ...
+Unpacking libtiff6:amd64 (4.5.1+git230720-4ubuntu2.2) ...
+Selecting previously unselected package libxpm4:amd64.
+Preparing to unpack .../128-libxpm4_1%3a3.5.17-1build2_amd64.deb ...
+Unpacking libxpm4:amd64 (1:3.5.17-1build2) ...
+Selecting previously unselected package libgd3:amd64.
+Preparing to unpack .../129-libgd3_2.3.3-9ubuntu5_amd64.deb ...
+Unpacking libgd3:amd64 (2.3.3-9ubuntu5) ...
+Selecting previously unselected package libc-devtools.
+Preparing to unpack .../130-libc-devtools_2.39-0ubuntu8.3_amd64.deb ...
+Unpacking libc-devtools (2.39-0ubuntu8.3) ...
+Selecting previously unselected package libfile-fcntllock-perl.
+Preparing to unpack .../131-libfile-fcntllock-perl_0.22-4ubuntu5_amd64.deb ...
+Unpacking libfile-fcntllock-perl (0.22-4ubuntu5) ...
+Selecting previously unselected package libheif-plugin-aomenc:amd64.
+Preparing to unpack .../132-libheif-plugin-aomenc_1.17.6-1ubuntu4.1_amd64.deb ...
+Unpacking libheif-plugin-aomenc:amd64 (1.17.6-1ubuntu4.1) ...
+Selecting previously unselected package libldap-common.
+Preparing to unpack .../133-libldap-common_2.6.7+dfsg-1~exp1ubuntu8.1_all.deb ...
+Unpacking libldap-common (2.6.7+dfsg-1~exp1ubuntu8.1) ...
+Selecting previously unselected package libsasl2-modules:amd64.
+Preparing to unpack .../134-libsasl2-modules_2.1.28+dfsg1-5ubuntu3.1_amd64.deb ...
+Unpacking libsasl2-modules:amd64 (2.1.28+dfsg1-5ubuntu3.1) ...
+Selecting previously unselected package manpages-dev.
+Preparing to unpack .../135-manpages-dev_6.7-2_all.deb ...
+Unpacking manpages-dev (6.7-2) ...
+Setting up libksba8:amd64 (1.6.6-1build1) ...
+Setting up pinentry-curses (1.2.1-3ubuntu5) ...
+Setting up libexpat1:amd64 (2.6.1-2ubuntu0.1) ...
+Setting up libsharpyuv0:amd64 (1.3.2-0.4build3) ...
+Setting up libaom3:amd64 (3.8.2-2ubuntu0.1) ...
+Setting up libxau6:amd64 (1:1.0.9-1build6) ...
+Setting up libkeyutils1:amd64 (1.6.3-3build1) ...
+Setting up lto-disabled-list (47) ...
+Setting up liblerc4:amd64 (4.0.0+ds-4ubuntu2) ...
+Setting up libgdbm6t64:amd64 (1.23-5.1build1) ...
+Setting up libgdbm-compat4t64:amd64 (1.23-5.1build1) ...
+Setting up libcbor0.10:amd64 (0.10.2-1.2ubuntu2) ...
+Setting up manpages (6.7-2) ...
+Setting up libbrotli1:amd64 (1.1.0-2build2) ...
+Setting up libsqlite3-0:amd64 (3.45.1-1ubuntu2) ...
+Setting up libsasl2-modules:amd64 (2.1.28+dfsg1-5ubuntu3.1) ...
+Setting up binutils-common:amd64 (2.42-4ubuntu2.3) ...
+Setting up libpsl5t64:amd64 (0.21.2-1.1build1) ...
+Setting up libnghttp2-14:amd64 (1.59.0-1ubuntu0.1) ...
+Setting up libdeflate0:amd64 (1.19-1build1.1) ...
+Setting up less (590-2ubuntu2.1) ...
+Setting up linux-libc-dev:amd64 (6.8.0-49.49) ...
+Setting up libctf-nobfd0:amd64 (2.42-4ubuntu2.3) ...
+Setting up krb5-locales (1.20.1-6ubuntu2.2) ...
+Setting up libgomp1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up bzip2 (1.0.8-5.1build0.1) ...
+Setting up libldap-common (2.6.7+dfsg-1~exp1ubuntu8.1) ...
+Setting up libjbig0:amd64 (2.1-6.1ubuntu2) ...
+Setting up libsframe1:amd64 (2.42-4ubuntu2.3) ...
+Setting up libfakeroot:amd64 (1.33-1) ...
+Setting up libjansson4:amd64 (2.14-2build2) ...
+Setting up libkrb5support0:amd64 (1.20.1-6ubuntu2.2) ...
+Setting up libsasl2-modules-db:amd64 (2.1.28+dfsg1-5ubuntu3.1) ...
+Setting up fakeroot (1.33-1) ...
+update-alternatives: using /usr/bin/fakeroot-sysv to provide /usr/bin/fakeroot (fakeroot) in auto mode
+update-alternatives: warning: skip creation of /usr/share/man/man1/fakeroot.1.gz because associated file /usr/share/man/man1/fakeroot-sysv.1.gz (of link group fakeroot) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/man1/faked.1.gz because associated file /usr/share/man/man1/faked-sysv.1.gz (of link group fakeroot) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/es/man1/fakeroot.1.gz because associated file /usr/share/man/es/man1/fakeroot-sysv.1.gz (of link group fakeroot) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/es/man1/faked.1.gz because associated file /usr/share/man/es/man1/faked-sysv.1.gz (of link group fakeroot) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/fr/man1/fakeroot.1.gz because associated file /usr/share/man/fr/man1/fakeroot-sysv.1.gz (of link group fakeroot) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/fr/man1/faked.1.gz because associated file /usr/share/man/fr/man1/faked-sysv.1.gz (of link group fakeroot) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/sv/man1/fakeroot.1.gz because associated file /usr/share/man/sv/man1/fakeroot-sysv.1.gz (of link group fakeroot) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/sv/man1/faked.1.gz because associated file /usr/share/man/sv/man1/faked-sysv.1.gz (of link group fakeroot) doesn't exist
+Setting up rpcsvc-proto (1.4.2-0ubuntu7) ...
+Setting up gcc-13-base:amd64 (13.2.0-23ubuntu4) ...
+Setting up libx11-data (2:1.8.7-1build1) ...
+Setting up make (4.3-4.1build2) ...
+Setting up libmpfr6:amd64 (4.2.1-1build1) ...
+Setting up gnupg-l10n (2.4.4-2ubuntu17) ...
+Setting up librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2build7) ...
+Setting up xz-utils (5.6.1+really5.4.5-1build0.1) ...
+update-alternatives: using /usr/bin/xz to provide /usr/bin/lzma (lzma) in auto mode
+update-alternatives: warning: skip creation of /usr/share/man/man1/lzma.1.gz because associated file /usr/share/man/man1/xz.1.gz (of link group lzma) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/man1/unlzma.1.gz because associated file /usr/share/man/man1/unxz.1.gz (of link group lzma) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/man1/lzcat.1.gz because associated file /usr/share/man/man1/xzcat.1.gz (of link group lzma) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/man1/lzmore.1.gz because associated file /usr/share/man/man1/xzmore.1.gz (of link group lzma) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/man1/lzless.1.gz because associated file /usr/share/man/man1/xzless.1.gz (of link group lzma) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/man1/lzdiff.1.gz because associated file /usr/share/man/man1/xzdiff.1.gz (of link group lzma) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/man1/lzcmp.1.gz because associated file /usr/share/man/man1/xzcmp.1.gz (of link group lzma) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/man1/lzgrep.1.gz because associated file /usr/share/man/man1/xzgrep.1.gz (of link group lzma) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/man1/lzegrep.1.gz because associated file /usr/share/man/man1/xzegrep.1.gz (of link group lzma) doesn't exist
+update-alternatives: warning: skip creation of /usr/share/man/man1/lzfgrep.1.gz because associated file /usr/share/man/man1/xzfgrep.1.gz (of link group lzma) doesn't exist
+Setting up perl-modules-5.38 (5.38.2-3.2build2) ...
+Setting up libquadmath0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up fonts-dejavu-mono (2.37-8) ...
+Setting up libpng16-16t64:amd64 (1.6.43-5build1) ...
+Setting up libmpc3:amd64 (1.3.1-1build1) ...
+Setting up libatomic1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up patch (2.7.6-7build3) ...
+Setting up fonts-dejavu-core (2.37-8) ...
+Setting up libk5crypto3:amd64 (1.20.1-6ubuntu2.2) ...
+Setting up libjpeg-turbo8:amd64 (2.1.5-2ubuntu2) ...
+Setting up libsasl2-2:amd64 (2.1.28+dfsg1-5ubuntu3.1) ...
+Setting up libwebp7:amd64 (1.3.2-0.4build3) ...
+Setting up libubsan1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up libhwasan0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up libcrypt-dev:amd64 (1:4.4.36-4build1) ...
+Setting up libasan8:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up git-man (1:2.43.0-1ubuntu7.1) ...
+Setting up netbase (6.4) ...
+Setting up libkrb5-3:amd64 (1.20.1-6ubuntu2.2) ...
+Setting up libperl5.38t64:amd64 (5.38.2-3.2build2) ...
+Setting up libtsan2:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up libbinutils:amd64 (2.42-4ubuntu2.3) ...
+Setting up libfido2-1:amd64 (1.14.0-1build3) ...
+Setting up libisl23:amd64 (0.26-3build1) ...
+Setting up libde265-0:amd64 (1.0.15-1build3) ...
+Setting up libc-dev-bin (2.39-0ubuntu8.3) ...
+Setting up openssl (3.0.13-0ubuntu3.4) ...
+Setting up libbsd0:amd64 (0.12.1-1build1) ...
+Setting up readline-common (8.2-4build1) ...
+Setting up publicsuffix (20231001.0357-0.1) ...
+Setting up libcc1-0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up libldap2:amd64 (2.6.7+dfsg-1~exp1ubuntu8.1) ...
+Setting up liblocale-gettext-perl (1.07-6ubuntu5) ...
+Setting up liblsan0:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up libitm1:amd64 (14.2.0-4ubuntu2~24.04) ...
+Setting up gnupg-utils (2.4.4-2ubuntu17) ...
+Setting up libctf0:amd64 (2.42-4ubuntu2.3) ...
+Setting up libjpeg8:amd64 (8c-2ubuntu11) ...
+Setting up manpages-dev (6.7-2) ...
+Setting up libxdmcp6:amd64 (1:1.1.3-0ubuntu6) ...
+Setting up libxcb1:amd64 (1.15-1ubuntu2) ...
+Setting up wget (1.21.4-1ubuntu4.1) ...
+Setting up cpp-13-x86-64-linux-gnu (13.2.0-23ubuntu4) ...
+Setting up fontconfig-config (2.15.0-1.1ubuntu2) ...
+Setting up libedit2:amd64 (3.1-20230828-1build1) ...
+Setting up ca-certificates (20240203) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (No usable dialog-like program is installed, so the dialog based frontend cannot be used. at /usr/share/perl5/Debconf/FrontEnd/Dialog.pm line 79.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+Updating certificates in /etc/ssl/certs...
+146 added, 0 removed; done.
+Setting up perl (5.38.2-3.2build2) ...
+Setting up libgprofng0:amd64 (2.42-4ubuntu2.3) ...
+Setting up libfreetype6:amd64 (2.13.2+dfsg-1build3) ...
+Setting up libgssapi-krb5-2:amd64 (1.20.1-6ubuntu2.2) ...
+Setting up libdpkg-perl (1.22.6ubuntu6.1) ...
+Setting up libssh-4:amd64 (0.10.6-2build2) ...
+Setting up libreadline8t64:amd64 (8.2-4build1) ...
+Setting up libgcc-13-dev:amd64 (13.2.0-23ubuntu4) ...
+Setting up libtiff6:amd64 (4.5.1+git230720-4ubuntu2.2) ...
+Setting up gpgconf (2.4.4-2ubuntu17) ...
+Setting up libc6-dev:amd64 (2.39-0ubuntu8.3) ...
+Setting up libx11-6:amd64 (2:1.8.7-1build1) ...
+Setting up libfontconfig1:amd64 (2.15.0-1.1ubuntu2) ...
+Setting up libxmuu1:amd64 (2:1.1.3-3build2) ...
+Setting up gpg (2.4.4-2ubuntu17) ...
+Setting up libstdc++-13-dev:amd64 (13.2.0-23ubuntu4) ...
+Setting up binutils-x86-64-linux-gnu (2.42-4ubuntu2.3) ...
+Setting up cpp-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Setting up gpg-agent (2.4.4-2ubuntu17) ...
+Setting up libxpm4:amd64 (1:3.5.17-1build2) ...
+Setting up cpp-13 (13.2.0-23ubuntu4) ...
+Setting up libfile-fcntllock-perl (0.22-4ubuntu5) ...
+Setting up libalgorithm-diff-perl (1.201-1) ...
+Setting up openssh-client (1:9.6p1-3ubuntu13.5) ...
+Setting up gcc-13-x86-64-linux-gnu (13.2.0-23ubuntu4) ...
+Setting up gpgsm (2.4.4-2ubuntu17) ...
+Setting up libcurl3t64-gnutls:amd64 (8.5.0-2ubuntu10.5) ...
+Setting up libxext6:amd64 (2:1.3.4-1build2) ...
+Setting up binutils (2.42-4ubuntu2.3) ...
+Setting up dpkg-dev (1.22.6ubuntu6.1) ...
+Setting up liberror-perl (0.17029-2) ...
+Setting up dirmngr (2.4.4-2ubuntu17) ...
+Setting up gcc-13 (13.2.0-23ubuntu4) ...
+Setting up keyboxd (2.4.4-2ubuntu17) ...
+Setting up git (1:2.43.0-1ubuntu7.1) ...
+Setting up xauth (1:1.1.2-1build1) ...
+Setting up cpp (4:13.2.0-7ubuntu1) ...
+Setting up gnupg (2.4.4-2ubuntu17) ...
+Setting up libalgorithm-diff-xs-perl:amd64 (0.04-8build3) ...
+Setting up libalgorithm-merge-perl (0.08-5) ...
+Setting up g++-13-x86-64-linux-gnu (13.2.0-23ubuntu4) ...
+Setting up gcc-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Setting up gpg-wks-client (2.4.4-2ubuntu17) ...
+Setting up gcc (4:13.2.0-7ubuntu1) ...
+Setting up g++-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Setting up g++-13 (13.2.0-23ubuntu4) ...
+Setting up g++ (4:13.2.0-7ubuntu1) ...
+update-alternatives: using /usr/bin/g++ to provide /usr/bin/c++ (c++) in auto mode
+update-alternatives: warning: skip creation of /usr/share/man/man1/c++.1.gz because associated file /usr/share/man/man1/g++.1.gz (of link group c++) doesn't exist
+Setting up build-essential (12.10ubuntu1) ...
+Setting up libheif1:amd64 (1.17.6-1ubuntu4.1) ...
+Setting up libgd3:amd64 (2.3.3-9ubuntu5) ...
+Setting up libc-devtools (2.39-0ubuntu8.3) ...
+Setting up libheif-plugin-aomdec:amd64 (1.17.6-1ubuntu4.1) ...
+Setting up libheif-plugin-libde265:amd64 (1.17.6-1ubuntu4.1) ...
+Setting up libheif-plugin-aomenc:amd64 (1.17.6-1ubuntu4.1) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.3) ...
+Processing triggers for ca-certificates (20240203) ...
+Updating certificates in /etc/ssl/certs...
+0 added, 0 removed; done.
+Running hooks in /etc/ca-certificates/update.d...
+done.
++ bash /opt/miniconda.sh -b -u -p /usr
+PREFIX=/usr
+Unpacking payload ...
+  0%|          | 0/73 [00:00<?, ?it/s]Extracting : sqlite-3.41.2-h5eee18b_0.conda:   0%|          | 0/73 [00:00<?, ?it/s]Extracting : pysocks-1.7.1-py310h06a4308_0.conda:   1%|▏         | 1/73 [00:00<00:01, 37.66it/s]Extracting : ncurses-6.4-h6a678d5_0.conda:   3%|▎         | 2/73 [00:01<00:45,  1.55it/s]       Extracting : ncurses-6.4-h6a678d5_0.conda:   4%|▍         | 3/73 [00:01<00:30,  2.33it/s]Extracting : reproc-cpp-14.2.4-h295c915_1.conda:   4%|▍         | 3/73 [00:01<00:30,  2.33it/s]Extracting : _openmp_mutex-5.1-1_gnu.conda:   5%|▌         | 4/73 [00:01<00:29,  2.33it/s]     Extracting : xz-5.4.5-h5eee18b_0.conda:   7%|▋         | 5/73 [00:01<00:29,  2.33it/s]    Extracting : zstd-1.5.5-hc292b87_0.conda:   8%|▊         | 6/73 [00:01<00:28,  2.33it/s]Extracting : pycosat-0.6.6-py310h5eee18b_0.conda:  10%|▉         | 7/73 [00:01<00:28,  2.33it/s]Extracting : libsolv-0.7.24-he621ea3_0.conda:  11%|█         | 8/73 [00:01<00:27,  2.33it/s]    Extracting : libgomp-11.2.0-h1234567_1.conda:  12%|█▏        | 9/73 [00:01<00:27,  2.33it/s]Extracting : libgcc-ng-11.2.0-h1234567_1.conda:  14%|█▎        | 10/73 [00:01<00:27,  2.33it/s]Extracting : urllib3-2.1.0-py310h06a4308_1.conda:  15%|█▌        | 11/73 [00:01<00:26,  2.33it/s]Extracting : tzdata-2023d-h04d1e81_0.conda:  16%|█▋        | 12/73 [00:01<00:26,  2.33it/s]      Extracting : cffi-1.16.0-py310h5eee18b_0.conda:  18%|█▊        | 13/73 [00:01<00:25,  2.33it/s]Extracting : conda-package-handling-2.2.0-py310h06a4308_0.conda:  19%|█▉        | 14/73 [00:01<00:25,  2.33it/s]Extracting : conda-24.1.2-py310h06a4308_0.conda:  21%|██        | 15/73 [00:01<00:24,  2.33it/s]                Extracting : libffi-3.4.4-h6a678d5_0.conda:  22%|██▏       | 16/73 [00:01<00:24,  2.33it/s]     Extracting : pybind11-abi-4-hd3eb1b0_1.conda:  23%|██▎       | 17/73 [00:01<00:24,  2.33it/s]Extracting : menuinst-2.0.2-py310h06a4308_0.conda:  25%|██▍       | 18/73 [00:01<00:23,  2.33it/s]Extracting : zlib-1.2.13-h5eee18b_0.conda:  26%|██▌       | 19/73 [00:01<00:23,  2.33it/s]        Extracting : python-3.10.13-h955ad1f_0.conda:  27%|██▋       | 20/73 [00:01<00:22,  2.33it/s]Extracting : python-3.10.13-h955ad1f_0.conda:  29%|██▉       | 21/73 [00:01<00:04, 12.95it/s]Extracting : certifi-2024.2.2-py310h06a4308_0.conda:  29%|██▉       | 21/73 [00:01<00:04, 12.95it/s]Extracting : platformdirs-3.10.0-py310h06a4308_0.conda:  30%|███       | 22/73 [00:01<00:03, 12.95it/s]Extracting : libnghttp2-1.57.0-h2d74bed_0.conda:  32%|███▏      | 23/73 [00:01<00:03, 12.95it/s]       Extracting : conda-content-trust-0.2.0-py310h06a4308_0.conda:  33%|███▎      | 24/73 [00:01<00:03, 12.95it/s]Extracting : libstdcxx-ng-11.2.0-h1234567_1.conda:  34%|███▍      | 25/73 [00:01<00:03, 12.95it/s]           Extracting : jsonpointer-2.1-pyhd3eb1b0_0.conda:  36%|███▌      | 26/73 [00:01<00:03, 12.95it/s]  Extracting : charset-normalizer-2.0.4-pyhd3eb1b0_0.conda:  37%|███▋      | 27/73 [00:01<00:03, 12.95it/s]Extracting : pycparser-2.21-pyhd3eb1b0_0.conda:  38%|███▊      | 28/73 [00:01<00:03, 12.95it/s]          Extracting : pluggy-1.0.0-py310h06a4308_1.conda:  40%|███▉      | 29/73 [00:01<00:03, 12.95it/s]Extracting : zstandard-0.19.0-py310h5eee18b_0.conda:  41%|████      | 30/73 [00:01<00:03, 12.95it/s]Extracting : libev-4.33-h7f8727e_1.conda:  42%|████▏     | 31/73 [00:01<00:03, 12.95it/s]           Extracting : tqdm-4.65.0-py310h2f386ee_0.conda:  44%|████▍     | 32/73 [00:01<00:03, 12.95it/s]Extracting : brotli-python-1.0.9-py310h6a678d5_7.conda:  45%|████▌     | 33/73 [00:01<00:03, 12.95it/s]Extracting : libmamba-1.5.6-haf1ee3a_0.conda:  47%|████▋     | 34/73 [00:01<00:03, 12.95it/s]          Extracting : archspec-0.2.1-pyhd3eb1b0_0.conda:  48%|████▊     | 35/73 [00:01<00:02, 12.95it/s]Extracting : conda-package-streaming-0.9.0-py310h06a4308_0.conda:  49%|████▉     | 36/73 [00:01<00:02, 12.95it/s]Extracting : ca-certificates-2023.12.12-h06a4308_0.conda:  51%|█████     | 37/73 [00:01<00:02, 12.95it/s]        Extracting : lz4-c-1.9.4-h6a678d5_0.conda:  52%|█████▏    | 38/73 [00:01<00:02, 12.95it/s]               Extracting : packaging-23.1-py310h06a4308_0.conda:  53%|█████▎    | 39/73 [00:01<00:02, 12.95it/s]Extracting : libuuid-1.41.5-h5eee18b_0.conda:  55%|█████▍    | 40/73 [00:01<00:02, 12.95it/s]     Extracting : reproc-14.2.4-h295c915_1.conda:  56%|█████▌    | 41/73 [00:01<00:02, 12.95it/s] Extracting : _libgcc_mutex-0.1-main.conda:  58%|█████▊    | 42/73 [00:01<00:02, 12.95it/s]  Extracting : ld_impl_linux-64-2.38-h1181459_1.conda:  59%|█████▉    | 43/73 [00:01<00:02, 12.95it/s]Extracting : boltons-23.0.0-py310h06a4308_0.conda:  60%|██████    | 44/73 [00:01<00:02, 12.95it/s]  Extracting : fmt-9.1.0-hdb19cb5_0.conda:  62%|██████▏   | 45/73 [00:01<00:02, 12.95it/s]          Extracting : libarchive-3.6.2-h6ac8c49_2.conda:  63%|██████▎   | 46/73 [00:01<00:02, 12.95it/s]Extracting : icu-73.1-h6a678d5_0.conda:  64%|██████▍   | 47/73 [00:01<00:02, 12.95it/s]        Extracting : libedit-3.1.20230828-h5eee18b_0.conda:  66%|██████▌   | 48/73 [00:01<00:01, 12.95it/s]Extracting : bzip2-1.0.8-h7b6447c_0.conda:  67%|██████▋   | 49/73 [00:01<00:01, 12.95it/s]         Extracting : libssh2-1.10.0-hdbd6064_2.conda:  68%|██████▊   | 50/73 [00:01<00:01, 12.95it/s]Extracting : wheel-0.41.2-py310h06a4308_0.conda:  70%|██████▉   | 51/73 [00:01<00:01, 12.95it/s]Extracting : truststore-0.8.0-py310h06a4308_0.conda:  71%|███████   | 52/73 [00:01<00:01, 12.95it/s]Extracting : requests-2.31.0-py310h06a4308_1.conda:  73%|███████▎  | 53/73 [00:01<00:01, 12.95it/s] Extracting : yaml-cpp-0.8.0-h6a678d5_0.conda:  74%|███████▍  | 54/73 [00:01<00:01, 12.95it/s]      Extracting : ruamel.yaml.clib-0.2.6-py310h5eee18b_1.conda:  75%|███████▌  | 55/73 [00:01<00:01, 12.95it/s]Extracting : pcre2-10.42-hebb0a14_0.conda:  77%|███████▋  | 56/73 [00:01<00:01, 12.95it/s]                Extracting : libcurl-8.5.0-h251f7ec_0.conda:  78%|███████▊  | 57/73 [00:01<00:01, 12.95it/s]Extracting : ruamel.yaml-0.17.21-py310h5eee18b_0.conda:  79%|███████▉  | 58/73 [00:01<00:01, 12.95it/s]Extracting : c-ares-1.19.1-h5eee18b_0.conda:  81%|████████  | 59/73 [00:01<00:01, 12.95it/s]           Extracting : libxml2-2.10.4-hf1b16e4_1.conda:  82%|████████▏ | 60/73 [00:01<00:01, 12.95it/s]Extracting : krb5-1.20.1-h143b758_1.conda:  84%|████████▎ | 61/73 [00:01<00:00, 12.95it/s]   Extracting : distro-1.8.0-py310h06a4308_0.conda:  85%|████████▍ | 62/73 [00:01<00:00, 12.95it/s]Extracting : pip-23.3.1-py310h06a4308_0.conda:  86%|████████▋ | 63/73 [00:02<00:00, 12.95it/s]  Extracting : pip-23.3.1-py310h06a4308_0.conda:  88%|████████▊ | 64/73 [00:02<00:00, 36.95it/s]Extracting : readline-8.2-h5eee18b_0.conda:  88%|████████▊ | 64/73 [00:02<00:00, 36.95it/s]   Extracting : idna-3.4-py310h06a4308_0.conda:  89%|████████▉ | 65/73 [00:02<00:00, 36.95it/s]Extracting : openssl-3.0.13-h7f8727e_0.conda:  90%|█████████ | 66/73 [00:02<00:00, 36.95it/s]Extracting : conda-libmamba-solver-24.1.0-pyhd3eb1b0_0.conda:  92%|█████████▏| 67/73 [00:02<00:00, 36.95it/s]Extracting : libmambapy-1.5.6-py310h2dafd23_0.conda:  93%|█████████▎| 68/73 [00:02<00:00, 36.95it/s]         Extracting : cryptography-42.0.2-py310hdda0065_0.conda:  95%|█████████▍| 69/73 [00:02<00:00, 36.95it/s]Extracting : tk-8.6.12-h1ccaba5_0.conda:  96%|█████████▌| 70/73 [00:02<00:00, 36.95it/s]               Extracting : jsonpatch-1.32-pyhd3eb1b0_0.conda:  97%|█████████▋| 71/73 [00:02<00:00, 36.95it/s]Extracting : setuptools-68.2.2-py310h06a4308_0.conda:  99%|█████████▊| 72/73 [00:02<00:00, 36.95it/s]                                                                                                     
+Installing base environment...
+
+
+Downloading and Extracting Packages: ...working... done
+
+Downloading and Extracting Packages: ...working... done
+Preparing transaction: ...working... done
+Executing transaction: ...working... done
+installation finished.
++ rm /opt/miniconda.sh
++ /usr/bin/conda init bash
+no change     /usr/condabin/conda
+no change     /usr/bin/conda
+no change     /usr/bin/conda-env
+no change     /usr/bin/activate
+no change     /usr/bin/deactivate
+no change     /usr/etc/profile.d/conda.sh
+no change     /usr/etc/fish/conf.d/conda.fish
+no change     /usr/shell/condabin/Conda.psm1
+no change     /usr/shell/condabin/conda-hook.ps1
+no change     /usr/lib/python3.10/site-packages/xontrib/conda.xsh
+no change     /usr/etc/profile.d/conda.csh
+modified      /root/.bashrc
+
+==> For changes to take effect, close and re-open your current shell. <==
+
++ echo source /usr/etc/profile.d/conda.sh && conda activate colabfold_ig
++ echo -e Creating Conda environment with GPU-enabled JAX and Pyrosetta for CUDA 12.0\n
+-e Creating Conda environment with GPU-enabled JAX and Pyrosetta for CUDA 12.0
+
++ CONDA_OVERRIDE_CUDA=12.0 /usr/bin/conda create --name colabfold_ig python=3.11 pip pandas matplotlib numpy<2.0.0 biopython=1.81 scipy pdbfixer seaborn kalign2=2.04 hhsuite=3.3.0 mmseqs2=14.7 openmm=8.0.0 libgfortran5 tqdm jupyter ffmpeg pyrosetta fsspec py3dmol chex dm-haiku flax<0.10.0 dm-tree joblib ml-collections immutabledict optax jaxlib=0.4.23=cuda120py311h5a49573_202 jax[cuda] cuda-nvcc cudnn appdirs tensorflow -c conda-forge -c nvidia -c bioconda --channel https://conda.graylab.jhu.edu -y
+Channels:
+ - conda-forge
+ - nvidia
+ - bioconda
+ - https://conda.graylab.jhu.edu
+ - defaults
+Platform: linux-64
+Collecting package metadata (repodata.json): ...working... done
+Solving environment: ...working... done
+
+## Package Plan ##
+
+  environment location: /usr/envs/colabfold_ig
+
+  added / updated specs:
+    - appdirs
+    - biopython=1.81
+    - chex
+    - cuda-nvcc
+    - cudnn
+    - dm-haiku
+    - dm-tree
+    - ffmpeg
+    - flax[version='<0.10.0']
+    - fsspec
+    - hhsuite=3.3.0
+    - immutabledict
+    - jax
+    - jaxlib==0.4.23=cuda120py311h5a49573_202
+    - joblib
+    - jupyter
+    - kalign2=2.04
+    - libgfortran5
+    - matplotlib
+    - ml-collections
+    - mmseqs2=14.7
+    - numpy[version='<2.0.0']
+    - openmm=8.0.0
+    - optax
+    - pandas
+    - pdbfixer
+    - pip
+    - py3dmol
+    - pyrosetta
+    - python=3.11
+    - scipy
+    - seaborn
+    - tensorflow
+    - tqdm
+
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    _libgcc_mutex-0.1          |      conda_forge           3 KB  conda-forge
+    _openmp_mutex-4.5          |            2_gnu          23 KB  conda-forge
+    absl-py-2.1.0              |     pyhd8ed1ab_0         105 KB  conda-forge
+    alsa-lib-1.2.13            |       hb9d3cd8_0         547 KB  conda-forge
+    anyio-4.6.2.post1          |     pyhd8ed1ab_0         107 KB  conda-forge
+    aom-3.9.1                  |       hac33072_0         2.6 MB  conda-forge
+    appdirs-1.4.4              |     pyh9f0ad1d_0          13 KB  conda-forge
+    argon2-cffi-23.1.0         |     pyhd8ed1ab_0          18 KB  conda-forge
+    argon2-cffi-bindings-21.2.0|  py311h9ecbd09_5          34 KB  conda-forge
+    aria2-1.37.0               |       h347180d_1         1.6 MB  conda-forge
+    arrow-1.3.0                |     pyhd8ed1ab_0          98 KB  conda-forge
+    asttokens-2.4.1            |     pyhd8ed1ab_0          28 KB  conda-forge
+    astunparse-1.6.3           |     pyhd8ed1ab_2          18 KB  conda-forge
+    async-lru-2.0.4            |     pyhd8ed1ab_0          15 KB  conda-forge
+    attr-2.5.1                 |       h166bdaf_1          69 KB  conda-forge
+    attrs-24.2.0               |     pyh71513ae_0          55 KB  conda-forge
+    babel-2.16.0               |     pyhd8ed1ab_0         6.2 MB  conda-forge
+    beautifulsoup4-4.12.3      |     pyha770c72_0         115 KB  conda-forge
+    binutils_impl_linux-64-2.43|       h4bf12b8_2         5.4 MB  conda-forge
+    binutils_linux-64-2.43     |       h4852527_2          34 KB  conda-forge
+    biopython-1.81             |  py311h459d7ec_1         3.2 MB  conda-forge
+    bleach-6.2.0               |     pyhd8ed1ab_0         130 KB  conda-forge
+    blosc-1.21.5               |       hc2324a3_1          48 KB  conda-forge
+    brotli-1.1.0               |       hb9d3cd8_2          19 KB  conda-forge
+    brotli-bin-1.1.0           |       hb9d3cd8_2          18 KB  conda-forge
+    brotli-python-1.1.0        |  py311hfdbb021_2         342 KB  conda-forge
+    bzip2-1.0.8                |       h4bc722e_7         247 KB  conda-forge
+    c-ares-1.34.3              |       hb9d3cd8_1         200 KB  conda-forge
+    ca-certificates-2024.8.30  |       hbcca054_0         155 KB  conda-forge
+    cached-property-1.5.2      |       hd8ed1ab_1           4 KB  conda-forge
+    cached_property-1.5.2      |     pyha770c72_1          11 KB  conda-forge
+    cairo-1.18.0               |       h3faef2a_0         959 KB  conda-forge
+    certifi-2024.8.30          |     pyhd8ed1ab_0         160 KB  conda-forge
+    cffi-1.17.1                |  py311hf29c0ef_0         295 KB  conda-forge
+    charset-normalizer-3.4.0   |     pyhd8ed1ab_0          46 KB  conda-forge
+    chex-0.1.86                |     pyhd8ed1ab_0          76 KB  conda-forge
+    colorama-0.4.6             |     pyhd8ed1ab_0          25 KB  conda-forge
+    comm-0.2.2                 |     pyhd8ed1ab_0          12 KB  conda-forge
+    contourpy-1.3.1            |  py311hd18a35c_0         272 KB  conda-forge
+    cuda-cccl_linux-64-12.6.77 |       ha770c72_0         1.0 MB  conda-forge
+    cuda-crt-dev_linux-64-12.6.85|       ha770c72_0          87 KB  conda-forge
+    cuda-crt-tools-12.6.85     |       ha770c72_0          26 KB  conda-forge
+    cuda-cudart-12.6.77        |       h5888daf_0          22 KB  conda-forge
+    cuda-cudart-dev-12.6.77    |       h5888daf_0          22 KB  conda-forge
+    cuda-cudart-dev_linux-64-12.6.77|       h3f2d84a_0         357 KB  conda-forge
+    cuda-cudart-static-12.6.77 |       h5888daf_0          22 KB  conda-forge
+    cuda-cudart-static_linux-64-12.6.77|       h3f2d84a_0         744 KB  conda-forge
+    cuda-cudart_linux-64-12.6.77|       h3f2d84a_0         184 KB  conda-forge
+    cuda-cupti-12.6.80         |       hbd13f7d_0         1.9 MB  conda-forge
+    cuda-driver-dev_linux-64-12.6.77|       h3f2d84a_0          35 KB  conda-forge
+    cuda-nvcc-12.6.85          |       hcdd1206_0          23 KB  conda-forge
+    cuda-nvcc-dev_linux-64-12.6.85|       he91c749_0        10.8 MB  conda-forge
+    cuda-nvcc-impl-12.6.85     |       h85509e4_0          25 KB  conda-forge
+    cuda-nvcc-tools-12.6.85    |       he02047a_0        23.0 MB  conda-forge
+    cuda-nvcc_linux-64-12.6.85 |       h04802cd_0          25 KB  conda-forge
+    cuda-nvrtc-12.6.85         |       hbd13f7d_0        17.3 MB  conda-forge
+    cuda-nvtx-12.6.77          |       hbd13f7d_0          31 KB  conda-forge
+    cuda-nvvm-dev_linux-64-12.6.85|       ha770c72_0          25 KB  conda-forge
+    cuda-nvvm-impl-12.6.85     |       he02047a_0         7.7 MB  conda-forge
+    cuda-nvvm-tools-12.6.85    |       he02047a_0        10.4 MB  conda-forge
+    cuda-version-12.6          |       h7480c83_3          20 KB  conda-forge
+    cudnn-8.9.7.29             |       h092f7fd_3       446.6 MB  conda-forge
+    cycler-0.12.1              |     pyhd8ed1ab_0          13 KB  conda-forge
+    dataclasses-0.8            |     pyhc8e2a94_3          10 KB  conda-forge
+    dav1d-1.2.1                |       hd590300_0         742 KB  conda-forge
+    dbus-1.13.6                |       h5008d03_3         604 KB  conda-forge
+    debugpy-1.8.9              |  py311hfdbb021_0         2.4 MB  conda-forge
+    decorator-5.1.1            |     pyhd8ed1ab_0          12 KB  conda-forge
+    defusedxml-0.7.1           |     pyhd8ed1ab_0          23 KB  conda-forge
+    dm-haiku-0.0.13            |     pyhd8ed1ab_0         218 KB  conda-forge
+    dm-tree-0.1.8              |  py311hbffca5d_5         121 KB  conda-forge
+    entrypoints-0.4            |     pyhd8ed1ab_0           9 KB  conda-forge
+    etils-1.10.0               |     pyhd8ed1ab_0         767 KB  conda-forge
+    exceptiongroup-1.2.2       |     pyhd8ed1ab_0          20 KB  conda-forge
+    executing-2.1.0            |     pyhd8ed1ab_0          28 KB  conda-forge
+    expat-2.6.4                |       h5888daf_0         135 KB  conda-forge
+    ffmpeg-7.0.1               | gpl_hb399a10_100         9.6 MB  conda-forge
+    flatbuffers-24.3.25        |       h59595ed_0         1.4 MB  conda-forge
+    flax-0.9.0                 |     pyhd8ed1ab_1         546 KB  conda-forge
+    font-ttf-dejavu-sans-mono-2.37|       hab24e00_0         388 KB  conda-forge
+    font-ttf-inconsolata-3.000 |       h77eed37_0          94 KB  conda-forge
+    font-ttf-source-code-pro-2.038|       h77eed37_0         684 KB  conda-forge
+    font-ttf-ubuntu-0.83       |       h77eed37_3         1.5 MB  conda-forge
+    fontconfig-2.14.2          |       h14ed4e7_0         266 KB  conda-forge
+    fonts-conda-ecosystem-1    |                0           4 KB  conda-forge
+    fonts-conda-forge-1        |                0           4 KB  conda-forge
+    fonttools-4.55.0           |  py311h2dc5d0c_0         2.8 MB  conda-forge
+    fqdn-1.5.1                 |     pyhd8ed1ab_0          14 KB  conda-forge
+    freetype-2.12.1            |       h267a509_2         620 KB  conda-forge
+    fribidi-1.0.10             |       h36c2ea0_0         112 KB  conda-forge
+    fsspec-2024.10.0           |     pyhff2d567_0         132 KB  conda-forge
+    gast-0.5.5                 |     pyhd8ed1ab_0          23 KB  conda-forge
+    gawk-5.3.1                 |       hcd3d067_0         1.1 MB  conda-forge
+    gcc_impl_linux-64-13.3.0   |       hfea6d02_1        64.3 MB  conda-forge
+    gcc_linux-64-13.3.0        |       hc28eda2_7          31 KB  conda-forge
+    gettext-0.22.5             |       he02047a_3         468 KB  conda-forge
+    gettext-tools-0.22.5       |       he02047a_3         2.6 MB  conda-forge
+    giflib-5.2.2               |       hd590300_0          75 KB  conda-forge
+    glib-2.80.2                |       hf974151_0         586 KB  conda-forge
+    glib-tools-2.80.2          |       hb6ce0ca_0         112 KB  conda-forge
+    gmp-6.3.0                  |       hac33072_2         449 KB  conda-forge
+    gnutls-3.7.9               |       hb077bed_0         1.9 MB  conda-forge
+    google-pasta-0.2.0         |     pyhd8ed1ab_1          48 KB  conda-forge
+    graphite2-1.3.13           |    h59595ed_1003          95 KB  conda-forge
+    grpcio-1.62.2              |  py311ha6695c7_0         1.0 MB  conda-forge
+    gst-plugins-base-1.24.4    |       h9ad1361_0         2.7 MB  conda-forge
+    gstreamer-1.24.4           |       haf2f30d_0         1.9 MB  conda-forge
+    gxx_impl_linux-64-13.3.0   |       hdbfa832_1        12.7 MB  conda-forge
+    gxx_linux-64-13.3.0        |       h6834431_7          30 KB  conda-forge
+    h11-0.14.0                 |     pyhd8ed1ab_0          47 KB  conda-forge
+    h2-4.1.0                   |     pyhd8ed1ab_0          46 KB  conda-forge
+    h5py-3.12.1                |nompi_py311hb639ac4_102         1.3 MB  conda-forge
+    harfbuzz-8.5.0             |       hfac3d4d_0         1.5 MB  conda-forge
+    hdf5-1.14.3                |nompi_hdf9ad27_105         3.7 MB  conda-forge
+    hhsuite-3.3.0              |py311pl5321h9f068be_13        26.8 MB  bioconda
+    hpack-4.0.0                |     pyh9f0ad1d_0          25 KB  conda-forge
+    httpcore-1.0.7             |     pyh29332c3_1          48 KB  conda-forge
+    httpx-0.28.0               |     pyhd8ed1ab_0          62 KB  conda-forge
+    humanize-4.11.0            |     pyhd8ed1ab_0          65 KB  conda-forge
+    hyperframe-6.0.1           |     pyhd8ed1ab_0          14 KB  conda-forge
+    icu-73.2                   |       h59595ed_0        11.5 MB  conda-forge
+    idna-3.10                  |     pyhd8ed1ab_0          49 KB  conda-forge
+    immutabledict-4.2.1        |     pyhd8ed1ab_0          10 KB  conda-forge
+    importlib-metadata-8.5.0   |     pyha770c72_0          28 KB  conda-forge
+    importlib_metadata-8.5.0   |       hd8ed1ab_0           9 KB  conda-forge
+    importlib_resources-6.4.5  |     pyhd8ed1ab_0          32 KB  conda-forge
+    ipykernel-6.29.5           |     pyh3099207_0         116 KB  conda-forge
+    ipython-8.30.0             |     pyh707e725_0         586 KB  conda-forge
+    ipython_genutils-0.2.0     |     pyhd8ed1ab_1          27 KB  conda-forge
+    ipywidgets-8.1.5           |     pyhd8ed1ab_0         111 KB  conda-forge
+    isoduration-20.11.0        |     pyhd8ed1ab_0          17 KB  conda-forge
+    jax-0.4.27                 |     pyhd8ed1ab_0         1.2 MB  conda-forge
+    jaxlib-0.4.23              |cuda120py311h5a49573_202        83.8 MB  conda-forge
+    jedi-0.19.2                |     pyhff2d567_0         823 KB  conda-forge
+    jinja2-3.1.4               |     pyhd8ed1ab_0         109 KB  conda-forge
+    jmp-0.0.4                  |     pyhd8ed1ab_0          20 KB  conda-forge
+    joblib-1.4.2               |     pyhd8ed1ab_0         215 KB  conda-forge
+    json5-0.10.0               |     pyhd8ed1ab_0          31 KB  conda-forge
+    jsonpointer-3.0.0          |  py311h38be061_1          17 KB  conda-forge
+    jsonschema-4.23.0          |     pyhd8ed1ab_0          73 KB  conda-forge
+    jsonschema-specifications-2024.10.1|     pyhd8ed1ab_0          16 KB  conda-forge
+    jsonschema-with-format-nongpl-4.23.0|       hd8ed1ab_0           7 KB  conda-forge
+    jupyter-1.1.1              |     pyhd8ed1ab_0           9 KB  conda-forge
+    jupyter-lsp-2.2.5          |     pyhd8ed1ab_0          54 KB  conda-forge
+    jupyter_client-7.4.9       |     pyhd8ed1ab_0          97 KB  conda-forge
+    jupyter_console-6.6.3      |     pyhd8ed1ab_0          26 KB  conda-forge
+    jupyter_core-5.7.2         |     pyh31011fe_1          56 KB  conda-forge
+    jupyter_events-0.10.0      |     pyhd8ed1ab_0          21 KB  conda-forge
+    jupyter_server-2.14.2      |     pyhd8ed1ab_0         316 KB  conda-forge
+    jupyter_server_terminals-0.5.3|     pyhd8ed1ab_0          19 KB  conda-forge
+    jupyterlab-4.3.1           |     pyhff2d567_0         6.8 MB  conda-forge
+    jupyterlab_pygments-0.3.0  |     pyhd8ed1ab_1          18 KB  conda-forge
+    jupyterlab_server-2.27.3   |     pyhd8ed1ab_0          48 KB  conda-forge
+    jupyterlab_widgets-3.0.13  |     pyhd8ed1ab_0         182 KB  conda-forge
+    kalign2-2.04               |       h031d066_7         103 KB  bioconda
+    keras-3.7.0                |     pyhd8ed1ab_0         932 KB  conda-forge
+    kernel-headers_linux-64-3.10.0|      he073ed8_18         921 KB  conda-forge
+    keyutils-1.6.1             |       h166bdaf_0         115 KB  conda-forge
+    kiwisolver-1.4.7           |  py311hd18a35c_0          71 KB  conda-forge
+    krb5-1.21.3                |       h659f571_0         1.3 MB  conda-forge
+    lame-3.100                 |    h166bdaf_1003         496 KB  conda-forge
+    lcms2-2.16                 |       hb7c19ff_0         239 KB  conda-forge
+    ld_impl_linux-64-2.43      |       h712a8e2_2         654 KB  conda-forge
+    lerc-4.0.0                 |       h27087fc_0         275 KB  conda-forge
+    libabseil-20240116.2       | cxx17_he02047a_1         1.2 MB  conda-forge
+    libaec-1.1.3               |       h59595ed_0          35 KB  conda-forge
+    libasprintf-0.22.5         |       he8f35ee_3          42 KB  conda-forge
+    libasprintf-devel-0.22.5   |       he8f35ee_3          33 KB  conda-forge
+    libass-0.17.1              |       h8fe9dca_1         124 KB  conda-forge
+    libavif16-1.0.4            |       hd2f8ffe_4          93 KB  conda-forge
+    libblas-3.9.0              |25_linux64_openblas          15 KB  conda-forge
+    libbrotlicommon-1.1.0      |       hb9d3cd8_2          67 KB  conda-forge
+    libbrotlidec-1.1.0         |       hb9d3cd8_2          32 KB  conda-forge
+    libbrotlienc-1.1.0         |       hb9d3cd8_2         275 KB  conda-forge
+    libcap-2.69                |       h0f662aa_0          98 KB  conda-forge
+    libcblas-3.9.0             |25_linux64_openblas          15 KB  conda-forge
+    libclang-cpp15-15.0.7      |default_h127d8a8_5        16.4 MB  conda-forge
+    libclang13-18.1.7          |default_h087397f_0        10.5 MB  conda-forge
+    libcublas-12.6.4.1         |       hbd13f7d_0       255.6 MB  conda-forge
+    libcufft-11.3.0.4          |       hbd13f7d_0       156.2 MB  conda-forge
+    libcups-2.3.3              |       h4637d8d_4         4.3 MB  conda-forge
+    libcurand-10.3.7.77        |       hbd13f7d_0        39.9 MB  conda-forge
+    libcurl-8.8.0              |       hca28451_1         401 KB  conda-forge
+    libcusolver-11.7.1.2       |       hbd13f7d_0        95.8 MB  conda-forge
+    libcusparse-12.5.4.2       |       hbd13f7d_0       118.6 MB  conda-forge
+    libdeflate-1.20            |       hd590300_0          70 KB  conda-forge
+    libdrm-2.4.123             |       hb9d3cd8_0         296 KB  conda-forge
+    libedit-3.1.20191231       |       he28a2e2_2         121 KB  conda-forge
+    libev-4.33                 |       hd590300_2         110 KB  conda-forge
+    libevent-2.1.12            |       hf998b51_1         417 KB  conda-forge
+    libexpat-2.6.4             |       h5888daf_0          72 KB  conda-forge
+    libffi-3.4.2               |       h7f98852_5          57 KB  conda-forge
+    libflac-1.4.3              |       h59595ed_0         385 KB  conda-forge
+    libgcc-14.2.0              |       h77fa898_1         829 KB  conda-forge
+    libgcc-devel_linux-64-13.3.0|     h84ea5a7_101         2.5 MB  conda-forge
+    libgcc-ng-14.2.0           |       h69a702a_1          53 KB  conda-forge
+    libgcrypt-1.11.0           |       ha770c72_2           6 KB  conda-forge
+    libgcrypt-devel-1.11.0     |       hb9d3cd8_2         104 KB  conda-forge
+    libgcrypt-lib-1.11.0       |       hb9d3cd8_2         572 KB  conda-forge
+    libgcrypt-tools-1.11.0     |       hb9d3cd8_2          32 KB  conda-forge
+    libgettextpo-0.22.5        |       he02047a_3         167 KB  conda-forge
+    libgettextpo-devel-0.22.5  |       he02047a_3          36 KB  conda-forge
+    libgfortran-14.2.0         |       h69a702a_1          53 KB  conda-forge
+    libgfortran-ng-14.2.0      |       h69a702a_1          53 KB  conda-forge
+    libgfortran5-14.2.0        |       hd5240d6_1         1.4 MB  conda-forge
+    libglib-2.80.2             |       hf974151_0         3.7 MB  conda-forge
+    libgomp-14.2.0             |       h77fa898_1         450 KB  conda-forge
+    libgpg-error-1.51          |       hbd13f7d_1         262 KB  conda-forge
+    libgrpc-1.62.2             |       h15f2491_0         7.0 MB  conda-forge
+    libhwloc-2.11.2            |default_he43201b_1000         2.3 MB  conda-forge
+    libiconv-1.17              |       hd590300_2         689 KB  conda-forge
+    libidn2-2.3.7              |       hd590300_0         124 KB  conda-forge
+    libjpeg-turbo-3.0.0        |       hd590300_1         604 KB  conda-forge
+    liblapack-3.9.0            |25_linux64_openblas          15 KB  conda-forge
+    libllvm15-15.0.7           |       hb3ce162_4        31.8 MB  conda-forge
+    libllvm18-18.1.7           |       hb77312f_0        36.6 MB  conda-forge
+    libnghttp2-1.58.0          |       h47da74e_1         617 KB  conda-forge
+    libnsl-2.0.1               |       hd590300_0          33 KB  conda-forge
+    libnvjitlink-12.6.85       |       hbd13f7d_0        14.9 MB  conda-forge
+    libogg-1.3.5               |       h4ab18f5_0         201 KB  conda-forge
+    libopenblas-0.3.28         |pthreads_h94d23a6_1         5.3 MB  conda-forge
+    libopenvino-2024.1.0       |       h2da1b83_7         4.9 MB  conda-forge
+    libopenvino-auto-batch-plugin-2024.1.0|       hb045406_7         107 KB  conda-forge
+    libopenvino-auto-plugin-2024.1.0|       hb045406_7         224 KB  conda-forge
+    libopenvino-hetero-plugin-2024.1.0|       h5c03a75_7         187 KB  conda-forge
+    libopenvino-intel-cpu-plugin-2024.1.0|       h2da1b83_7        10.4 MB  conda-forge
+    libopenvino-intel-gpu-plugin-2024.1.0|       h2da1b83_7         8.1 MB  conda-forge
+    libopenvino-intel-npu-plugin-2024.1.0|       he02047a_7         318 KB  conda-forge
+    libopenvino-ir-frontend-2024.1.0|       h5c03a75_7         196 KB  conda-forge
+    libopenvino-onnx-frontend-2024.1.0|       h07e8aee_7         1.5 MB  conda-forge
+    libopenvino-paddle-frontend-2024.1.0|       h07e8aee_7         683 KB  conda-forge
+    libopenvino-pytorch-frontend-2024.1.0|       he02047a_7         1.1 MB  conda-forge
+    libopenvino-tensorflow-frontend-2024.1.0|       h39126c6_7         1.3 MB  conda-forge
+    libopenvino-tensorflow-lite-frontend-2024.1.0|       he02047a_7         476 KB  conda-forge
+    libopus-1.3.1              |       h7f98852_1         255 KB  conda-forge
+    libpciaccess-0.18          |       hd590300_0          28 KB  conda-forge
+    libpng-1.6.43              |       h2797004_0         281 KB  conda-forge
+    libpq-16.6                 |       h2d7952a_0         2.4 MB  conda-forge
+    libprotobuf-4.25.3         |       h08a7969_0         2.7 MB  conda-forge
+    libre2-11-2023.09.01       |       h5a48ba9_2         227 KB  conda-forge
+    libsanitizer-13.3.0        |       heb74ff8_1         3.9 MB  conda-forge
+    libsndfile-1.2.2           |       hc60ed4a_1         346 KB  conda-forge
+    libsodium-1.0.20           |       h4ab18f5_0         201 KB  conda-forge
+    libsqlite-3.46.0           |       hde9e2c9_0         845 KB  conda-forge
+    libssh2-1.11.0             |       h0841786_0         265 KB  conda-forge
+    libstdcxx-14.2.0           |       hc0a3c3a_1         3.7 MB  conda-forge
+    libstdcxx-devel_linux-64-13.3.0|     h84ea5a7_101        13.4 MB  conda-forge
+    libstdcxx-ng-14.2.0        |       h4852527_1          53 KB  conda-forge
+    libsystemd0-256.7          |       h2774228_1         402 KB  conda-forge
+    libtasn1-4.19.0            |       h166bdaf_0         114 KB  conda-forge
+    libtiff-4.6.0              |       h1dd3fc0_3         276 KB  conda-forge
+    libunistring-0.9.10        |       h7f98852_0         1.4 MB  conda-forge
+    libuuid-2.38.1             |       h0b41bf4_0          33 KB  conda-forge
+    libva-2.21.0               |       h4ab18f5_2         185 KB  conda-forge
+    libvorbis-1.3.7            |       h9c3ff4c_0         280 KB  conda-forge
+    libvpx-1.14.1              |       hac33072_0         999 KB  conda-forge
+    libwebp-base-1.4.0         |       hd590300_0         429 KB  conda-forge
+    libxcb-1.15                |       h0b41bf4_0         375 KB  conda-forge
+    libxcrypt-4.4.36           |       hd590300_1          98 KB  conda-forge
+    libxkbcommon-1.7.0         |       h662e7e4_0         580 KB  conda-forge
+    libxml2-2.12.7             |       hc051c1a_1         688 KB  conda-forge
+    libzlib-1.2.13             |       h4ab18f5_6          60 KB  conda-forge
+    lz4-c-1.9.4                |       hcb278e6_0         140 KB  conda-forge
+    markdown-3.6               |     pyhd8ed1ab_0          76 KB  conda-forge
+    markdown-it-py-3.0.0       |     pyhd8ed1ab_0          63 KB  conda-forge
+    markupsafe-3.0.2           |  py311h2dc5d0c_0          25 KB  conda-forge
+    matplotlib-3.9.1           |  py311h38be061_1           8 KB  conda-forge
+    matplotlib-base-3.9.1      |  py311h74b4f7c_2         7.6 MB  conda-forge
+    matplotlib-inline-0.1.7    |     pyhd8ed1ab_0          14 KB  conda-forge
+    mdurl-0.1.2                |     pyhd8ed1ab_0          14 KB  conda-forge
+    mistune-3.0.2              |     pyhd8ed1ab_0          64 KB  conda-forge
+    ml-collections-1.0.0       |     pyh29332c3_0          60 KB  conda-forge
+    ml_dtypes-0.3.2            |  py311h320fe9a_0         162 KB  conda-forge
+    mmseqs2-14.7e284           | pl5321h6a68c12_2         4.1 MB  bioconda
+    mpfr-4.2.1                 |       h90cbb55_3         620 KB  conda-forge
+    mpg123-1.32.9              |       hc50e24c_0         480 KB  conda-forge
+    msgpack-python-1.1.0       |  py311hd18a35c_0         102 KB  conda-forge
+    munkres-1.1.4              |     pyh9f0ad1d_0          12 KB  conda-forge
+    mysql-common-8.3.0         |       hf1915f5_4         766 KB  conda-forge
+    mysql-libs-8.3.0           |       hca2cd23_4         1.5 MB  conda-forge
+    namex-0.0.8                |     pyhd8ed1ab_0          11 KB  conda-forge
+    nbclassic-1.1.0            |     pyhd8ed1ab_0         5.2 MB  conda-forge
+    nbclient-0.10.1            |     pyhd8ed1ab_0          27 KB  conda-forge
+    nbconvert-core-7.16.4      |     pyhd8ed1ab_1         185 KB  conda-forge
+    nbformat-5.10.4            |     pyhd8ed1ab_0          99 KB  conda-forge
+    nccl-2.23.4.1              |       h2b5d15b_3       118.8 MB  conda-forge
+    ncurses-6.5                |       he02047a_1         868 KB  conda-forge
+    nest-asyncio-1.6.0         |     pyhd8ed1ab_0          11 KB  conda-forge
+    nettle-3.9.1               |       h7ab15ed_0         988 KB  conda-forge
+    notebook-6.5.7             |     pyha770c72_0         301 KB  conda-forge
+    notebook-shim-0.2.4        |     pyhd8ed1ab_0          16 KB  conda-forge
+    nspr-4.36                  |       h5888daf_0         225 KB  conda-forge
+    nss-3.100                  |       hca3bf56_0         2.0 MB  conda-forge
+    numpy-1.26.4               |  py311h64a7726_0         7.7 MB  conda-forge
+    ocl-icd-2.3.2              |       hb9d3cd8_2          93 KB  conda-forge
+    ocl-icd-system-1.0.0       |                1           4 KB  conda-forge
+    opencl-headers-2024.10.24  |       h5888daf_0          53 KB  conda-forge
+    openh264-2.4.1             |       h59595ed_0         718 KB  conda-forge
+    openjpeg-2.5.2             |       h488ebb8_0         334 KB  conda-forge
+    openmm-8.0.0               |  py311h11a6390_4        10.9 MB  conda-forge
+    openssl-3.4.0              |       hb9d3cd8_0         2.8 MB  conda-forge
+    opt-einsum-3.4.0           |       hd8ed1ab_0           6 KB  conda-forge
+    opt_einsum-3.4.0           |     pyhd8ed1ab_0          61 KB  conda-forge
+    optax-0.2.2                |     pyhd8ed1ab_1         142 KB  conda-forge
+    optree-0.13.1              |  py311hd18a35c_1         358 KB  conda-forge
+    orbax-checkpoint-0.6.4     |     pyhd8ed1ab_0         162 KB  conda-forge
+    overrides-7.7.0            |     pyhd8ed1ab_0          30 KB  conda-forge
+    p11-kit-0.24.1             |       hc5aa10d_0         4.5 MB  conda-forge
+    packaging-24.2             |     pyhff2d567_1          59 KB  conda-forge
+    pandas-2.2.3               |  py311h7db5c69_1        15.0 MB  conda-forge
+    pandocfilters-1.5.0        |     pyhd8ed1ab_0          11 KB  conda-forge
+    parso-0.8.4                |     pyhd8ed1ab_0          73 KB  conda-forge
+    patsy-1.0.1                |     pyhff2d567_0         182 KB  conda-forge
+    pcre2-10.43                |       hcad00b1_0         929 KB  conda-forge
+    pdbfixer-1.9               |     pyh1a96a4e_0         489 KB  conda-forge
+    perl-5.32.1                | 7_hd590300_perl5        12.7 MB  conda-forge
+    pexpect-4.9.0              |     pyhd8ed1ab_0          52 KB  conda-forge
+    pickleshare-0.7.5          |          py_1003           9 KB  conda-forge
+    pillow-10.3.0              |  py311h18e6fac_0        40.6 MB  conda-forge
+    pip-24.3.1                 |     pyh8b19718_0         1.2 MB  conda-forge
+    pixman-0.43.2              |       h59595ed_0         378 KB  conda-forge
+    pkgutil-resolve-name-1.3.10|     pyhd8ed1ab_1          11 KB  conda-forge
+    platformdirs-4.3.6         |     pyhd8ed1ab_0          20 KB  conda-forge
+    ply-3.11                   |     pyhd8ed1ab_2          48 KB  conda-forge
+    prometheus_client-0.21.0   |     pyhd8ed1ab_0          48 KB  conda-forge
+    prompt-toolkit-3.0.48      |     pyha770c72_0         264 KB  conda-forge
+    prompt_toolkit-3.0.48      |       hd8ed1ab_0           7 KB  conda-forge
+    protobuf-4.25.3            |  py311hbffca5d_1         390 KB  conda-forge
+    psutil-6.1.0               |  py311h9ecbd09_0         494 KB  conda-forge
+    pthread-stubs-0.4          |    hb9d3cd8_1002           8 KB  conda-forge
+    ptyprocess-0.7.0           |     pyhd3deb0d_0          16 KB  conda-forge
+    pugixml-1.14               |       h59595ed_0         112 KB  conda-forge
+    pulseaudio-client-17.0     |       hb77b528_0         740 KB  conda-forge
+    pure_eval-0.2.3            |     pyhd8ed1ab_0          16 KB  conda-forge
+    py3dmol-2.4.2              |     pyhd8ed1ab_0          12 KB  conda-forge
+    pybind11-abi-4             |       hd8ed1ab_3          10 KB  conda-forge
+    pycparser-2.22             |     pyhd8ed1ab_0         103 KB  conda-forge
+    pygments-2.18.0            |     pyhd8ed1ab_0         859 KB  conda-forge
+    pyparsing-3.2.0            |     pyhd8ed1ab_1          90 KB  conda-forge
+    pyqt-5.15.9                |  py311hf0fb5b6_5         5.1 MB  conda-forge
+    pyqt5-sip-12.12.2          |  py311hb755f60_5          83 KB  conda-forge
+    pyrosetta-2024.42+release.3366cf78a3|          py311_0        1.40 GB  https://conda.graylab.jhu.edu
+    pysocks-1.7.1              |     pyha2e5f31_6          19 KB  conda-forge
+    python-3.11.9              |hb806964_0_cpython        29.5 MB  conda-forge
+    python-dateutil-2.9.0.post0|     pyhff2d567_0         217 KB  conda-forge
+    python-fastjsonschema-2.21.0|     pyhd8ed1ab_0         221 KB  conda-forge
+    python-flatbuffers-24.3.25 |     pyh59ac667_0          34 KB  conda-forge
+    python-json-logger-2.0.7   |     pyhd8ed1ab_0          13 KB  conda-forge
+    python-tzdata-2024.2       |     pyhd8ed1ab_0         139 KB  conda-forge
+    python_abi-3.11            |          5_cp311           6 KB  conda-forge
+    pytz-2024.1                |     pyhd8ed1ab_0         184 KB  conda-forge
+    pyyaml-6.0.2               |  py311h9ecbd09_1         208 KB  conda-forge
+    pyzmq-26.2.0               |  py311h7deb3e3_3         380 KB  conda-forge
+    qhull-2020.2               |       h434a139_5         540 KB  conda-forge
+    qt-main-5.15.8             |      hc9dc06e_21        58.5 MB  conda-forge
+    rav1e-0.6.6                |       he8a937b_2        14.7 MB  conda-forge
+    re2-2023.09.01             |       h7f4b329_2          26 KB  conda-forge
+    readline-8.2               |       h8228510_1         275 KB  conda-forge
+    referencing-0.35.1         |     pyhd8ed1ab_0          41 KB  conda-forge
+    requests-2.32.3            |     pyhd8ed1ab_0          57 KB  conda-forge
+    rfc3339-validator-0.1.4    |     pyhd8ed1ab_0           8 KB  conda-forge
+    rfc3986-validator-0.1.1    |     pyh9f0ad1d_0           8 KB  conda-forge
+    rich-13.9.4                |     pyhd8ed1ab_0         181 KB  conda-forge
+    rpds-py-0.21.0             |  py311h9e33e62_0         326 KB  conda-forge
+    scipy-1.14.1               |  py311he9a78e4_1        16.8 MB  conda-forge
+    seaborn-0.13.2             |       hd8ed1ab_2           7 KB  conda-forge
+    seaborn-base-0.13.2        |     pyhd8ed1ab_2         229 KB  conda-forge
+    send2trash-1.8.3           |     pyh0d859eb_0          22 KB  conda-forge
+    setuptools-75.6.0          |     pyhff2d567_1         756 KB  conda-forge
+    sip-6.7.12                 |  py311hb755f60_0         571 KB  conda-forge
+    six-1.16.0                 |     pyh6c4a22f_0          14 KB  conda-forge
+    snappy-1.2.1               |       ha2e4443_0          41 KB  conda-forge
+    sniffio-1.3.1              |     pyhd8ed1ab_0          15 KB  conda-forge
+    soupsieve-2.5              |     pyhd8ed1ab_1          36 KB  conda-forge
+    stack_data-0.6.2           |     pyhd8ed1ab_0          26 KB  conda-forge
+    statsmodels-0.14.4         |  py311h9f3472d_0        11.7 MB  conda-forge
+    svt-av1-2.1.0              |       hac33072_0         2.5 MB  conda-forge
+    sysroot_linux-64-2.17      |      h4a8ded7_18        14.8 MB  conda-forge
+    tabulate-0.9.0             |     pyhd8ed1ab_1          35 KB  conda-forge
+    tbb-2022.0.0               |       hceb3a55_0         174 KB  conda-forge
+    tensorboard-2.16.2         |     pyhd8ed1ab_0         4.9 MB  conda-forge
+    tensorboard-data-server-0.7.0|  py311hafd3f86_2         3.4 MB  conda-forge
+    tensorflow-2.16.1          |cuda120py311h452d031_0          42 KB  conda-forge
+    tensorflow-base-2.16.1     |cuda120py311h291cb5b_0       349.5 MB  conda-forge
+    tensorflow-estimator-2.16.1|cuda120py311h0c188d0_0         702 KB  conda-forge
+    tensorstore-0.1.60         |  py311hbe3d8c9_0         8.0 MB  conda-forge
+    termcolor-2.5.0            |     pyhd8ed1ab_0          12 KB  conda-forge
+    terminado-0.18.1           |     pyh0d859eb_0          22 KB  conda-forge
+    tinycss2-1.4.0             |     pyhd8ed1ab_0          28 KB  conda-forge
+    tk-8.6.13                  |noxft_h4845f30_101         3.2 MB  conda-forge
+    toml-0.10.2                |     pyhd8ed1ab_0          18 KB  conda-forge
+    tomli-2.2.1                |     pyhd8ed1ab_0          19 KB  conda-forge
+    toolz-1.0.0                |     pyhd8ed1ab_0          51 KB  conda-forge
+    tornado-6.4.2              |  py311h9ecbd09_0         836 KB  conda-forge
+    tqdm-4.67.1                |     pyhd8ed1ab_0          87 KB  conda-forge
+    traitlets-5.14.3           |     pyhd8ed1ab_0         108 KB  conda-forge
+    types-python-dateutil-2.9.0.20241003|     pyhff2d567_0          21 KB  conda-forge
+    typing-extensions-4.12.2   |       hd8ed1ab_0          10 KB  conda-forge
+    typing_extensions-4.12.2   |     pyha770c72_0          39 KB  conda-forge
+    typing_utils-0.1.0         |     pyhd8ed1ab_0          14 KB  conda-forge
+    tzdata-2024b               |       hc8b5060_0         119 KB  conda-forge
+    unicodedata2-15.1.0        |  py311h9ecbd09_1         360 KB  conda-forge
+    uri-template-1.3.0         |     pyhd8ed1ab_0          23 KB  conda-forge
+    urllib3-2.2.3              |     pyhd8ed1ab_0          96 KB  conda-forge
+    wcwidth-0.2.13             |     pyhd8ed1ab_0          32 KB  conda-forge
+    webcolors-24.8.0           |     pyhd8ed1ab_0          18 KB  conda-forge
+    webencodings-0.5.1         |     pyhd8ed1ab_2          15 KB  conda-forge
+    websocket-client-1.8.0     |     pyhd8ed1ab_0          46 KB  conda-forge
+    werkzeug-3.1.3             |     pyhff2d567_0         237 KB  conda-forge
+    wget-1.21.4                |       hda4d442_0         752 KB  conda-forge
+    wheel-0.45.1               |     pyhd8ed1ab_0          62 KB  conda-forge
+    widgetsnbextension-4.0.13  |     pyhd8ed1ab_0         878 KB  conda-forge
+    wrapt-1.17.0               |  py311h9ecbd09_0          64 KB  conda-forge
+    x264-1!164.3095            |       h166bdaf_2         877 KB  conda-forge
+    x265-3.5                   |       h924138e_3         3.2 MB  conda-forge
+    xcb-util-0.4.0             |       hd590300_1          19 KB  conda-forge
+    xcb-util-image-0.4.0       |       h8ee46fc_1          24 KB  conda-forge
+    xcb-util-keysyms-0.4.0     |       h8ee46fc_1          14 KB  conda-forge
+    xcb-util-renderutil-0.3.9  |       hd590300_1          17 KB  conda-forge
+    xcb-util-wm-0.4.1          |       h8ee46fc_1          51 KB  conda-forge
+    xkeyboard-config-2.42      |       h4ab18f5_0         380 KB  conda-forge
+    xorg-fixesproto-5.0        |    hb9d3cd8_1003          11 KB  conda-forge
+    xorg-kbproto-1.0.7         |    hb9d3cd8_1003          30 KB  conda-forge
+    xorg-libice-1.1.1          |       hb9d3cd8_1          57 KB  conda-forge
+    xorg-libsm-1.2.4           |       he73a12e_1          27 KB  conda-forge
+    xorg-libx11-1.8.9          |       h8ee46fc_0         809 KB  conda-forge
+    xorg-libxau-1.0.11         |       hb9d3cd8_1          14 KB  conda-forge
+    xorg-libxdmcp-1.1.5        |       hb9d3cd8_0          19 KB  conda-forge
+    xorg-libxext-1.3.4         |       h0b41bf4_2          49 KB  conda-forge
+    xorg-libxfixes-5.0.3       |    h7f98852_1004          18 KB  conda-forge
+    xorg-libxrender-0.9.11     |       hd590300_0          37 KB  conda-forge
+    xorg-renderproto-0.11.1    |    hb9d3cd8_1003          12 KB  conda-forge
+    xorg-xextproto-7.3.0       |    hb9d3cd8_1004          30 KB  conda-forge
+    xorg-xf86vidmodeproto-2.3.1|    hb9d3cd8_1005          26 KB  conda-forge
+    xorg-xproto-7.0.31         |    hb9d3cd8_1008          72 KB  conda-forge
+    xz-5.2.6                   |       h166bdaf_0         409 KB  conda-forge
+    yaml-0.2.5                 |       h7f98852_2          87 KB  conda-forge
+    zeromq-4.3.5               |       h3b0a872_7         328 KB  conda-forge
+    zipp-3.21.0                |     pyhd8ed1ab_1          21 KB  conda-forge
+    zlib-1.2.13                |       h4ab18f5_6          91 KB  conda-forge
+    zstandard-0.23.0           |  py311hbc35293_1         408 KB  conda-forge
+    zstd-1.5.6                 |       ha6fb4c9_0         542 KB  conda-forge
+    ------------------------------------------------------------
+                                           Total:        3.81 GB
+
+The following NEW packages will be INSTALLED:
+
+  _libgcc_mutex      conda-forge/linux-64::_libgcc_mutex-0.1-conda_forge 
+  _openmp_mutex      conda-forge/linux-64::_openmp_mutex-4.5-2_gnu 
+  absl-py            conda-forge/noarch::absl-py-2.1.0-pyhd8ed1ab_0 
+  alsa-lib           conda-forge/linux-64::alsa-lib-1.2.13-hb9d3cd8_0 
+  anyio              conda-forge/noarch::anyio-4.6.2.post1-pyhd8ed1ab_0 
+  aom                conda-forge/linux-64::aom-3.9.1-hac33072_0 
+  appdirs            conda-forge/noarch::appdirs-1.4.4-pyh9f0ad1d_0 
+  argon2-cffi        conda-forge/noarch::argon2-cffi-23.1.0-pyhd8ed1ab_0 
+  argon2-cffi-bindi~ conda-forge/linux-64::argon2-cffi-bindings-21.2.0-py311h9ecbd09_5 
+  aria2              conda-forge/linux-64::aria2-1.37.0-h347180d_1 
+  arrow              conda-forge/noarch::arrow-1.3.0-pyhd8ed1ab_0 
+  asttokens          conda-forge/noarch::asttokens-2.4.1-pyhd8ed1ab_0 
+  astunparse         conda-forge/noarch::astunparse-1.6.3-pyhd8ed1ab_2 
+  async-lru          conda-forge/noarch::async-lru-2.0.4-pyhd8ed1ab_0 
+  attr               conda-forge/linux-64::attr-2.5.1-h166bdaf_1 
+  attrs              conda-forge/noarch::attrs-24.2.0-pyh71513ae_0 
+  babel              conda-forge/noarch::babel-2.16.0-pyhd8ed1ab_0 
+  beautifulsoup4     conda-forge/noarch::beautifulsoup4-4.12.3-pyha770c72_0 
+  binutils_impl_lin~ conda-forge/linux-64::binutils_impl_linux-64-2.43-h4bf12b8_2 
+  binutils_linux-64  conda-forge/linux-64::binutils_linux-64-2.43-h4852527_2 
+  biopython          conda-forge/linux-64::biopython-1.81-py311h459d7ec_1 
+  bleach             conda-forge/noarch::bleach-6.2.0-pyhd8ed1ab_0 
+  blosc              conda-forge/linux-64::blosc-1.21.5-hc2324a3_1 
+  brotli             conda-forge/linux-64::brotli-1.1.0-hb9d3cd8_2 
+  brotli-bin         conda-forge/linux-64::brotli-bin-1.1.0-hb9d3cd8_2 
+  brotli-python      conda-forge/linux-64::brotli-python-1.1.0-py311hfdbb021_2 
+  bzip2              conda-forge/linux-64::bzip2-1.0.8-h4bc722e_7 
+  c-ares             conda-forge/linux-64::c-ares-1.34.3-hb9d3cd8_1 
+  ca-certificates    conda-forge/linux-64::ca-certificates-2024.8.30-hbcca054_0 
+  cached-property    conda-forge/noarch::cached-property-1.5.2-hd8ed1ab_1 
+  cached_property    conda-forge/noarch::cached_property-1.5.2-pyha770c72_1 
+  cairo              conda-forge/linux-64::cairo-1.18.0-h3faef2a_0 
+  certifi            conda-forge/noarch::certifi-2024.8.30-pyhd8ed1ab_0 
+  cffi               conda-forge/linux-64::cffi-1.17.1-py311hf29c0ef_0 
+  charset-normalizer conda-forge/noarch::charset-normalizer-3.4.0-pyhd8ed1ab_0 
+  chex               conda-forge/noarch::chex-0.1.86-pyhd8ed1ab_0 
+  colorama           conda-forge/noarch::colorama-0.4.6-pyhd8ed1ab_0 
+  comm               conda-forge/noarch::comm-0.2.2-pyhd8ed1ab_0 
+  contourpy          conda-forge/linux-64::contourpy-1.3.1-py311hd18a35c_0 
+  cuda-cccl_linux-64 conda-forge/noarch::cuda-cccl_linux-64-12.6.77-ha770c72_0 
+  cuda-crt-dev_linu~ conda-forge/noarch::cuda-crt-dev_linux-64-12.6.85-ha770c72_0 
+  cuda-crt-tools     conda-forge/linux-64::cuda-crt-tools-12.6.85-ha770c72_0 
+  cuda-cudart        conda-forge/linux-64::cuda-cudart-12.6.77-h5888daf_0 
+  cuda-cudart-dev    conda-forge/linux-64::cuda-cudart-dev-12.6.77-h5888daf_0 
+  cuda-cudart-dev_l~ conda-forge/noarch::cuda-cudart-dev_linux-64-12.6.77-h3f2d84a_0 
+  cuda-cudart-static conda-forge/linux-64::cuda-cudart-static-12.6.77-h5888daf_0 
+  cuda-cudart-stati~ conda-forge/noarch::cuda-cudart-static_linux-64-12.6.77-h3f2d84a_0 
+  cuda-cudart_linux~ conda-forge/noarch::cuda-cudart_linux-64-12.6.77-h3f2d84a_0 
+  cuda-cupti         conda-forge/linux-64::cuda-cupti-12.6.80-hbd13f7d_0 
+  cuda-driver-dev_l~ conda-forge/noarch::cuda-driver-dev_linux-64-12.6.77-h3f2d84a_0 
+  cuda-nvcc          conda-forge/linux-64::cuda-nvcc-12.6.85-hcdd1206_0 
+  cuda-nvcc-dev_lin~ conda-forge/noarch::cuda-nvcc-dev_linux-64-12.6.85-he91c749_0 
+  cuda-nvcc-impl     conda-forge/linux-64::cuda-nvcc-impl-12.6.85-h85509e4_0 
+  cuda-nvcc-tools    conda-forge/linux-64::cuda-nvcc-tools-12.6.85-he02047a_0 
+  cuda-nvcc_linux-64 conda-forge/linux-64::cuda-nvcc_linux-64-12.6.85-h04802cd_0 
+  cuda-nvrtc         conda-forge/linux-64::cuda-nvrtc-12.6.85-hbd13f7d_0 
+  cuda-nvtx          conda-forge/linux-64::cuda-nvtx-12.6.77-hbd13f7d_0 
+  cuda-nvvm-dev_lin~ conda-forge/noarch::cuda-nvvm-dev_linux-64-12.6.85-ha770c72_0 
+  cuda-nvvm-impl     conda-forge/linux-64::cuda-nvvm-impl-12.6.85-he02047a_0 
+  cuda-nvvm-tools    conda-forge/linux-64::cuda-nvvm-tools-12.6.85-he02047a_0 
+  cuda-version       conda-forge/noarch::cuda-version-12.6-h7480c83_3 
+  cudnn              conda-forge/linux-64::cudnn-8.9.7.29-h092f7fd_3 
+  cycler             conda-forge/noarch::cycler-0.12.1-pyhd8ed1ab_0 
+  dataclasses        conda-forge/noarch::dataclasses-0.8-pyhc8e2a94_3 
+  dav1d              conda-forge/linux-64::dav1d-1.2.1-hd590300_0 
+  dbus               conda-forge/linux-64::dbus-1.13.6-h5008d03_3 
+  debugpy            conda-forge/linux-64::debugpy-1.8.9-py311hfdbb021_0 
+  decorator          conda-forge/noarch::decorator-5.1.1-pyhd8ed1ab_0 
+  defusedxml         conda-forge/noarch::defusedxml-0.7.1-pyhd8ed1ab_0 
+  dm-haiku           conda-forge/noarch::dm-haiku-0.0.13-pyhd8ed1ab_0 
+  dm-tree            conda-forge/linux-64::dm-tree-0.1.8-py311hbffca5d_5 
+  entrypoints        conda-forge/noarch::entrypoints-0.4-pyhd8ed1ab_0 
+  etils              conda-forge/noarch::etils-1.10.0-pyhd8ed1ab_0 
+  exceptiongroup     conda-forge/noarch::exceptiongroup-1.2.2-pyhd8ed1ab_0 
+  executing          conda-forge/noarch::executing-2.1.0-pyhd8ed1ab_0 
+  expat              conda-forge/linux-64::expat-2.6.4-h5888daf_0 
+  ffmpeg             conda-forge/linux-64::ffmpeg-7.0.1-gpl_hb399a10_100 
+  flatbuffers        conda-forge/linux-64::flatbuffers-24.3.25-h59595ed_0 
+  flax               conda-forge/noarch::flax-0.9.0-pyhd8ed1ab_1 
+  font-ttf-dejavu-s~ conda-forge/noarch::font-ttf-dejavu-sans-mono-2.37-hab24e00_0 
+  font-ttf-inconsol~ conda-forge/noarch::font-ttf-inconsolata-3.000-h77eed37_0 
+  font-ttf-source-c~ conda-forge/noarch::font-ttf-source-code-pro-2.038-h77eed37_0 
+  font-ttf-ubuntu    conda-forge/noarch::font-ttf-ubuntu-0.83-h77eed37_3 
+  fontconfig         conda-forge/linux-64::fontconfig-2.14.2-h14ed4e7_0 
+  fonts-conda-ecosy~ conda-forge/noarch::fonts-conda-ecosystem-1-0 
+  fonts-conda-forge  conda-forge/noarch::fonts-conda-forge-1-0 
+  fonttools          conda-forge/linux-64::fonttools-4.55.0-py311h2dc5d0c_0 
+  fqdn               conda-forge/noarch::fqdn-1.5.1-pyhd8ed1ab_0 
+  freetype           conda-forge/linux-64::freetype-2.12.1-h267a509_2 
+  fribidi            conda-forge/linux-64::fribidi-1.0.10-h36c2ea0_0 
+  fsspec             conda-forge/noarch::fsspec-2024.10.0-pyhff2d567_0 
+  gast               conda-forge/noarch::gast-0.5.5-pyhd8ed1ab_0 
+  gawk               conda-forge/linux-64::gawk-5.3.1-hcd3d067_0 
+  gcc_impl_linux-64  conda-forge/linux-64::gcc_impl_linux-64-13.3.0-hfea6d02_1 
+  gcc_linux-64       conda-forge/linux-64::gcc_linux-64-13.3.0-hc28eda2_7 
+  gettext            conda-forge/linux-64::gettext-0.22.5-he02047a_3 
+  gettext-tools      conda-forge/linux-64::gettext-tools-0.22.5-he02047a_3 
+  giflib             conda-forge/linux-64::giflib-5.2.2-hd590300_0 
+  glib               conda-forge/linux-64::glib-2.80.2-hf974151_0 
+  glib-tools         conda-forge/linux-64::glib-tools-2.80.2-hb6ce0ca_0 
+  gmp                conda-forge/linux-64::gmp-6.3.0-hac33072_2 
+  gnutls             conda-forge/linux-64::gnutls-3.7.9-hb077bed_0 
+  google-pasta       conda-forge/noarch::google-pasta-0.2.0-pyhd8ed1ab_1 
+  graphite2          conda-forge/linux-64::graphite2-1.3.13-h59595ed_1003 
+  grpcio             conda-forge/linux-64::grpcio-1.62.2-py311ha6695c7_0 
+  gst-plugins-base   conda-forge/linux-64::gst-plugins-base-1.24.4-h9ad1361_0 
+  gstreamer          conda-forge/linux-64::gstreamer-1.24.4-haf2f30d_0 
+  gxx_impl_linux-64  conda-forge/linux-64::gxx_impl_linux-64-13.3.0-hdbfa832_1 
+  gxx_linux-64       conda-forge/linux-64::gxx_linux-64-13.3.0-h6834431_7 
+  h11                conda-forge/noarch::h11-0.14.0-pyhd8ed1ab_0 
+  h2                 conda-forge/noarch::h2-4.1.0-pyhd8ed1ab_0 
+  h5py               conda-forge/linux-64::h5py-3.12.1-nompi_py311hb639ac4_102 
+  harfbuzz           conda-forge/linux-64::harfbuzz-8.5.0-hfac3d4d_0 
+  hdf5               conda-forge/linux-64::hdf5-1.14.3-nompi_hdf9ad27_105 
+  hhsuite            bioconda/linux-64::hhsuite-3.3.0-py311pl5321h9f068be_13 
+  hpack              conda-forge/noarch::hpack-4.0.0-pyh9f0ad1d_0 
+  httpcore           conda-forge/noarch::httpcore-1.0.7-pyh29332c3_1 
+  httpx              conda-forge/noarch::httpx-0.28.0-pyhd8ed1ab_0 
+  humanize           conda-forge/noarch::humanize-4.11.0-pyhd8ed1ab_0 
+  hyperframe         conda-forge/noarch::hyperframe-6.0.1-pyhd8ed1ab_0 
+  icu                conda-forge/linux-64::icu-73.2-h59595ed_0 
+  idna               conda-forge/noarch::idna-3.10-pyhd8ed1ab_0 
+  immutabledict      conda-forge/noarch::immutabledict-4.2.1-pyhd8ed1ab_0 
+  importlib-metadata conda-forge/noarch::importlib-metadata-8.5.0-pyha770c72_0 
+  importlib_metadata conda-forge/noarch::importlib_metadata-8.5.0-hd8ed1ab_0 
+  importlib_resourc~ conda-forge/noarch::importlib_resources-6.4.5-pyhd8ed1ab_0 
+  ipykernel          conda-forge/noarch::ipykernel-6.29.5-pyh3099207_0 
+  ipython            conda-forge/noarch::ipython-8.30.0-pyh707e725_0 
+  ipython_genutils   conda-forge/noarch::ipython_genutils-0.2.0-pyhd8ed1ab_1 
+  ipywidgets         conda-forge/noarch::ipywidgets-8.1.5-pyhd8ed1ab_0 
+  isoduration        conda-forge/noarch::isoduration-20.11.0-pyhd8ed1ab_0 
+  jax                conda-forge/noarch::jax-0.4.27-pyhd8ed1ab_0 
+  jaxlib             conda-forge/linux-64::jaxlib-0.4.23-cuda120py311h5a49573_202 
+  jedi               conda-forge/noarch::jedi-0.19.2-pyhff2d567_0 
+  jinja2             conda-forge/noarch::jinja2-3.1.4-pyhd8ed1ab_0 
+  jmp                conda-forge/noarch::jmp-0.0.4-pyhd8ed1ab_0 
+  joblib             conda-forge/noarch::joblib-1.4.2-pyhd8ed1ab_0 
+  json5              conda-forge/noarch::json5-0.10.0-pyhd8ed1ab_0 
+  jsonpointer        conda-forge/linux-64::jsonpointer-3.0.0-py311h38be061_1 
+  jsonschema         conda-forge/noarch::jsonschema-4.23.0-pyhd8ed1ab_0 
+  jsonschema-specif~ conda-forge/noarch::jsonschema-specifications-2024.10.1-pyhd8ed1ab_0 
+  jsonschema-with-f~ conda-forge/noarch::jsonschema-with-format-nongpl-4.23.0-hd8ed1ab_0 
+  jupyter            conda-forge/noarch::jupyter-1.1.1-pyhd8ed1ab_0 
+  jupyter-lsp        conda-forge/noarch::jupyter-lsp-2.2.5-pyhd8ed1ab_0 
+  jupyter_client     conda-forge/noarch::jupyter_client-7.4.9-pyhd8ed1ab_0 
+  jupyter_console    conda-forge/noarch::jupyter_console-6.6.3-pyhd8ed1ab_0 
+  jupyter_core       conda-forge/noarch::jupyter_core-5.7.2-pyh31011fe_1 
+  jupyter_events     conda-forge/noarch::jupyter_events-0.10.0-pyhd8ed1ab_0 
+  jupyter_server     conda-forge/noarch::jupyter_server-2.14.2-pyhd8ed1ab_0 
+  jupyter_server_te~ conda-forge/noarch::jupyter_server_terminals-0.5.3-pyhd8ed1ab_0 
+  jupyterlab         conda-forge/noarch::jupyterlab-4.3.1-pyhff2d567_0 
+  jupyterlab_pygmen~ conda-forge/noarch::jupyterlab_pygments-0.3.0-pyhd8ed1ab_1 
+  jupyterlab_server  conda-forge/noarch::jupyterlab_server-2.27.3-pyhd8ed1ab_0 
+  jupyterlab_widgets conda-forge/noarch::jupyterlab_widgets-3.0.13-pyhd8ed1ab_0 
+  kalign2            bioconda/linux-64::kalign2-2.04-h031d066_7 
+  keras              conda-forge/noarch::keras-3.7.0-pyhd8ed1ab_0 
+  kernel-headers_li~ conda-forge/noarch::kernel-headers_linux-64-3.10.0-he073ed8_18 
+  keyutils           conda-forge/linux-64::keyutils-1.6.1-h166bdaf_0 
+  kiwisolver         conda-forge/linux-64::kiwisolver-1.4.7-py311hd18a35c_0 
+  krb5               conda-forge/linux-64::krb5-1.21.3-h659f571_0 
+  lame               conda-forge/linux-64::lame-3.100-h166bdaf_1003 
+  lcms2              conda-forge/linux-64::lcms2-2.16-hb7c19ff_0 
+  ld_impl_linux-64   conda-forge/linux-64::ld_impl_linux-64-2.43-h712a8e2_2 
+  lerc               conda-forge/linux-64::lerc-4.0.0-h27087fc_0 
+  libabseil          conda-forge/linux-64::libabseil-20240116.2-cxx17_he02047a_1 
+  libaec             conda-forge/linux-64::libaec-1.1.3-h59595ed_0 
+  libasprintf        conda-forge/linux-64::libasprintf-0.22.5-he8f35ee_3 
+  libasprintf-devel  conda-forge/linux-64::libasprintf-devel-0.22.5-he8f35ee_3 
+  libass             conda-forge/linux-64::libass-0.17.1-h8fe9dca_1 
+  libavif16          conda-forge/linux-64::libavif16-1.0.4-hd2f8ffe_4 
+  libblas            conda-forge/linux-64::libblas-3.9.0-25_linux64_openblas 
+  libbrotlicommon    conda-forge/linux-64::libbrotlicommon-1.1.0-hb9d3cd8_2 
+  libbrotlidec       conda-forge/linux-64::libbrotlidec-1.1.0-hb9d3cd8_2 
+  libbrotlienc       conda-forge/linux-64::libbrotlienc-1.1.0-hb9d3cd8_2 
+  libcap             conda-forge/linux-64::libcap-2.69-h0f662aa_0 
+  libcblas           conda-forge/linux-64::libcblas-3.9.0-25_linux64_openblas 
+  libclang-cpp15     conda-forge/linux-64::libclang-cpp15-15.0.7-default_h127d8a8_5 
+  libclang13         conda-forge/linux-64::libclang13-18.1.7-default_h087397f_0 
+  libcublas          conda-forge/linux-64::libcublas-12.6.4.1-hbd13f7d_0 
+  libcufft           conda-forge/linux-64::libcufft-11.3.0.4-hbd13f7d_0 
+  libcups            conda-forge/linux-64::libcups-2.3.3-h4637d8d_4 
+  libcurand          conda-forge/linux-64::libcurand-10.3.7.77-hbd13f7d_0 
+  libcurl            conda-forge/linux-64::libcurl-8.8.0-hca28451_1 
+  libcusolver        conda-forge/linux-64::libcusolver-11.7.1.2-hbd13f7d_0 
+  libcusparse        conda-forge/linux-64::libcusparse-12.5.4.2-hbd13f7d_0 
+  libdeflate         conda-forge/linux-64::libdeflate-1.20-hd590300_0 
+  libdrm             conda-forge/linux-64::libdrm-2.4.123-hb9d3cd8_0 
+  libedit            conda-forge/linux-64::libedit-3.1.20191231-he28a2e2_2 
+  libev              conda-forge/linux-64::libev-4.33-hd590300_2 
+  libevent           conda-forge/linux-64::libevent-2.1.12-hf998b51_1 
+  libexpat           conda-forge/linux-64::libexpat-2.6.4-h5888daf_0 
+  libffi             conda-forge/linux-64::libffi-3.4.2-h7f98852_5 
+  libflac            conda-forge/linux-64::libflac-1.4.3-h59595ed_0 
+  libgcc             conda-forge/linux-64::libgcc-14.2.0-h77fa898_1 
+  libgcc-devel_linu~ conda-forge/noarch::libgcc-devel_linux-64-13.3.0-h84ea5a7_101 
+  libgcc-ng          conda-forge/linux-64::libgcc-ng-14.2.0-h69a702a_1 
+  libgcrypt          conda-forge/linux-64::libgcrypt-1.11.0-ha770c72_2 
+  libgcrypt-devel    conda-forge/linux-64::libgcrypt-devel-1.11.0-hb9d3cd8_2 
+  libgcrypt-lib      conda-forge/linux-64::libgcrypt-lib-1.11.0-hb9d3cd8_2 
+  libgcrypt-tools    conda-forge/linux-64::libgcrypt-tools-1.11.0-hb9d3cd8_2 
+  libgettextpo       conda-forge/linux-64::libgettextpo-0.22.5-he02047a_3 
+  libgettextpo-devel conda-forge/linux-64::libgettextpo-devel-0.22.5-he02047a_3 
+  libgfortran        conda-forge/linux-64::libgfortran-14.2.0-h69a702a_1 
+  libgfortran-ng     conda-forge/linux-64::libgfortran-ng-14.2.0-h69a702a_1 
+  libgfortran5       conda-forge/linux-64::libgfortran5-14.2.0-hd5240d6_1 
+  libglib            conda-forge/linux-64::libglib-2.80.2-hf974151_0 
+  libgomp            conda-forge/linux-64::libgomp-14.2.0-h77fa898_1 
+  libgpg-error       conda-forge/linux-64::libgpg-error-1.51-hbd13f7d_1 
+  libgrpc            conda-forge/linux-64::libgrpc-1.62.2-h15f2491_0 
+  libhwloc           conda-forge/linux-64::libhwloc-2.11.2-default_he43201b_1000 
+  libiconv           conda-forge/linux-64::libiconv-1.17-hd590300_2 
+  libidn2            conda-forge/linux-64::libidn2-2.3.7-hd590300_0 
+  libjpeg-turbo      conda-forge/linux-64::libjpeg-turbo-3.0.0-hd590300_1 
+  liblapack          conda-forge/linux-64::liblapack-3.9.0-25_linux64_openblas 
+  libllvm15          conda-forge/linux-64::libllvm15-15.0.7-hb3ce162_4 
+  libllvm18          conda-forge/linux-64::libllvm18-18.1.7-hb77312f_0 
+  libnghttp2         conda-forge/linux-64::libnghttp2-1.58.0-h47da74e_1 
+  libnsl             conda-forge/linux-64::libnsl-2.0.1-hd590300_0 
+  libnvjitlink       conda-forge/linux-64::libnvjitlink-12.6.85-hbd13f7d_0 
+  libogg             conda-forge/linux-64::libogg-1.3.5-h4ab18f5_0 
+  libopenblas        conda-forge/linux-64::libopenblas-0.3.28-pthreads_h94d23a6_1 
+  libopenvino        conda-forge/linux-64::libopenvino-2024.1.0-h2da1b83_7 
+  libopenvino-auto-~ conda-forge/linux-64::libopenvino-auto-batch-plugin-2024.1.0-hb045406_7 
+  libopenvino-auto-~ conda-forge/linux-64::libopenvino-auto-plugin-2024.1.0-hb045406_7 
+  libopenvino-heter~ conda-forge/linux-64::libopenvino-hetero-plugin-2024.1.0-h5c03a75_7 
+  libopenvino-intel~ conda-forge/linux-64::libopenvino-intel-cpu-plugin-2024.1.0-h2da1b83_7 
+  libopenvino-intel~ conda-forge/linux-64::libopenvino-intel-gpu-plugin-2024.1.0-h2da1b83_7 
+  libopenvino-intel~ conda-forge/linux-64::libopenvino-intel-npu-plugin-2024.1.0-he02047a_7 
+  libopenvino-ir-fr~ conda-forge/linux-64::libopenvino-ir-frontend-2024.1.0-h5c03a75_7 
+  libopenvino-onnx-~ conda-forge/linux-64::libopenvino-onnx-frontend-2024.1.0-h07e8aee_7 
+  libopenvino-paddl~ conda-forge/linux-64::libopenvino-paddle-frontend-2024.1.0-h07e8aee_7 
+  libopenvino-pytor~ conda-forge/linux-64::libopenvino-pytorch-frontend-2024.1.0-he02047a_7 
+  libopenvino-tenso~ conda-forge/linux-64::libopenvino-tensorflow-frontend-2024.1.0-h39126c6_7 
+  libopenvino-tenso~ conda-forge/linux-64::libopenvino-tensorflow-lite-frontend-2024.1.0-he02047a_7 
+  libopus            conda-forge/linux-64::libopus-1.3.1-h7f98852_1 
+  libpciaccess       conda-forge/linux-64::libpciaccess-0.18-hd590300_0 
+  libpng             conda-forge/linux-64::libpng-1.6.43-h2797004_0 
+  libpq              conda-forge/linux-64::libpq-16.6-h2d7952a_0 
+  libprotobuf        conda-forge/linux-64::libprotobuf-4.25.3-h08a7969_0 
+  libre2-11          conda-forge/linux-64::libre2-11-2023.09.01-h5a48ba9_2 
+  libsanitizer       conda-forge/linux-64::libsanitizer-13.3.0-heb74ff8_1 
+  libsndfile         conda-forge/linux-64::libsndfile-1.2.2-hc60ed4a_1 
+  libsodium          conda-forge/linux-64::libsodium-1.0.20-h4ab18f5_0 
+  libsqlite          conda-forge/linux-64::libsqlite-3.46.0-hde9e2c9_0 
+  libssh2            conda-forge/linux-64::libssh2-1.11.0-h0841786_0 
+  libstdcxx          conda-forge/linux-64::libstdcxx-14.2.0-hc0a3c3a_1 
+  libstdcxx-devel_l~ conda-forge/noarch::libstdcxx-devel_linux-64-13.3.0-h84ea5a7_101 
+  libstdcxx-ng       conda-forge/linux-64::libstdcxx-ng-14.2.0-h4852527_1 
+  libsystemd0        conda-forge/linux-64::libsystemd0-256.7-h2774228_1 
+  libtasn1           conda-forge/linux-64::libtasn1-4.19.0-h166bdaf_0 
+  libtiff            conda-forge/linux-64::libtiff-4.6.0-h1dd3fc0_3 
+  libunistring       conda-forge/linux-64::libunistring-0.9.10-h7f98852_0 
+  libuuid            conda-forge/linux-64::libuuid-2.38.1-h0b41bf4_0 
+  libva              conda-forge/linux-64::libva-2.21.0-h4ab18f5_2 
+  libvorbis          conda-forge/linux-64::libvorbis-1.3.7-h9c3ff4c_0 
+  libvpx             conda-forge/linux-64::libvpx-1.14.1-hac33072_0 
+  libwebp-base       conda-forge/linux-64::libwebp-base-1.4.0-hd590300_0 
+  libxcb             conda-forge/linux-64::libxcb-1.15-h0b41bf4_0 
+  libxcrypt          conda-forge/linux-64::libxcrypt-4.4.36-hd590300_1 
+  libxkbcommon       conda-forge/linux-64::libxkbcommon-1.7.0-h662e7e4_0 
+  libxml2            conda-forge/linux-64::libxml2-2.12.7-hc051c1a_1 
+  libzlib            conda-forge/linux-64::libzlib-1.2.13-h4ab18f5_6 
+  lz4-c              conda-forge/linux-64::lz4-c-1.9.4-hcb278e6_0 
+  markdown           conda-forge/noarch::markdown-3.6-pyhd8ed1ab_0 
+  markdown-it-py     conda-forge/noarch::markdown-it-py-3.0.0-pyhd8ed1ab_0 
+  markupsafe         conda-forge/linux-64::markupsafe-3.0.2-py311h2dc5d0c_0 
+  matplotlib         conda-forge/linux-64::matplotlib-3.9.1-py311h38be061_1 
+  matplotlib-base    conda-forge/linux-64::matplotlib-base-3.9.1-py311h74b4f7c_2 
+  matplotlib-inline  conda-forge/noarch::matplotlib-inline-0.1.7-pyhd8ed1ab_0 
+  mdurl              conda-forge/noarch::mdurl-0.1.2-pyhd8ed1ab_0 
+  mistune            conda-forge/noarch::mistune-3.0.2-pyhd8ed1ab_0 
+  ml-collections     conda-forge/noarch::ml-collections-1.0.0-pyh29332c3_0 
+  ml_dtypes          conda-forge/linux-64::ml_dtypes-0.3.2-py311h320fe9a_0 
+  mmseqs2            bioconda/linux-64::mmseqs2-14.7e284-pl5321h6a68c12_2 
+  mpfr               conda-forge/linux-64::mpfr-4.2.1-h90cbb55_3 
+  mpg123             conda-forge/linux-64::mpg123-1.32.9-hc50e24c_0 
+  msgpack-python     conda-forge/linux-64::msgpack-python-1.1.0-py311hd18a35c_0 
+  munkres            conda-forge/noarch::munkres-1.1.4-pyh9f0ad1d_0 
+  mysql-common       conda-forge/linux-64::mysql-common-8.3.0-hf1915f5_4 
+  mysql-libs         conda-forge/linux-64::mysql-libs-8.3.0-hca2cd23_4 
+  namex              conda-forge/noarch::namex-0.0.8-pyhd8ed1ab_0 
+  nbclassic          conda-forge/noarch::nbclassic-1.1.0-pyhd8ed1ab_0 
+  nbclient           conda-forge/noarch::nbclient-0.10.1-pyhd8ed1ab_0 
+  nbconvert-core     conda-forge/noarch::nbconvert-core-7.16.4-pyhd8ed1ab_1 
+  nbformat           conda-forge/noarch::nbformat-5.10.4-pyhd8ed1ab_0 
+  nccl               conda-forge/linux-64::nccl-2.23.4.1-h2b5d15b_3 
+  ncurses            conda-forge/linux-64::ncurses-6.5-he02047a_1 
+  nest-asyncio       conda-forge/noarch::nest-asyncio-1.6.0-pyhd8ed1ab_0 
+  nettle             conda-forge/linux-64::nettle-3.9.1-h7ab15ed_0 
+  notebook           conda-forge/noarch::notebook-6.5.7-pyha770c72_0 
+  notebook-shim      conda-forge/noarch::notebook-shim-0.2.4-pyhd8ed1ab_0 
+  nspr               conda-forge/linux-64::nspr-4.36-h5888daf_0 
+  nss                conda-forge/linux-64::nss-3.100-hca3bf56_0 
+  numpy              conda-forge/linux-64::numpy-1.26.4-py311h64a7726_0 
+  ocl-icd            conda-forge/linux-64::ocl-icd-2.3.2-hb9d3cd8_2 
+  ocl-icd-system     conda-forge/linux-64::ocl-icd-system-1.0.0-1 
+  opencl-headers     conda-forge/linux-64::opencl-headers-2024.10.24-h5888daf_0 
+  openh264           conda-forge/linux-64::openh264-2.4.1-h59595ed_0 
+  openjpeg           conda-forge/linux-64::openjpeg-2.5.2-h488ebb8_0 
+  openmm             conda-forge/linux-64::openmm-8.0.0-py311h11a6390_4 
+  openssl            conda-forge/linux-64::openssl-3.4.0-hb9d3cd8_0 
+  opt-einsum         conda-forge/noarch::opt-einsum-3.4.0-hd8ed1ab_0 
+  opt_einsum         conda-forge/noarch::opt_einsum-3.4.0-pyhd8ed1ab_0 
+  optax              conda-forge/noarch::optax-0.2.2-pyhd8ed1ab_1 
+  optree             conda-forge/linux-64::optree-0.13.1-py311hd18a35c_1 
+  orbax-checkpoint   conda-forge/noarch::orbax-checkpoint-0.6.4-pyhd8ed1ab_0 
+  overrides          conda-forge/noarch::overrides-7.7.0-pyhd8ed1ab_0 
+  p11-kit            conda-forge/linux-64::p11-kit-0.24.1-hc5aa10d_0 
+  packaging          conda-forge/noarch::packaging-24.2-pyhff2d567_1 
+  pandas             conda-forge/linux-64::pandas-2.2.3-py311h7db5c69_1 
+  pandocfilters      conda-forge/noarch::pandocfilters-1.5.0-pyhd8ed1ab_0 
+  parso              conda-forge/noarch::parso-0.8.4-pyhd8ed1ab_0 
+  patsy              conda-forge/noarch::patsy-1.0.1-pyhff2d567_0 
+  pcre2              conda-forge/linux-64::pcre2-10.43-hcad00b1_0 
+  pdbfixer           conda-forge/noarch::pdbfixer-1.9-pyh1a96a4e_0 
+  perl               conda-forge/linux-64::perl-5.32.1-7_hd590300_perl5 
+  pexpect            conda-forge/noarch::pexpect-4.9.0-pyhd8ed1ab_0 
+  pickleshare        conda-forge/noarch::pickleshare-0.7.5-py_1003 
+  pillow             conda-forge/linux-64::pillow-10.3.0-py311h18e6fac_0 
+  pip                conda-forge/noarch::pip-24.3.1-pyh8b19718_0 
+  pixman             conda-forge/linux-64::pixman-0.43.2-h59595ed_0 
+  pkgutil-resolve-n~ conda-forge/noarch::pkgutil-resolve-name-1.3.10-pyhd8ed1ab_1 
+  platformdirs       conda-forge/noarch::platformdirs-4.3.6-pyhd8ed1ab_0 
+  ply                conda-forge/noarch::ply-3.11-pyhd8ed1ab_2 
+  prometheus_client  conda-forge/noarch::prometheus_client-0.21.0-pyhd8ed1ab_0 
+  prompt-toolkit     conda-forge/noarch::prompt-toolkit-3.0.48-pyha770c72_0 
+  prompt_toolkit     conda-forge/noarch::prompt_toolkit-3.0.48-hd8ed1ab_0 
+  protobuf           conda-forge/linux-64::protobuf-4.25.3-py311hbffca5d_1 
+  psutil             conda-forge/linux-64::psutil-6.1.0-py311h9ecbd09_0 
+  pthread-stubs      conda-forge/linux-64::pthread-stubs-0.4-hb9d3cd8_1002 
+  ptyprocess         conda-forge/noarch::ptyprocess-0.7.0-pyhd3deb0d_0 
+  pugixml            conda-forge/linux-64::pugixml-1.14-h59595ed_0 
+  pulseaudio-client  conda-forge/linux-64::pulseaudio-client-17.0-hb77b528_0 
+  pure_eval          conda-forge/noarch::pure_eval-0.2.3-pyhd8ed1ab_0 
+  py3dmol            conda-forge/noarch::py3dmol-2.4.2-pyhd8ed1ab_0 
+  pybind11-abi       conda-forge/noarch::pybind11-abi-4-hd8ed1ab_3 
+  pycparser          conda-forge/noarch::pycparser-2.22-pyhd8ed1ab_0 
+  pygments           conda-forge/noarch::pygments-2.18.0-pyhd8ed1ab_0 
+  pyparsing          conda-forge/noarch::pyparsing-3.2.0-pyhd8ed1ab_1 
+  pyqt               conda-forge/linux-64::pyqt-5.15.9-py311hf0fb5b6_5 
+  pyqt5-sip          conda-forge/linux-64::pyqt5-sip-12.12.2-py311hb755f60_5 
+  pyrosetta          /linux-64::pyrosetta-2024.42+release.3366cf78a3-py311_0 
+  pysocks            conda-forge/noarch::pysocks-1.7.1-pyha2e5f31_6 
+  python             conda-forge/linux-64::python-3.11.9-hb806964_0_cpython 
+  python-dateutil    conda-forge/noarch::python-dateutil-2.9.0.post0-pyhff2d567_0 
+  python-fastjsonsc~ conda-forge/noarch::python-fastjsonschema-2.21.0-pyhd8ed1ab_0 
+  python-flatbuffers conda-forge/noarch::python-flatbuffers-24.3.25-pyh59ac667_0 
+  python-json-logger conda-forge/noarch::python-json-logger-2.0.7-pyhd8ed1ab_0 
+  python-tzdata      conda-forge/noarch::python-tzdata-2024.2-pyhd8ed1ab_0 
+  python_abi         conda-forge/linux-64::python_abi-3.11-5_cp311 
+  pytz               conda-forge/noarch::pytz-2024.1-pyhd8ed1ab_0 
+  pyyaml             conda-forge/linux-64::pyyaml-6.0.2-py311h9ecbd09_1 
+  pyzmq              conda-forge/linux-64::pyzmq-26.2.0-py311h7deb3e3_3 
+  qhull              conda-forge/linux-64::qhull-2020.2-h434a139_5 
+  qt-main            conda-forge/linux-64::qt-main-5.15.8-hc9dc06e_21 
+  rav1e              conda-forge/linux-64::rav1e-0.6.6-he8a937b_2 
+  re2                conda-forge/linux-64::re2-2023.09.01-h7f4b329_2 
+  readline           conda-forge/linux-64::readline-8.2-h8228510_1 
+  referencing        conda-forge/noarch::referencing-0.35.1-pyhd8ed1ab_0 
+  requests           conda-forge/noarch::requests-2.32.3-pyhd8ed1ab_0 
+  rfc3339-validator  conda-forge/noarch::rfc3339-validator-0.1.4-pyhd8ed1ab_0 
+  rfc3986-validator  conda-forge/noarch::rfc3986-validator-0.1.1-pyh9f0ad1d_0 
+  rich               conda-forge/noarch::rich-13.9.4-pyhd8ed1ab_0 
+  rpds-py            conda-forge/linux-64::rpds-py-0.21.0-py311h9e33e62_0 
+  scipy              conda-forge/linux-64::scipy-1.14.1-py311he9a78e4_1 
+  seaborn            conda-forge/noarch::seaborn-0.13.2-hd8ed1ab_2 
+  seaborn-base       conda-forge/noarch::seaborn-base-0.13.2-pyhd8ed1ab_2 
+  send2trash         conda-forge/noarch::send2trash-1.8.3-pyh0d859eb_0 
+  setuptools         conda-forge/noarch::setuptools-75.6.0-pyhff2d567_1 
+  sip                conda-forge/linux-64::sip-6.7.12-py311hb755f60_0 
+  six                conda-forge/noarch::six-1.16.0-pyh6c4a22f_0 
+  snappy             conda-forge/linux-64::snappy-1.2.1-ha2e4443_0 
+  sniffio            conda-forge/noarch::sniffio-1.3.1-pyhd8ed1ab_0 
+  soupsieve          conda-forge/noarch::soupsieve-2.5-pyhd8ed1ab_1 
+  stack_data         conda-forge/noarch::stack_data-0.6.2-pyhd8ed1ab_0 
+  statsmodels        conda-forge/linux-64::statsmodels-0.14.4-py311h9f3472d_0 
+  svt-av1            conda-forge/linux-64::svt-av1-2.1.0-hac33072_0 
+  sysroot_linux-64   conda-forge/noarch::sysroot_linux-64-2.17-h4a8ded7_18 
+  tabulate           conda-forge/noarch::tabulate-0.9.0-pyhd8ed1ab_1 
+  tbb                conda-forge/linux-64::tbb-2022.0.0-hceb3a55_0 
+  tensorboard        conda-forge/noarch::tensorboard-2.16.2-pyhd8ed1ab_0 
+  tensorboard-data-~ conda-forge/linux-64::tensorboard-data-server-0.7.0-py311hafd3f86_2 
+  tensorflow         conda-forge/linux-64::tensorflow-2.16.1-cuda120py311h452d031_0 
+  tensorflow-base    conda-forge/linux-64::tensorflow-base-2.16.1-cuda120py311h291cb5b_0 
+  tensorflow-estima~ conda-forge/linux-64::tensorflow-estimator-2.16.1-cuda120py311h0c188d0_0 
+  tensorstore        conda-forge/linux-64::tensorstore-0.1.60-py311hbe3d8c9_0 
+  termcolor          conda-forge/noarch::termcolor-2.5.0-pyhd8ed1ab_0 
+  terminado          conda-forge/noarch::terminado-0.18.1-pyh0d859eb_0 
+  tinycss2           conda-forge/noarch::tinycss2-1.4.0-pyhd8ed1ab_0 
+  tk                 conda-forge/linux-64::tk-8.6.13-noxft_h4845f30_101 
+  toml               conda-forge/noarch::toml-0.10.2-pyhd8ed1ab_0 
+  tomli              conda-forge/noarch::tomli-2.2.1-pyhd8ed1ab_0 
+  toolz              conda-forge/noarch::toolz-1.0.0-pyhd8ed1ab_0 
+  tornado            conda-forge/linux-64::tornado-6.4.2-py311h9ecbd09_0 
+  tqdm               conda-forge/noarch::tqdm-4.67.1-pyhd8ed1ab_0 
+  traitlets          conda-forge/noarch::traitlets-5.14.3-pyhd8ed1ab_0 
+  types-python-date~ conda-forge/noarch::types-python-dateutil-2.9.0.20241003-pyhff2d567_0 
+  typing-extensions  conda-forge/noarch::typing-extensions-4.12.2-hd8ed1ab_0 
+  typing_extensions  conda-forge/noarch::typing_extensions-4.12.2-pyha770c72_0 
+  typing_utils       conda-forge/noarch::typing_utils-0.1.0-pyhd8ed1ab_0 
+  tzdata             conda-forge/noarch::tzdata-2024b-hc8b5060_0 
+  unicodedata2       conda-forge/linux-64::unicodedata2-15.1.0-py311h9ecbd09_1 
+  uri-template       conda-forge/noarch::uri-template-1.3.0-pyhd8ed1ab_0 
+  urllib3            conda-forge/noarch::urllib3-2.2.3-pyhd8ed1ab_0 
+  wcwidth            conda-forge/noarch::wcwidth-0.2.13-pyhd8ed1ab_0 
+  webcolors          conda-forge/noarch::webcolors-24.8.0-pyhd8ed1ab_0 
+  webencodings       conda-forge/noarch::webencodings-0.5.1-pyhd8ed1ab_2 
+  websocket-client   conda-forge/noarch::websocket-client-1.8.0-pyhd8ed1ab_0 
+  werkzeug           conda-forge/noarch::werkzeug-3.1.3-pyhff2d567_0 
+  wget               conda-forge/linux-64::wget-1.21.4-hda4d442_0 
+  wheel              conda-forge/noarch::wheel-0.45.1-pyhd8ed1ab_0 
+  widgetsnbextension conda-forge/noarch::widgetsnbextension-4.0.13-pyhd8ed1ab_0 
+  wrapt              conda-forge/linux-64::wrapt-1.17.0-py311h9ecbd09_0 
+  x264               conda-forge/linux-64::x264-1!164.3095-h166bdaf_2 
+  x265               conda-forge/linux-64::x265-3.5-h924138e_3 
+  xcb-util           conda-forge/linux-64::xcb-util-0.4.0-hd590300_1 
+  xcb-util-image     conda-forge/linux-64::xcb-util-image-0.4.0-h8ee46fc_1 
+  xcb-util-keysyms   conda-forge/linux-64::xcb-util-keysyms-0.4.0-h8ee46fc_1 
+  xcb-util-renderut~ conda-forge/linux-64::xcb-util-renderutil-0.3.9-hd590300_1 
+  xcb-util-wm        conda-forge/linux-64::xcb-util-wm-0.4.1-h8ee46fc_1 
+  xkeyboard-config   conda-forge/linux-64::xkeyboard-config-2.42-h4ab18f5_0 
+  xorg-fixesproto    conda-forge/linux-64::xorg-fixesproto-5.0-hb9d3cd8_1003 
+  xorg-kbproto       conda-forge/linux-64::xorg-kbproto-1.0.7-hb9d3cd8_1003 
+  xorg-libice        conda-forge/linux-64::xorg-libice-1.1.1-hb9d3cd8_1 
+  xorg-libsm         conda-forge/linux-64::xorg-libsm-1.2.4-he73a12e_1 
+  xorg-libx11        conda-forge/linux-64::xorg-libx11-1.8.9-h8ee46fc_0 
+  xorg-libxau        conda-forge/linux-64::xorg-libxau-1.0.11-hb9d3cd8_1 
+  xorg-libxdmcp      conda-forge/linux-64::xorg-libxdmcp-1.1.5-hb9d3cd8_0 
+  xorg-libxext       conda-forge/linux-64::xorg-libxext-1.3.4-h0b41bf4_2 
+  xorg-libxfixes     conda-forge/linux-64::xorg-libxfixes-5.0.3-h7f98852_1004 
+  xorg-libxrender    conda-forge/linux-64::xorg-libxrender-0.9.11-hd590300_0 
+  xorg-renderproto   conda-forge/linux-64::xorg-renderproto-0.11.1-hb9d3cd8_1003 
+  xorg-xextproto     conda-forge/linux-64::xorg-xextproto-7.3.0-hb9d3cd8_1004 
+  xorg-xf86vidmodep~ conda-forge/linux-64::xorg-xf86vidmodeproto-2.3.1-hb9d3cd8_1005 
+  xorg-xproto        conda-forge/linux-64::xorg-xproto-7.0.31-hb9d3cd8_1008 
+  xz                 conda-forge/linux-64::xz-5.2.6-h166bdaf_0 
+  yaml               conda-forge/linux-64::yaml-0.2.5-h7f98852_2 
+  zeromq             conda-forge/linux-64::zeromq-4.3.5-h3b0a872_7 
+  zipp               conda-forge/noarch::zipp-3.21.0-pyhd8ed1ab_1 
+  zlib               conda-forge/linux-64::zlib-1.2.13-h4ab18f5_6 
+  zstandard          conda-forge/linux-64::zstandard-0.23.0-py311hbc35293_1 
+  zstd               conda-forge/linux-64::zstd-1.5.6-ha6fb4c9_0 
+
+
+
+Downloading and Extracting Packages: ...working... done
+Preparing transaction: ...working... done
+Verifying transaction: ...working... done
+Executing transaction: ...working... By downloading and using the cuDNN conda packages, you accept the terms and conditions of the NVIDIA cuDNN EULA -
+  https://docs.nvidia.com/deeplearning/cudnn/sla/index.html
+
+done
+#
+# To activate this environment, use
+#
+#     $ conda activate colabfold_ig
+#
+# To deactivate an active environment, use
+#
+#     $ conda deactivate
+
++ apt-get clean
++ conda clean -y --all
+Will remove 515 (3.91 GB) tarball(s).
+Will remove 1 index cache(s).
+Will remove 37 (15.9 MB) package(s).
+There are no tempfile(s) to remove.
+There are no logfile(s) to remove.
++ pip cache purge
+WARNING: No matching packages
+Files removed: 0
+INFO:    Adding help info
+INFO:    Adding environment to container
+INFO:    Adding runscript
+INFO:    Creating SIF file...
+INFO:    Build complete: colab_fold_ig_cuda12.sif

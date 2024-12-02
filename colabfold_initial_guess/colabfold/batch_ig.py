@@ -1119,6 +1119,7 @@ def run_ig(
     interface_rmsd_cut=20,
     template_chain_1=False,
     template_chain_2_plus=True,
+    outname: str = "out",
     **kwargs
 ):
     # check what device is available
@@ -1184,9 +1185,9 @@ def run_ig(
         rank_by = "plddt"
 
     #create silent out, scorefile, and checkpoint if needed
-    sfd_out = pyrosetta.rosetta.core.io.silent.SilentFileData("out.silent", False, False, "binary", pyrosetta.rosetta.core.io.silent.SilentFileOptions())
-    checkpoint_filename = "check.point"
-    scorefilename = "out.sc"
+    sfd_out = pyrosetta.rosetta.core.io.silent.SilentFileData(f"{outname}.silent", False, False, "binary", pyrosetta.rosetta.core.io.silent.SilentFileOptions())
+    checkpoint_filename = f"{outname}.check.point"
+    scorefilename = f"{outname}.sc"
     write_header = not os.path.exists(scorefilename)
 
     finished_structs = af2_util.determine_finished_structs(checkpoint_filename)
@@ -1498,7 +1499,7 @@ def run_ig(
 
                     # af2_pose.dump_pdb(f"{raw_jobname}_{model_tag}.pdb")
 
-                    af2_util.add2silent(f"{raw_jobname}_{model_tag}", af2_pose, score_dict, sfd_out)
+                    af2_util.add2silent(f"{raw_jobname}_{model_tag}", af2_pose, score_dict, sfd_out, f"{outname}.silent")
                     af2_util.add2scorefile(f"{raw_jobname}_{model_tag}", scorefilename, write_header=write_header, score_dict=score_dict)
                     write_header = False
 

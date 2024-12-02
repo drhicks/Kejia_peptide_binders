@@ -40,7 +40,7 @@ def add_to_score_file_open(tag, f, write_header=False, score_dict=None, string_d
         scores_string = " ".join(final_dict.values())
         f.write("SCORE:  %s    %s\n"%(scores_string, tag))
 
-def add2silent( tag, pose, score_dict, sfd_out ):
+def add2silent( tag, pose, score_dict, sfd_out, outname):
         # pose = pose_from_file( pdb )
 
         # pose = insert_chainbreaks( pose, binderlen )
@@ -55,7 +55,7 @@ def add2silent( tag, pose, score_dict, sfd_out ):
                 struct.add_energy(scorename, value)
 
         sfd_out.add_structure( struct )
-        sfd_out.write_silent_struct( struct, "out.silent" )
+        sfd_out.write_silent_struct( struct, outname)
 
 def record_checkpoint( tag_buffer, checkpoint_filename ):
         with open( checkpoint_filename, 'a' ) as f:
@@ -279,7 +279,7 @@ def get_final_dict(score_dict, string_dict) -> OrderedDict:
 
     return final_dict
 
-def insert_Rosetta_chainbreaks( pose, binderlen ) -> core.pose.Pose:
+def insert_Rosetta_chainbreaks( pose, binderlen ):
     '''
     Given a pose and a list of indices to insert chainbreaks after,
     insert the chainbreaks into the pose.

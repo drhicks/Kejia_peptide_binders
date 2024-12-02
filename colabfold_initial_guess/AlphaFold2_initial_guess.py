@@ -48,6 +48,7 @@ def setup_argparse():
     parser = argparse.ArgumentParser(description='Run AlphaFold predictions with customizable parameters.')
     parser.add_argument('-silent', '--silent', type=str, required=True, help='Path to a silent file for initial guess predictions')
     parser.add_argument('--result_dir', type=str, default='./', help='Directory where results will be saved.')
+    parser.add_argument('--outname', type=str, default='out', help='name prefix for score file, silent file, and check point file')
     parser.add_argument('--msa_mode', type=str, default='single_sequence', choices=['MMseqs2 (UniRef+Environmental)', 'MMseqs2 (UniRef only)', 'single_sequence', 'custom'], help='Mode for multiple sequence alignment. Absolutely do not submit many jobs with MSA. It would overload colabfold server. Should implement MSA on digs...')
     parser.add_argument('--pair_mode', type=str, default='unpaired+paired', choices=['unpaired+paired', 'paired', 'unpaired'], help='Pairing mode for sequences.')
     parser.add_argument('--pairing_strategy', type=str, default='greedy', choices=["greedy", "complete"], help='Pairing strategy for sequences.')
@@ -103,6 +104,7 @@ def main():
             pae_interaction_cut=args.pae_interaction_cut,
             interface_rmsd_cut=args.interface_rmsd_cut,
             recompile_padding=0,
+            outname=args.outname,
         )
 
     except Exception as e:

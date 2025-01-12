@@ -269,6 +269,37 @@ def filter_duplicate_seqs(df, sequence_column):
     df_filtered = df_sorted.drop_duplicates(subset=[sequence_column], keep='first')
     return df_filtered
 
+def save_and_print_results(final_results, file_name="cluster_filter.sc", header=None):
+    """
+    Print the results to the console and save them to a space-separated file with an optional header.
+
+    Parameters:
+        final_results (dict): A dictionary containing results, where the key is a label
+                              and the value is the result group (list, DataFrame, etc.).
+        file_name (str): Name of the file where results will be saved. Defaults to "cluster_filter.sc".
+        header (str or list): Optional header to write at the top of the file. Can be a string or list of strings.
+    """
+    with open(file_name, "w") as score_file:
+        # Write the header if provided
+        if header:
+            if isinstance(header, list):  # If the header is a list, join with spaces
+                score_file.write(" ".join(header) + "\n")
+            elif isinstance(header, str):  # If the header is a single string, write directly
+                score_file.write(header + "\n")
+
+        for key, group in final_results.items():
+            # Print the result to the console
+            print_full(group)
+
+            # Write the result to the file
+            if isinstance(group, list):  # If group is a list of rows
+                for row in group:
+                    score_file.write(" ".join(map(str, row)) + "\n")
+            elif hasattr(group, "to_string"):  # If group is a DataFrame
+                score_file.write(group.to_string(index=False, header=False) + "\n")
+            else:  # If it's a generic object, convert it to a string
+                score_file.write(str(group) + "\n")
+
 def main():
     parser = argparse.ArgumentParser(description="Process protein sequences and filter based on properties.")
     parser.add_argument("scorefile", type=str, help="Path to the score file.")
@@ -288,7 +319,7 @@ def main():
     parser.add_argument("--worst_plddt_binder", type=float, default=85.0, help="Minimum allowable threshold for plddt_binder.")
     parser.add_argument("--n_examples", type=int, default=1, help="Desired number of output per cluster")
     parser.add_argument("--abs_cut", type=float, default=0, help="minimum acceptable Abs_0.1 value so you can use A280")
-    parser.add_argument("--isoelectric_point_cut", type=float, default=5.5, help="maximum acceptable isoelectric_point")
+    parser.add_argument("--isoelectric_point_cut", type=float, default=14, help="maximum acceptable isoelectric_point")
     parser.add_argument('--not_initial_guess', action='store_true', help='Set this flag for af2 predictions not using initial guess')
 
     args = parser.parse_args()
@@ -341,7 +372,7 @@ def main():
     df = add_protein_info(df, 'sequence')
     print("added protein info")
 
-    df = df[(df["Abs_0.1%"] > args.abs_cut) & 
+    df = df[(df["Abs_0.1%"] >= args.abs_cut) & 
             (df["isoelectric_point"] <= args.isoelectric_point_cut)]
     print(f"df len: {len(df)}", flush=True)
 
@@ -360,8 +391,7 @@ def main():
         final_results[key] = filtered_group
         print(f"Cluster ID: {key}, Final Length: {len(filtered_group)}, Final Thresholds: {thresholds}")
 
-    for key, group in final_results.items():
-        print_full(group)
+    save_and_print_results(final_results, header=list(df.columns))
 
 if __name__ == "__main__":
     main()

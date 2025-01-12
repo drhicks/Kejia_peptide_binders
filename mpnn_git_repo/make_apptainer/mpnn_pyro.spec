@@ -18,10 +18,13 @@ IncludeCmd: yes
     rm /opt/miniconda.sh
 
   /usr/bin/conda install -c conda-forge mamba -y
-  mamba install python=3.11 pip tensorflow pytorch numpy scipy numba biopython ipython pandas matplotlib ipykernel seaborn pyrosetta -c pytorch -c conda-forge --channel https://conda.graylab.jhu.edu -y
+  mamba install python=3.11 prody pip tensorflow pytorch numpy scipy numba biopython ipython pandas matplotlib ipykernel seaborn modelcif -c conda-forge -c pytorch
 
-  # # PyRosetta
-  # pip install pyrosetta -f https://west.rosettacommons.org/pyrosetta/release/release/PyRosetta4.Release.python310.linux.wheel/
+  #pyrosetta --channel https://conda.graylab.jhu.edu -y
+
+  # PyRosetta
+  pip install pyrosetta -f https://west.rosettacommons.org/pyrosetta/release/release/PyRosetta4.Release.python311.linux.wheel/
+  pip install dm-tree ml_collections
 
 
   # Clean up

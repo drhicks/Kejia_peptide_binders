@@ -41,12 +41,12 @@ if (len(sys.argv) == 1):
     eprint(" -script            : The python script that you wish to run")
     eprint(" -silent            : The sequence file that contains sequences that you want to submit")
     eprint(" -args              : A string of addition arguments that you wish to be used in the python script command")
-    eprint(" -apptainer         : A path to the apptainer you would like to run this script with (default: /software/containers/mpnn_binder_design.sif)")
+    eprint(" -apptainer         : A path to the apptainer you would like to run this script with (default: /software/containers/af2_binder_design.sif)")
     eprint(" -structs_per_job   : The number of structures that you wish to package into one job")
     eprint(" -cpus              : Optional, the number of cpus per job that you wish to use (default, 2)")
     eprint(" -mem               : Optional, the amount of memory that you wish to use per job in GB (default, 16)")
-    eprint(" -p                 : Optional, the SLURM queue that you wish to submit your job to (default, cpu-bf)")
-    eprint(" -t                 : Optional, the SLURM timelimit to use for your job (default, 12:00:00)")
+    eprint(" -p                 : Optional, the SLURM queue that you wish to submit your job to (default, gpu)")
+    eprint(" -t                 : Optional, the SLURM time limit to use for your job (default, 12:00:00)")
     eprint(" -gres              : Optional, arguments that you would like to submit to SLURM's --gres field (default, '')")
     eprint(" -jobs_per_group    : Optional, the number of jobs per submission to SLURM (default, 1)")
     eprint(" -scratch           : Optional, whether to write the output of the runs to a mirrored directory on scratch (default, False)")
@@ -58,11 +58,11 @@ parser.add_argument("-prefix", type=str, default="")
 parser.add_argument("-script", type=str, default="")
 parser.add_argument("-silent", type=str, default="")
 parser.add_argument("-args", type=str, default="")
-parser.add_argument("-apptainer", type=str, default="/software/containers/mpnn_binder_design.sif")
+parser.add_argument("-apptainer", type=str, default="/software/containers/af2_binder_design.sif")
 parser.add_argument("-structs_per_job", type=int, default="0")
 parser.add_argument("-cpus", type=int, default=2)
 parser.add_argument("-mem", type=int, default=16)
-parser.add_argument("-p", type=str, default="cpu-bf")
+parser.add_argument("-p", type=str, default="gpu")
 parser.add_argument("-t", type=str, default="12:00:00")
 parser.add_argument("-gres", type=str, default="")
 parser.add_argument("-jobs_per_group", type=int, default=1)
@@ -155,13 +155,13 @@ cmd( "mkdir splits" )
 os.chdir( 'splits' )
 
 # Let's just use sequence outputs
-cmd( f'/home/drhicks1/scripts/Kejia_peptide_binders/silent_tools/silentsplitnoshuf {silent} {structs_per_job}' )
+cmd( f'/home/drhicks1/scripts/Kejia_peptide_binders/silent_tools/silentsplitbylength {silent} {structs_per_job}' )
 
 commands = []
-for x in glob.glob("*.silent"):
+for x in glob.glob("len*.silent"):
     full_x = os.path.join(commands_path,'splits', x)
     dirname = my_rstrip( x, ".silent" )
-    commands.append( "cd {runs_path}; mkdir {dirname}; cd {dirname}; apptainer exec -B /home/drhicks1/ -B /mnt/home/drhicks1/ -B /home/$USER/ -B /mnt/home/$USER/ -B /mnt/net/scratch/$USER/ -B /net/scratch/$USER/ -B /databases/mpnn/ -B /projects/ml/struc2seq/ {args.apptainer} python {script_filename} -silent {full_x} {args_string} > log.log 2>&1".format(**locals()) )
+    commands.append( "cd {runs_path}; mkdir {dirname}; cd {dirname}; apptainer exec -B /home/$USER/ -B /mnt/home/$USER/ -B /mnt/net/scratch/$USER/ -B /net/scratch/$USER/ --nv {args.apptainer} python {script_filename} -silent {full_x} {args_string} > log.log 2>&1".format(**locals()) )
 
 os.chdir( commands_path )
 with open("commands.list", "w") as f:

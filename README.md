@@ -10,6 +10,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 - Correct paths in MPNN scripts for your local installs.
 - Update paths in `path_to/threading/make_jobs.py` to use your Python environment.
 - Ensure `path_to/threading/make_jobs.py` has the correct path for `path_to/threading/thread_peptide_sequence_new.py`
+- To start with, only use the templates from `walle` and `walle2`. `mini` and `strand` contains primarily strand pairing binding modes, which tends to give way higher AF2 passing rate, but might not necessarily be favored in real life cases (in terms of success % and affinities). Recommend only to use when you have clues about your targets structurally compatibility with strand pairing, and/or when testing in a larger number of designs.
 
 ## Step-by-Step Guide
 
@@ -158,7 +159,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 1. After 1 or 2 rounds of mpnn/af2 , if not enough designs (< 70) passing the final filtering criteria, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion.
 2. On the final designs before ordering, if enough designs (>= 70) passing the final filtering criteria, but one may want to order on chips (i.e. oligo library) and/or include arbitrary refined designs in initial test, in which case you can repeat either the one cycle or two cycles of mpnn/af2 on the output from diffusion. Depending on available computation resources and chip quota.
 3. On the initial hits after experimental screeining and characterization, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion.
-- In general the pipeline works most times without the use of diffusion, however, intellegent use of diffusion can increase in silico success rates for difficult targets and potentially improve the affinity and specificty of characterized binders.
+- In general the pipeline works most times without the use of diffusion, however, intellegent use of diffusion can increase in silico success rates for difficult targets and potentially improve the affinity and specificty of characterized binders. Recommend considering to use for a better specificity, though the filtering criteria might change accordingly.
 - We provide two scripts to help make jobs for running diffusion. The first uses motif diffusion which helps preserve interface interactions. The second is partial diffusion, which is more aggressive and will often lose good interface interactions like bidentate hydrogen bonds built into the inital template library.
 1. path_to/bcov_rf_diffusion_24_04_12_tied_mpnn/motif_diffusion/make_motif_diffusion_jobs.py
 2. path_to/bcov_rf_diffusion_24_04_12_tied_mpnn/partial_diffusion/make_partial_diffusion_jobs.py

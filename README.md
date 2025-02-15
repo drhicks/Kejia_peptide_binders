@@ -1,6 +1,6 @@
 # Kejia_peptide_IDR_binders
 
-A computational pipeline to target arbitrary unstructured sequence fragments (4-30 amino acids) of intrinsically disordered proteins and peptides, with de novo designed binding proteins.
+A computational pipeline to target arbitrary unstructured sequence fragments (4-40 amino acids) of intrinsically disordered proteins and peptides, with de novo designed binding proteins. Recommend starting points as 8-30 amino acids; shorter or longer one would presumably require further round of oracle guided diffusion refinement.
 
 ## Prerequisites
 
@@ -11,6 +11,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 - Update paths in `path_to/threading/make_jobs.py` to use your Python environment.
 - Ensure `path_to/threading/make_jobs.py` has the correct path for `path_to/threading/thread_peptide_sequence_new.py`
 - To start with, only use the templates from `walle` and `walle2`. `mini` and `strand` contains primarily strand pairing binding modes, which tends to give way higher AF2 passing rate, but might not necessarily be favored in real life cases (in terms of success % and affinities). Recommend only to use when you have clues about your targets structurally compatibility with strand pairing, and/or when testing in a larger number of designs.
+- Further details of the pipeline will be releases journal manuscript journal acceptance.
 
 ## Step-by-Step Guide
 
@@ -146,10 +147,12 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 
     You could alternatively run the filtering without averaging all 5 alphafold models and it will simply select the 1 of 5 prediction with best iptm. For easier targets where all 5 predictions tend to converge, averaging may be better. For more difficult targets with low prediction pass rates, not averaging may be needed.
 
-### Additional Steps
+### Additional Steps: Diffusion Refinement, i.e., one-sided partial diffusion, two-sided partial diffusion, motif diffusion.
 
 - **Other filtering steps as desired such as af2_filtering/rosetta_min_ddg.py and visual inspection to order**.
 - **Incorporate motif diffusion or partial diffusion as needed**
+- **This branch is different than the lab released vanilla. Please see Methods section in the manuscript.**
+- **Pay attention to the duplicate backbones coming out of diffusion. Updating soon**
 
 ## Notes
 
@@ -159,7 +162,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 1. After 1 or 2 rounds of mpnn/af2 , if not enough designs (< 70) passing the final filtering criteria, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion.
 2. On the final designs before ordering, if enough designs (>= 70) passing the final filtering criteria, but one may want to order on chips (i.e. oligo library) and/or include arbitrary refined designs in initial test, in which case you can repeat either the one cycle or two cycles of mpnn/af2 on the output from diffusion. Depending on available computation resources and chip quota.
 3. On the initial hits after experimental screeining and characterization, in which case you will want to repeat the two cycles of mpnn/af2 on the output from diffusion.
-- In general the pipeline works most times without the use of diffusion, however, intellegent use of diffusion can increase in silico success rates for difficult targets and potentially improve the affinity and specificty of characterized binders. Recommend considering to use for a better specificity, though the filtering criteria might change accordingly.
+- In general the pipeline works most times without the use of diffusion refinement, however, intellegent use of diffusion can increase in silico success rates for difficult targets and/or potentially improve the affinity and specificty of characterized binders. However, design numbers worth ordering might increase dramatically after this step, and AF2 might not necessarily be the only judge (i.e., we speculate in IDR targeting, AF2 has biases towards database-enriched binding modes such as alpha helices and beta strands; diversity shall be considered here other than ranking solely by AF2 metrics). Recommend considering to use for a better specificity, or a larger screening throughput, though the filtering criteria might change accordingly. (See our following work soon)
 - We provide two scripts to help make jobs for running diffusion. The first uses motif diffusion which helps preserve interface interactions. The second is partial diffusion, which is more aggressive and will often lose good interface interactions like bidentate hydrogen bonds built into the inital template library.
 1. path_to/bcov_rf_diffusion_24_04_12_tied_mpnn/motif_diffusion/make_motif_diffusion_jobs.py
 2. path_to/bcov_rf_diffusion_24_04_12_tied_mpnn/partial_diffusion/make_partial_diffusion_jobs.py

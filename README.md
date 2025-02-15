@@ -11,7 +11,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 - Update paths in `path_to/threading/make_jobs.py` to use your Python environment.
 - Ensure `path_to/threading/make_jobs.py` has the correct path for `path_to/threading/thread_peptide_sequence_new.py`
 - To start with, only use the templates from `walle` and `walle2`. `mini` and `strand` contains primarily strand pairing binding modes, which tends to give way higher AF2 passing rate, but might not necessarily be favored in real life cases (in terms of success % and affinities). Recommend only to use when you have clues about your targets structurally compatibility with strand pairing, and/or when testing in a larger number of designs.
-- Further details of the pipeline will be releases journal manuscript journal acceptance.
+- Further details of the pipeline will be released upon manuscript journal acceptance.
 
 ## Step-by-Step Guide
 
@@ -152,7 +152,7 @@ A computational pipeline to target arbitrary unstructured sequence fragments (4-
 - **Other filtering steps as desired such as af2_filtering/rosetta_min_ddg.py and visual inspection to order**.
 - **Incorporate motif diffusion or partial diffusion as needed**
 - **This branch is different than the lab released vanilla. Please see Methods section in the manuscript.**
-- **Pay attention to the duplicate backbones coming out of diffusion. Updating soon**
+- **Pay attention to the duplicate backbones coming out of diffusion. Updating soon.**
 
 ## Notes
 
